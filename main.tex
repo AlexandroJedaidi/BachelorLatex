@@ -1,14 +1,10 @@
 \documentclass[
     paper=a4, % Seitenformat
     fontsize=10pt,  % Schriftgröße
-    oneside,        % einseitig
-    headsepline,    % Trennlinie für die Kopfzeile
-    notitlepage     % keine extra Titelseite
 ]{extarticle}         % KOMA-Script Article
 %------------------------------------------------------------------------
 
 \usepackage[automark]{scrlayer-scrpage}  % Seiten-Stil für scrartcl
-\usepackage[top=25mm, left=25mm, right=20mm]{geometry}          % Oberer Rand 25mm Einrückung
 \usepackage[utf8]{inputenc}              % Eingabekodierung
 \usepackage[T1]{fontenc}                 % Zeichenkodierung
 \usepackage[english,ngerman]{babel}      % Mehrsprachenumgebung, Hauptsprache Deutsch
@@ -26,6 +22,11 @@
 \usepackage{fontawesome}
 \usepackage{hyperref}
 \usepackage[backend=biber,style=numeric,url=true,sorting=none,doi=false,urldate=long,natbib=true]{biblatex}
+\usepackage[a4paper,lmargin={3cm},rmargin={3cm},tmargin={2.5cm},bmargin = {2.5cm}]{geometry}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+\usepackage{tabularx}
 
 \pagestyle{scrheadings}                  % Kopfzeilen nach scr-Standard
 
@@ -57,7 +58,7 @@
 
 % This info will be visible in the document head
 \author{Alexandro Jedaidi}
-\title{\textbf{LatexTemplate}\\\large{Automatically build and deploy your latex documents.}}
+\title{\textbf{Vergleich der Integrationsmethoden und der Methoden des maschinellen Lernens für gewöhnliche Differentialgleichungen}}
 \date{}
 
 \begin{document}
@@ -65,15 +66,31 @@
     \maketitle
     \tableofcontents
     \newpage
+    \begin{abstract}
+        Bachelorabeit WiSe 2021/2022
+    \end{abstract}
     \pagestyle{headings}
 
-    \section{About}
-    This is a sample project with a bibliography to show the capabilities of the pipeline building and deploying this template.\cite{Google}
+    \section{Einleitung}
+    Citing template\cite{Google}
 
-    \subsection{Some example subsection}
-    \subsection{Another example subsection}
+    \section{Problemstellung}
+    \subsection{Gewöhnliche Differentialgleichungen n-ter Ordnung}
 
-    \section{Section (Example)}
+    \subsection{Reduzieren der Ordnung von ODE´s}
+    \subsection{General first-order ODE}
+    \subsection{Dynamische Syteme}
+    \subsection{Existenz und Eindeutigkeit}
+
+    \section{Numerischer Lösungsansatz}
+    \subsection{Methodenbeschreibung}
+    \subsection{Fehlerdisskusion (Stabilität)}
+    
+    \section{neuronale Netze}
+    \subsection{Methodenbeschreibung}
+    \subsection{Fehlerdisskussion (Lossfunktion)}
+    
+    \subsection{Anwendungsbeispiele}
 
     \newpage
     \printbibliography[heading=bibintoc]
