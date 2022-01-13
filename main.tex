@@ -1,7 +1,10 @@
 \documentclass[
     paper=a4, % Seitenformat
-    fontsize=10pt,  % Schriftgröße
-]{article}         % KOMA-Script Article
+    fontsize=12pt,  % Schriftgröße
+    oneside,        % einseitig
+    headsepline,    % Trennlinie für die Kopfzeile
+    notitlepage     % keine extra Titelseite
+]{extarticle}         % KOMA-Script Article
 %------------------------------------------------------------------------
 
 \usepackage[automark]{scrlayer-scrpage}  % Seiten-Stil für scrartcl
@@ -15,7 +18,7 @@
 \usepackage{graphicx}                    % Abbildungen einbinden
 \usepackage{tikz}                        % Abbildungen zeichnen
 \usepackage{enumitem}
-\usepackage[outputdir=out]{minted}
+%\usepackage[outputdir=out]{minted}
 \usepackage{mathtools}
 \usepackage{pdfpages}
 \usepackage[algo2e]{algorithm2e}
@@ -39,7 +42,7 @@
 
 % Horizontale Linie mit Abstand zu den Seitenrändern
 \newcommand{\ownline}{\vspace{.7em}\hrule\vspace{.7em}}
-\renewcommand{\ALG@name}{Algorithmus}
+%\renewcommand{\ALG@name}{Algorithmus}
 \newcommand{\RNum}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
 \newcommand{\qedwhite}{\hfill \ensuremath{\Box}}
 
@@ -112,7 +115,7 @@
     gleichungen $erster$ Ordnung umzuwandeln. Dies erleichtert uns in späteren Abschnitten Aussagen über die Existenz
     und Eindeutigkeit der Lösung(en) $\hat{x}$ zu treffen.
     Betrachte hierzu eine gewöhnliche Differentialgleichung $m-ter$ Ordnung (vgl. \eqref{eq:1}). Diese ist mit Hilfe
-    der Funktionen $x_{j}:D \rightarrow \mathbb{R}$ für $j \in \{1,...,k\}$ äquivalent zu einem System erster Ordnung
+    der Funktionen $x_{j}:D \rightarrow \mathbb{R}$ für $j \in \{1,\dots,k\}$ äquivalent zu einem System erster Ordnung
     mit $m$ Gleichungen:
     \begin{empheq}[left={\empheqbiglbrace~}]{align*}
         x_{1}^{\prime}&=x_{2} \\
@@ -121,7 +124,7 @@
         &. \label{eq:3} \tag{\RNum{3}}\\
         &. \\
         x_{m-1}^{\prime}&=x_{m} \\
-        x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, ..., x_{m}). \\
+        x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \\
     \end{empheq}
     Für ein AWP \eqref{eq:2} gilt zusätzlich:
     \begin{empheq}[left={\empheqbiglbrace~}]{align*}
@@ -166,8 +169,8 @@
     $Beweis$ \cite[52-55]{beckGewohnlicheDifferentialgleichungen2018}
 
     \subsubsection{Eindeutigkeit von Lösungen}
-    Ähnlich wie im vorherigen Kapitel existiert ein Satz, welcher zeigt, dass eine $lipschitz$-stetige
-    \cite{LipschitzStetigkeitSerloMathe} rechte Seite $f$ reicht, damit eine eindeutige Lösung für eine
+    Ähnlich wie im vorherigen Kapitel existiert ein Satz, welcher zeigt, dass eine $lipschitz$-stetige~\cite{LipschitzStetigkeitSerloMathe}
+    rechte Seite $f$ reicht, damit eine eindeutige Lösung für eine
     gewöhnliche Differentialgleichung erster Ordnung existiert.
     \begin{satz}
         (Existenzsatz- und Eindeutigkeitssatz von Picard-Lindelöf, lokale quantitative und qualitative Version) \\
@@ -189,8 +192,7 @@
         das Anfangswertproblem \eqref{eq:5} auf dem Intervall $[t_{0}-a,t_{0}+a]$ genau eine Lösung $\hat{x}$ hat.
         (Qualitative Version)
     \end{satz}
-    $Beweis$ \cite[56-58]{beckGewohnlicheDifferentialgleichungen2018}
-    \cite{stykelSkriptZurVorlesung2020}
+    $Beweis$ \cite[56-58]{beckGewohnlicheDifferentialgleichungen2018}~\cite{stykelSkriptZurVorlesung2020}
 
     \subsection{Abhängigkeit der Lösungen von den Daten}
     TODO: Motivation für den Abschnitt
