@@ -1,0 +1,84 @@
+\section{Numerischer Lösungsansatz}
+Unser Ziel ist es, eine effektive Methode zu verwenden, um eine Lösung eines Anfangswertproblem finden zu können.
+Da es nicht immer möglich ist, eine ODE analytisch zu lösen, gibt es sogenannte Ein- und Mehrschrittverfahren, welche
+eine Lösung der ODE approximiert.
+Der Grundgedanke dieser Verfahren ist es das Zeitintervall $D=[t_0,t_f]$ zu diskretisieren und beginnend mit dem
+Anfangswert $t_0$ eine Näherung $u_i \approx x(t_i)$ für $i=0 \dots N$, wobei $t_N=t_f$, berechnet.
+Solche Verfahren werden mit Hilfe von Quadraturformeln der numerischen
+Integration \cite[Numerische Integration]{walzLexikonMathematik} hergeleitet.\\
+Dies basiert darauf, dass die Differentialgleichung auf einem Teilintervall $[t_i, t_{i+1}] \subset D$
+integriert wird und nach dem Hauptsatz der Differential- und Integralrechung auf folgende Gleichung gebracht werden kann:
+\[
+    x(t_{i+1}) - x(t_i) = \int_{t_i}^{t_{i+1}} x^{\prime}(t)dt = \int_{t_i}^{t_{i+1}}f(t, x(t))dt.
+\]
+Das Integral kann nun mit einer bereits genannten Quadraturformel approximiert werden, welches je nach Wahl der
+Quadraturformel ein Einschrittverfahren bildet.
+\subsection{Einschrittverfahren}
+\begin{definition}
+    Sei $D=[t_0,t_0+\alpha]$ ein Zeitintervall und eine Zerlegung von D
+    \[
+        t_0 < t_1 < \dots < t_N = t_0 + a
+    \]
+    mit der Schrittweite $h=\frac{a}{N}$, also $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Intervallzerlegung.
+    Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{eq:5} hat die Form
+    \begin{empheq}{align*}
+        u_0 &= x_0\\
+        u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6} \tag{\RNum{6}}
+    \end{empheq}
+    wobei die Lösung $x:D \rightarrow \mathbb{R}^{n}$ auf ganz $D$ existiert.
+    Dabei nennt man mit $K \supseteq \mathbb{R}^n$
+    $\phi:D_h \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n) \rightarrow \mathbb{R}^n$ die
+    Inkrementfunktion.
+    Implizite Einschrittverfahren haben die Form
+    \begin{empheq}{align*}
+        u_0 &= x_0\\
+        u_{i+1} &= u_i + h\phi(t_i,u_i,u_{i+1},h,f), \quad i=0,\dots,N-1,
+    \end{empheq}
+    mit $\phi:D_h \times \mathbb{R}^n \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n)
+    \rightarrow \mathbb{R}^n$.
+\end{definition}
+\subsubsection{Fehlerdiskussion}
+Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erläutert.
+\begin{definition}[lokaler Diskretisierungsfehler]
+    Sei das Anfangswertproblem \eqref{eq:5} mit Lipschitz-stetiger
+    rechten Seite und ein explizites Einschrittverfahren \eqref{eq:6} gegeben. Für $\hat{t}\in [t_0,t_0+a]$ und
+    $0 < h < t_0 + a - \hat{t}$ ist der lokale Diskretisierungsfehler definiert als
+    \[
+        \tau(\hat{t}, h) := \frac{x(\hat{t} + h) - u_1(\hat{t})}{h},
+    \] wobei $u_1(\hat{t})=x(\hat{t}) + h\phi\left(\hat{t},x(\hat{t}\right),h,f) $ ist die Approximation der exakten
+    Lösung nach einem Schritt und mit $x(\hat{t})$ als Startpunkt.\\
+    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung m) in der x-Variable gilt, dass
+    für alle $\hat{t} \in (t_0, t_0+a]$
+    \[
+        \lim_{h \rightarrow 0 } \tau(\hat{t}, h)=0,
+    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
+\end{definition}
+\begin{definition}
+    Mit $\hat{t} = t_i = t_0+ih, i=1,\dots, N$ ist der globale Diskretisierungsfehler definiert als
+    \[
+        e(\hat{t}, h) := x(\hat{t}) - u_i.
+    \]
+    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung m) in der x-Variable gilt, dass
+    für alle $\hat{t} \in (t_0, t_0+a]$
+    \[
+        \lim_{h \rightarrow 0 } e(\hat{t}, h)=0,
+    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
+\end{definition}
+Um eine obere Schranke für den globalen Fehler finden zu können, müssen wir zuerst die diskrete Version der Gronwall
+Ungleichung \ref{Satz 6} beweisen.
+\begin{satz}[diskrete Gronwallsche Ungleichung]
+    Gegeben seien die Folgen $(\alpha)_i,(\beta)_i,(\gamma)_i \geq 0$ mit $i \in \{0,\dots,N\}$ und es gilt
+    \[
+        \gamma_{i+1} \leq (1 + \alpha_i)\gamma_i + \beta_i \quad \text{für } i=0,\dots,N-1.
+    \] Dann gilt
+    \[
+        \gamma_{i+1} \leq \left( \gamma_0 + \sum_{j=0}^{i}\beta_j \right) e^{\alpha_0 + \dots \alpha_i}  \quad
+        \text{für } i=0, \dots, N-1.
+    \]
+\end{satz}
+
+\subsection{Runge-Kutta-Verfahren}
+\subsection{Mehrschrittverfahren}
+\subsection{Fehlerdisskusion}
+\subsubsection{Konsistenz und Konvergenz}
+\subsubsection{Stabilität}
