@@ -76,6 +76,21 @@ Ungleichung \ref{Satz 6} beweisen.
         \text{für } i=0, \dots, N-1.
     \]
 \end{satz}
+$Beweis.$ Da $i=1,\dots,N$ bietet sich ein Induktionsbeweis nach i an:
+\begin{empheq}{align*}
+    (i=0): \qquad \gamma_1 &\leq
+    \underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
+    \underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
+    \text{(I.V.):} \qquad
+    \gamma_{i} &\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
+    (i \rightarrow i+1): \quad
+    \gamma_{i+1} &\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
+    &\underset{\text{I.V.}}{\leq} (1 + \alpha_i)
+    \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
+    &\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
+    + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
+    &\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
+\end{empheq}
 
 \subsection{Runge-Kutta-Verfahren}
 \subsection{Mehrschrittverfahren}
