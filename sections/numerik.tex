@@ -21,19 +21,19 @@ Quadraturformel ein Einschrittverfahren bildet.
     \]
     mit der Schrittweite $h=\frac{a}{N}$, also $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Intervallzerlegung.
     Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{eq:5} hat die Form
-    \begin{empheq}{align*}
+    \begin{align*}
         u_0 &= x_0\\
         u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6} \tag{\RNum{6}}
-    \end{empheq}
+    \end{align*}
     wobei die Lösung $x:D \rightarrow \mathbb{R}^{n}$ auf ganz $D$ existiert.
     Dabei nennt man mit $K \supseteq \mathbb{R}^n$
     $\phi:D_h \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n) \rightarrow \mathbb{R}^n$ die
     Inkrementfunktion.
     Implizite Einschrittverfahren haben die Form
-    \begin{empheq}{align*}
+    \begin{align*}
         u_0 &= x_0\\
         u_{i+1} &= u_i + h\phi(t_i,u_i,u_{i+1},h,f), \quad i=0,\dots,N-1,
-    \end{empheq}
+    \end{align*}
     mit $\phi:D_h \times \mathbb{R}^n \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n)
     \rightarrow \mathbb{R}^n$.
 \end{definition}
@@ -77,20 +77,20 @@ Ungleichung \ref{Satz 6} beweisen.
     \]
 \end{satz}
 $Beweis.$ Da $i=1,\dots,N$ bietet sich ein Induktionsbeweis nach i an:
-\begin{empheq}{align*}
-    (i=0): \qquad \gamma_1 &\leq
+\begin{alignat*}{2}
+    (i=0):& \qquad \gamma_1 &&\leq
     \underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
     \underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
-    \text{(I.V.):} \qquad
-    \gamma_{i} &\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
-    (i \rightarrow i+1): \quad
-    \gamma_{i+1} &\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
-    &\underset{\text{I.V.}}{\leq} (1 + \alpha_i)
+    (\text{IV}):& \qquad
+    \gamma_{i} &&\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
+    (i \rightarrow i+1):& \quad
+    \gamma_{i+1} &&\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
+    & &&\underset{\text{IV}}{\leq} (1 + \alpha_i)
     \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
-    &\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
+    &  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
     + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
-    &\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
-\end{empheq}
+    &  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
+\end{alignat*}
 
 \subsection{Runge-Kutta-Verfahren}
 \subsection{Mehrschrittverfahren}

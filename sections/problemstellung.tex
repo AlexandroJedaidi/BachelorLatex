@@ -34,7 +34,7 @@ und Eindeutigkeit der Lösung(en) $\hat{x}$ zu treffen.
 Betrachte hierzu eine gewöhnliche Differentialgleichung $m-ter$ Ordnung (vgl. \eqref{eq:1}). Diese ist mit Hilfe
 der Funktionen $x_{j}:D \rightarrow \mathbb{R}$ für $j \in \{1,\dots,k\}$ äquivalent zu einem System erster Ordnung
 mit $m$ Gleichungen:
-\begin{empheq}[left={\empheqbiglbrace~}]{align*}
+\begin{align*}
     x_{1}^{\prime}&=x_{2} \\
     x_{2}^{\prime}&=x_{3} \\
     &. \\
@@ -42,9 +42,9 @@ mit $m$ Gleichungen:
     &. \\
     x_{m-1}^{\prime}&=x_{m} \\
     x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \\
-\end{empheq}
+\end{align*}
 Für ein AWP \eqref{eq:2} gilt zusätzlich:
-\begin{empheq}[left={\empheqbiglbrace~}]{align*}
+\begin{align*}
     x_{1}(t_{0})&=x_{0,1} \\
     x_{2}(t_{0})&=x_{0,2} \\
     &. \\
@@ -52,14 +52,14 @@ Für ein AWP \eqref{eq:2} gilt zusätzlich:
     &. \\
     x_{m-1}(t_{0})&=x_{0,m-1} \\
     x_{m}(t_{0})&=x_{0,m}. \\
-\end{empheq}
+\end{align*}
 
 \subsection{Existenz und Eindeutigkeit}
 In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung
-\begin{empheq}{align*}
+\begin{align*}
     x^{\prime}&=f(t,x)\\
     x(t_{0})&=x_{0} \label{eq:5} \tag{\RNum{5}}
-\end{empheq}
+\end{align*}
 und zeigen, unter welchen Bedingungen der rechten Seite $f(t,x(t))$ eine Lösung existiert und ggf. eindeutig ist.
 
 \subsubsection{Existenz von Lösungen}
@@ -87,7 +87,17 @@ $Beweis$ \cite[52-55]{beckGewohnlicheDifferentialgleichungen2018}
 \subsubsection{Eindeutigkeit von Lösungen}
 Ähnlich wie im vorherigen Kapitel existiert ein Satz, welcher zeigt, dass eine $lipschitz$-stetige~\cite{LipschitzStetigkeitSerloMathe}
 rechte Seite $f$ ausreicht, damit eine eindeutige Lösung für eine
-gewöhnliche Differentialgleichung erster Ordnung existiert.
+gewöhnliche Differentialgleichung erster Ordnung existiert. Dazu definieren wir zuerst eine Lipschitz-stetige Funktion.
+\begin{definition}
+    Sei $M \subset \mathbb{R} \times \mathbb{R}^{n}$ und $f: M \rightarrow \mathbb{R}^n$ eine Funktion. Dann heißt genau
+    dann f Lipschitz-stetig auf $M$ bezüglich der x-Variable, wenn ein $L>0$ existiert, so dass gilt:
+    \[
+        \left\lVert f(t,x) - f(t,y) \right\rVert_2 \leq L \left\lVert x -y  \right\rVert_2
+    \]
+    für alle $(t,x), (t,y) \in M$.
+\end{definition}
+Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differentialgleichunen betrachten(beweisen
+falls ich den beweis noch mache mit Fixpunktsatz davor).
 \begin{satz}[Existenzsatz- und Eindeutigkeitssatz von Picard-Lindelöf]
 Quantitative Version: Seien
 \[
@@ -155,11 +165,11 @@ Außerdem benötigen wir noch folgendes Lemma.
     Ist $\hat{x}$ eine stetig-differenzierbare Funktion auf dem Intervall $D \subset \mathbb{R}$ und eine Lösung des
     Anfangswertproblems \eqref{eq:5} und ist $\hat{x}_a$ eine stetig-differenzierbare Funktion und eine
     Näherungslösung mit $(t,\hat{x}_a(t))\in T$ für alle $t \in D$ und es gilt
-    \begin{empheq}{align*}
+    \begin{align*}
         \left\lVert \hat{x}_a^{\prime}(t) - f(t,\hat{x}_a(t)) \right\rVert_{2} &\leq d_e \qquad t \in D,\\
         |t_{0} - \tilde{t_0}| &\leq d_t,\\
         \left\lVert x_0 - \hat{x}_a(\tilde{t_0}) \right\rVert_{2} &\leq d_a\\
-    \end{empheq}
+    \end{align*}
     ($d_g$ representiert die Störung der rechten Seite, $d_t$ die Störung der Anfangszeit und $d_a$ die Störung
     des Anfangswerts).
     Dann gilt die Abschätzung
@@ -170,17 +180,17 @@ Außerdem benötigen wir noch folgendes Lemma.
     \]
 \end{lemma}
 $Beweis.$ Betrachte zuerst die Differenz der Lösung $\hat{x}$ und $\hat{x}_a$ bei $t = t_0$.
-\begin{empheq}{align*}
+\begin{align*}
     \left\lVert \hat{x}(t_0) - \hat{x}_a(t_0) \right\rVert_2 &= \left\lVert \hat{x}_0 -
     \int_{\tilde{t}_0}^{t_0} \hat{x}_a^\prime(s)ds - \hat{x}_a(\tilde{t}_{0}) \right\rVert_2 \\
     & \leq \left\lVert_2 \hat{x}_0 - \hat{x}_a(\tilde{t}_0)\right\rVert
     \left\lVert \int_{\tilde{t}_0}^{t_0} [\hat{x}_a^\prime(s) - f(s, \hat{x}_a(s))] ds \right\rVert_2
     \left\lVert \int_{\tilde{t}_0}^{t_0} f(s,\hat{x}_a(s)) ds \right\rVert_2 \\
     & \leq d_a + d_t(d_g + \sup_{s \in D} \left\lVert f(s,\hat{x}_a(s)) \right\rVert).
-\end{empheq}
+\end{align*}
 Nun können wir mit Hilfe der Lipschitz-Eigenschaft der rechten Seite $f$ die Differenz für allgemeines
 $t \in D , t > t_0$ abschätzen:
-\begin{empheq}{align*}
+\begin{align*}
     \left\lVert \hat{x}(t) - \hat{x}_a(t) \right\rVert_2 &=
     \left\lVert \hat{x}_0 + \int_{t_0}^{t} f(s,\hat{x})ds - \hat{x}_a(t_0) - \int_{t_0}^{t} \hat{x}_a^{\prime}(s) ds \right\rVert_2\\
     &\leq \left\lVert \hat{x}_0 - \hat{x}_a(t_0) \right\rVert_2 +
@@ -188,21 +198,21 @@ $t \in D , t > t_0$ abschätzen:
     \left\lVert \hat{x}_a^{\prime}(s) - f(s,\hat{x}_a(s)) \right\rVert_2] ds \\
     &\leq d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) +
     \int_{t_0}^{t} [L \left\lVert \hat{x}(s) - \hat{x}_a(s) \right\rVert_2 + d_g] ds.
-\end{empheq}
+\end{align*}
 Um das gronwallsche Lemma verwenden zu können, setzen wir
 $u(t):=\left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L}$,
 \[
     \beta:=d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2 + \frac{d_g}{L})
 \] und $\alpha:=L$.
 Offensichtlich gilt
-\begin{empheq}{align*}
+\begin{align*}
     &u(t) \leq \alpha \int_{t_0}^{t} u(s) ds + \beta\\
     \Leftrightarrow & \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L} \leq
     L \int_{t_0}^{t} \left[\left\lVert \hat{x}(s) - \hat{x}_a(s)\right\rVert_2 + \frac{d_g}{L}\right] ds + \beta \\
     \Leftrightarrow & \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 \leq
     d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) +
     \int_{t_0}^{t} \left[ L \left\lVert \hat{x}(s) - \hat{x}_a(s) \right\rVert_2 + d_g \right] ds - \frac{d_g}{L}
-\end{empheq}
+\end{align*}
 Also können wir das gronwallsche Lemma anwenden und somit folgt
 \[
     \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L} \leq
@@ -219,10 +229,10 @@ Mit diesem Lemma können wir etwas über die stetige Abhängigkeit der Lösung v
     ist eine Lösung $x$ auf einem kompakten Intervall $D \subset \mathbb{R}$, eine Umgebung U des Graphen
     $\{(t,x(t): t \in D)$ in T und ein $\epsilon>0$ gegeben, dann existiert ein $\delta(\epsilon, U, f, D) >0$ in,
     sodass die Lösung $\hat{x}$ des gestörten Anfangswertproblems
-    \begin{empheq}{align*}
+    \begin{align*}
         \hat{x}^{\prime} &= \hat{f}(t,\hat{x})\\
         \hat{x}(\hat{t}_0) &= \hat{x}_0 \\
-    \end{empheq}
+    \end{align*}
     auf ganz D existiert und die Abschätzung
     \[
         \left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon \qquad t \in D
