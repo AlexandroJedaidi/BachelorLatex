@@ -86,8 +86,8 @@ $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}
     lokale Lösung, d.h., es existiert ein $a=a(t_{0},x_{0}) \geq 0$, sodass das Anfangswertproblem \eqref{eq:5} auf
     dem Intervall $[t_{0}-a,t_{0}+a]$ mindestens eine Lösung $\hat{x}$ hat.
 \end{satz}
-$Beweis.$ Sei $J\subset D$ abgeschlossen mit $t_0 \in J$ und $\hat{x}(t)$ eine Lösung von \eqref{eq:5}. Da die rechte
-Seite $f$ auf J stetig ist, gilt nach dem Hauptsatz der Differential- und Integralrechnung:
+$Beweis.$ (Quantitative Lösung) Sei $J\subset D$ abgeschlossen mit $t_0 \in J$ und $\hat{x}(t)$ eine Lösung von \eqref{eq:5}.
+Da die rechte Seite $f$ auf J stetig ist, gilt nach dem Hauptsatz der Differential- und Integralrechnung:
 \[
     \hat{x}(t) = \hat{x}_0 + \int_{t_0}^{t} f(s, \hat{x}(s)) ds \quad \text{für alle} \quad t \in J.
 \]
@@ -171,7 +171,38 @@ gewöhnliche Differentialgleichung erster Ordnung existiert. Dazu definieren wir
     \]
     für alle $(t,x), (t,y) \in M$.
 \end{definition}
-Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differentialgleichunen beweisen.
+Außerdem benötigen wir für den Beweis noch den Fixpunktsatz von Weissinger.
+\begin{satz}[Fixpunktsatz von Weissinger]
+    Sei $\left( B, \left\lVert . \right\rVert \right) $ ein Banachraum und $U \subset B$ abgeschlossen und nichtleer.
+    Ferner ist $\sum_{j=1}^{\infty} \alpha_j$ eine konvergente Reihe positiver Zahlen, also
+    $\sum_{j=1}^{\infty} \alpha_j < \infty $, $\alpha_j \geq 0$, sowie $A:U \rightarrow U$ eine Selbstabbildung, für die
+    \[
+        \left\lVert A^{j}u - A^{j}v \right\rVert \leq \alpha_j \left\lVert u - v \right\rVert \quad \text{ für alle }
+        \quad u,v \in U \quad \text{ und } \quad j \in \mathbb{N}
+    \]
+    gilt. Dann besitzt $A$ genau einen Fixpunkt in $U$, nämlich
+    \[
+        u = \lim_{n\rightarrow \infty} A^{n}u_0
+    \]
+    mit beliebigem $u_0 \in U$. $u$ ist also der Grenzwert der rekursiven Folge $u_j:=Au_{j-1}$ für $j \geq 1$
+    mit $u_0 \in U$ beliebig. Außerdem gilt die Fehlerabschätzung
+    \[
+        \left\lVert u - u_n \right\rVert \leq \sum_{j=n}^{\infty} \alpha_j \left\lVert u_1 - u_0 \right\rVert.
+    \]
+\end{satz}
+$Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
+%Es gilt
+%\[
+%    \left\lVert u_{j+1}-u_j \right\rVert = \left\lVert A^j u_1 - A^j u_0 \right\rVert \leq
+%    \alpha_j \left\lVert u_1 - u_0 \right\rVert
+%\] also können wir folgern
+%\[
+%    \left\lVert u_{j+k} - u_j \right\rVert \leq \left\lVert u_{j+k-1} - u_{j+k-2} \right\rVert + \dots +
+%    \left\lVert u_{j+1} - u_j \right\rVert
+%    \leq \underbrace{\left( \alpha_{j+k-1} + \dots + \alpha_{j} \right)}_{\rightarrow 0 \text{ für } j,k
+%    \rightarrow\infty} \left\lVert u_1 - u_0\right\rVert
+%\]
+Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differentialgleichungen beweisen.
 \begin{satz}[Existenzsatz- und Eindeutigkeitssatz von Picard-Lindelöf]
 Quantitative Version: Seien
 \[
@@ -182,24 +213,45 @@ $(t_{o},x_{0})\in {\cal G}$ und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig u
 Dann besitzt das Anfangswertproblem \eqref{eq:5} genau eine Lösung $\hat{x}$ auf dem Intervall
 $D=\{t_{0}-a,t_{0}+a\}$, wobei
 \[
-    a=\min\{\alpha, \frac{\beta}{M}\}, \qquad M= \max_{(t,y)\in {\cal G}}\{\left\lVert f(t,x)\right\rVert_{2} \}
-    .
+    a=\min\{\alpha, \frac{\beta}{M}\}, \qquad M= \max_{(t,y)\in {\cal G}}\left\lVert f(t,x)\right\rVert_{2} .
 \]\\
 Qualitative Version: Seien ${\cal G}\in \mathbb{R} \times \mathbb{R}^{n}$ offen und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig und lokal
 Lipschitz-stetig bzgl. $x$ auf $\cal{G}$. Dann besitzt das Anfangswertproblem \eqref{eq:5} für jedes Paar
 $(t_{0},x_{0}) \in {\cal G}$ genau eine lokale Lösung, d.h., es existiert ein $a=a(t_{0},x_{0}) \geq 0$, sodass
 das Anfangswertproblem \eqref{eq:5} auf dem Intervall $[t_{0}-a,t_{0}+a]$ genau eine Lösung $\hat{x}$ hat.
 \end{satz}
-$Beweis$ \cite[56-58]{beckGewohnlicheDifferentialgleichungen2018}
+$Beweis$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
+aus dem Beweis von Peano. Aus
+\begin{align*}
+    \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert &=
+    \left\lVert u_0 - v_0 + \int_{t_0}^{t} f(s, (A^{j-1}u)(s)) - f(s, (A^{j-1}v)(s)) ds  \right\rVert \\
+    &\leq \left\lVert u_0 - v_0 \right\rVert +
+    \left\lVert \int_{t_0}^{t} f(s, (A^{j-1} u)(s)) - f(s, (A^{j-1} v)(s)) ds  \right\rVert \\
+    &\leq \left\lVert u_0 - v_0 \right\rVert +
+    (|t - t_0| \max_{t\in D} \left\lVert f(t,(A^{j-1}u)(t)) - f(t,(A^{j-1}v)(t)) \right\rVert ) \\
+    &\leq \left\lVert u_0 - v_0 \right\rVert + (|t - t_0| L \left\lVert (A^{j-1}u)(t) -( A^{j-1}v)(t) \right\rVert) \\_{\infty}
+    &. \\
+    &. \\
+    &. \\
+    &\leq j \left\lVert u_0 - v_0 \right\rVert
+\end{align*}
+folgt direkt
+\[
+    \left\lVert A^j u - A^j v \right\rVert_{\infty} \leq \frac{(aL)^j}{j!} \left\lVert u - v \right\rVert_{\infty}.
+\]
+Die Reihe $\sum_{j=1}^{\infty} \frac{(aL)^j}{j!} $ ist nach dem Quotientenkriterium offensichtlich konvergent. Also
+lässt sich der Fixpunktsatz von Weissinger anwenden. Der daraus gewonnene Fixpunkt ist eindeutig und mit ähnlicher
+Äuqivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite
+
 
 \subsection{Abhängigkeit der Lösungen von den Daten}
-In dieser Arbeit betrachten in späteren Abschnitten gewöhnliche Differentialgleichungen, die zur Simulation/Vorhersage
-natürlicher Systeme genutzt wird, worin es üblich ist, dass Anfangsdaten durch Messfehler oder ähnlicher Fehler
-von tatsächlichen Daten abeweichen. Deshalb ist es sinnvoll Aussagen zu betrachen, die zeigen, welche Auswirkungen
+In späteren Abschnitten werden wir gewöhnliche Differentialgleichungen betrachten, die zur Simulation/Vorhersage
+natürlicher Systeme genutzt werden. Darin ist es üblich, dass Anfangsdaten durch Messfehler oder unüblicher Verhalten
+von tatsächlichen Daten abweichen. Deshalb ist es sinnvoll Aussagen zu betrachten, die zeigen, welche Auswirkungen
 kleine Störungen auf die Lösung der Differentialgleichungen haben. In diesem Sektion ist die rechte Seite $f$ stetig und
 Lipschitz-stetig bezüglich der x-Variable, sodass wir die Eindeutigkeit der Lösung durch Picard-Lindelöff garantieren.
 Der große Vorteil hierfür ist, dass wir keine Maximal- und Minimallösungen betrachten müssen.
-Um eine Aussage über die stetige Abhängigkeit der Anfangsdaten teffen zu können, beweisen wir zuerst einen wichtigen
+Um eine Aussage über die stetige Abhängigkeit der Anfangsdaten treffen zu können, beweisen wir zuerst einen wichtigen
 Hilfssatz.
 \begin{theorem}[Gronwallsche Ungleichung]
     \label{Satz-gronwall}
