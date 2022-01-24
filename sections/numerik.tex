@@ -26,9 +26,9 @@ Quadraturformel ein Einschrittverfahren bildet.
         u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6} \tag{\RNum{6}}
     \end{align*}
     wobei die Lösung $x:D \rightarrow \mathbb{R}^{n}$ auf ganz $D$ existiert.
-    Dabei nennt man mit $K \supseteq \mathbb{R}^n$
+    Dabei nennt man
     $\phi:D_h \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n) \rightarrow \mathbb{R}^n$ die
-    Inkrementfunktion.
+    Inkrementfunktion, wobei $K \subseteq \mathbb{R}^n$.
     Implizite Einschrittverfahren haben die Form
     \begin{align*}
         u_0 &= x_0\\
@@ -53,7 +53,7 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
         \lim_{h \rightarrow 0 } \tau(\hat{t}, h)=0,
     \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
 \end{definition}
-\begin{definition}
+\begin{definition}[globaler Diskretisierungsfehler]
     Mit $\hat{t} = t_i = t_0+ih, i=1,\dots, N$ ist der globale Diskretisierungsfehler definiert als
     \[
         e(\hat{t}, h) := x(\hat{t}) - u_i.
@@ -64,8 +64,8 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
         \lim_{h \rightarrow 0 } e(\hat{t}, h)=0,
     \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
 \end{definition}
-Um eine obere Schranke für den globalen Fehler finden zu können, müssen wir zuerst die diskrete Version der Gronwall
-Ungleichung \ref{Satz-gronwall} beweisen.
+Es ist uns möglich, eine obere Schranke für den globalen Fehler zu finden. Dazu müssen wir zuerst die diskrete Version
+der Gronwall Ungleichung \ref{Satz-gronwall} beweisen.
 \begin{satz}[diskrete Gronwallsche Ungleichung]
     Gegeben seien die Folgen $(\alpha)_i,(\beta)_i,(\gamma)_i \geq 0$ mit $i \in \{0,\dots,N\}$ und es gilt
     \[
@@ -91,6 +91,47 @@ $Beweis.$ Da $i=1,\dots,N$ bietet sich ein Induktionsbeweis nach i an:
     + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
     &  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
 \end{alignat*}
+\begin{satz}
+    Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{eq:5} gegeben. Ist  die Inkrementfunktion
+    $\phi$ in der $x-Variable$ Lipschitz-stetig, also
+    \[
+        \left\lVert \phi(t, x_1, h, f) - \phi(t, x_2, h, f) \right\rVert \leq L \left\lVert x_1 - x_2 \right\rVert
+    \]
+    für alle $(t, x_1, h),(t, x_2, h) \in D \times \mathbb{R}^n \times [0, h_0]$ mit $h_0, L>0$, dann gilt für den
+    globalen Fehler in $t_i = t_0 + ih$ die obere Schranke
+    \[
+        \left\lVert e(t_i,h) \right\rVert \leq \left( \left\lVert e_0 \right\rVert + (t_i-t_0)\tau_h \right)
+        e^{L(t_i-t_0)}, \quad i = 1, \dots, N.
+    \]
+    Dabei ist $e_0 = x(t_0)-u_0$ und $\tau_h= \max\limits_{k=1,\dots,N} \left\lVert \tau(t_k,h) \right\rVert $.
+\end{satz}
+$Beweis.$ Löse zuerst die Gleichung des lokalen Diskretisierungsfehlers auf $x(t_{j+1})$ auf:
+\[
+    x(t_{j+1}) = x(t_j) + h \phi(t_j, x(t_j),h,f) + h \tau(t_j), \quad j = 0, \dots , i-1
+\]
+Dann nutzen wir das Ergebnis für den globalen Fehler
+\[
+    e(t_{j+1},h) = x(t_{j+1}) - u_{j+1} = x(t_j) - u_j + h \tau(t_j)
+    + h \left( \phi(t_j, x(t_j),h,f) - \phi(t_j, u_j, h, f) \right)
+\]
+und schätzen ab
+\[
+    \left\lVert e(t_{j+1},h) \right\rVert \leq \left\lVert e(t_j, h) \right\rVert + h\tau_h
+    + hL\left\lVert e(t_j,h) \right\rVert = (1 + hL) \left\lVert e(t_j,h) \right\rVert + h\tau_h.
+\]
+Nun können wir mit $\alpha_j=hL$, $\gamma_j =\left\lVert e(t_j,h) \right\rVert$ und $\beta_j = h\tau_h$ die diskrete
+Gronwall Ungleichung anwenden und erhalten
+\begin{align*}
+    \left\lVert e(t_{j+1},h) \right\rVert
+    &\leq \left( \left\lVert e_0 \right\rVert \sum_{i=0}^{j} h\tau_h e^{\sum_{i=0}^{j} hL } \right)\\
+    &= \left( \left\lVert e_0 \right\rVert + (j+1)h \tau_h \right)e^{(j+1)hL} \\
+    &= \left( \left\lVert e_0 \right\rVert + (t_{j+1} - t_0) \tau_h \right)e^{L(t_{j+1} - t_0)} \\
+\end{align*}
+für alle $j=0, \dots, i-1$, also insbesondere
+\[
+    \left\lVert e(t_{i},h) \right\rVert
+    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}.
+\] \qedwhite
 
 \subsection{Runge-Kutta-Verfahren}
 \subsection{Mehrschrittverfahren}
