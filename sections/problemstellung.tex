@@ -6,24 +6,24 @@ das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 \begin{definition}
     Ein System gewöhnlicher Differentialgleichungen $m-ter$ Ordnung hat die Form
     \[
-        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, ..., x^{(m-1)}) \label{eq:1} \tag{\RNum{1}}
+        x^{(m)}(t) = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1} \tag{\RNum{1}}
     \]
     mit der gegebenen Funktion
     $
-    f : D \times \mathbb{R}^{n} \times \mathbb{R}^{n} \times ... \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
+    f : D \times \mathbb{R}^{n} \times \mathbb{R}^{n} \times \dots \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
     $
     wobei $D \subseteq \mathbb{R}$ ein Zeitintervall ist. Eine dazugehörige Lösung (falls existent)
     $\hat{x} : D \rightarrow \mathbb{R}$ ist eine $m-mal$ differenzierbare Funktion und erfüllt die Bedingung
     \[
-        \hat{x}^{(m)} = f(t, \hat{x},\hat{x}^{\prime},\hat{x}^{\prime\prime}, ...,\hat{x}^{(m-1)}).
+        \hat{x}^{(m)} = f(t, \hat{x},\hat{x}^{\prime},\hat{x}^{\prime\prime}, \dots,\hat{x}^{(m-1)}).
     \]
 \end{definition}
 \begin{definition}
     Ein Anfangswertproblem für eine Differentialgleichung \eqref{eq:1} mit gegebenen Anfangswerten $x_{0,1},
-    ...,x_{0,m} \in \mathbb{R}^{n}$ hat die Form
+    \dots,x_{0,m} \in \mathbb{R}^{n}$ hat die Form
     \[
-        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, ..., x^{(m-1)}),\quad x(t_{0})=x_{0,1},\quad x^{\prime}(t_{0})=x_{0,2} \quad
-        ,...,\quad x^{(m-1)}(t_{0})=x_{0,m}. \label{eq:2} \tag{\RNum{2}}
+        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}),\quad x(t_{0})=x_{0,1},\quad x^{\prime}(t_{0})=x_{0,2}
+        ,\dots,x^{(m-1)}(t_{0})=x_{0,m}. \label{eq:2} \tag{\RNum{2}}
     \]
     Eine Lösung des Problems $\hat{x} : D \rightarrow \mathbb{R}$ muss also zusätzlich zu \eqref{eq:1} auch die
     Anfangswertbedingungen (vgl. \eqref{eq:2}) erfüllen.
@@ -53,6 +53,28 @@ Für ein AWP \eqref{eq:2} gilt zusätzlich:
     x_{m-1}(t_{0})&=x_{0,m-1} \\
     x_{m}(t_{0})&=x_{0,m}. \\
 \end{align*}
+\begin{definition}
+    Ein System gewöhnlicher Differentialgleichungen \eqref{eq:1} heißt $autonom$, wenn die rechte Seite $f$ nicht
+    explizit von der unabhängigen Variable $t$ abhängt. Das bedeutet, es gilt
+    \[
+        x^{m} = f(x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)})
+    \]
+    auf ganz $D$ gilt.
+\end{definition}
+In ähnlichem Stil zu der Ordnungsreduktion können wir auch eine nichtautonome Differentialgleichung zu einem autonomen
+System gewöhnlicher Differentialgleichungen umwandeln. Dazu führen wir eine neue Variable $z$ ein, für die gilt
+\[
+    z^{\prime} = 1, \quad z(t_0) = t_0.
+\]
+Dann ist das Anfangswertproblem \eqref{eq:2} äquivalent zu dem autonomen Anfangswertproblem $m+1$-ter Ordnung
+\begin{alignat*}{3}
+    z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\
+    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \\
+\end{alignat*}
+Die Lösung hat also die Form $\left[ \begin{matrix}
+                                         t\\
+                                         x(t)\\
+                                    \end{matrix} \right].$
 
 \subsection{Existenz und Eindeutigkeit}
 In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung

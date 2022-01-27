@@ -47,10 +47,10 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
         \tau(\hat{t}, h) := \frac{x(\hat{t} + h) - u_1(\hat{t})}{h},
     \] wobei $u_1(\hat{t})=x(\hat{t}) + h\phi\left(\hat{t},x(\hat{t}\right),h,f) $ ist die Approximation der exakten
     Lösung nach einem Schritt und mit $x(\hat{t})$ als Startpunkt.\\
-    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung m) in der x-Variable gilt, dass
+    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung p) in der x-Variable gilt, dass
     für alle $\hat{t} \in (t_0, t_0+a]$
     \[
-        \lim_{h \rightarrow 0 } \tau(\hat{t}, h)=0,
+        \lim_{h \rightarrow 0 } \tau(\hat{t}, h)=0 \quad (\tau(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
     \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
 \end{definition}
 \begin{definition}[globaler Diskretisierungsfehler]
@@ -61,8 +61,8 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
     Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung m) in der x-Variable gilt, dass
     für alle $\hat{t} \in (t_0, t_0+a]$
     \[
-        \lim_{h \rightarrow 0 } e(\hat{t}, h)=0,
-    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
+        \lim_{h \rightarrow 0 } e(\hat{t}, h)=0 \quad (e(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
+    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung p).
 \end{definition}
 Es ist uns möglich, eine obere Schranke für den globalen Fehler zu finden. Dazu müssen wir zuerst die diskrete Version
 der Gronwall Ungleichung \ref{Satz-gronwall} beweisen.
@@ -130,10 +130,165 @@ Gronwall Ungleichung anwenden und erhalten
 für alle $j=0, \dots, i-1$, also insbesondere
 \[
     \left\lVert e(t_{i},h) \right\rVert
-    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}.
-\] \qedwhite
+    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}. \qedwhite
+\]
+Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Im allgemeinen ist
+ein Verfahren genau dann konvergent, wenn es konsistent und stabil ist, wie wir später beweisen werden.
 
 \subsection{Runge-Kutta-Verfahren}
+Runge-Kutta-Verfahren sind Einschrittverfahren höherer Ordnung. Um ein RK-Verfahren herleiten zu können, müssen wir
+zuerst definieren, was eine Quadraturformel ist.
+\begin{definition}
+    Eine Quadratur ist eine Abbildung $Q_n: C([a,b])\rightarrow \mathbb{R}$ für die gilt
+    \[
+        Q_n(f) = (b-a)\sum_{i=0}^{n}\alpha_i f(x_i) \quad \text{ für alle } f\in C([a,b]),
+    \]
+    wobei $\Delta = \{a=x_0, \dots, x_n=b\}$ die Einteilung Stützstellen und die Zahlen $\alpha_0, \dots, \alpha_n$
+    (Quadratur) Gewichte genannt werden.\\
+    Für eine interpolische Quadratur gilt zusätzlich
+    \[
+        \alpha_i = \int_{0}^{1} \prod_{\underset{j\neq i}{j=0}}^{n} \frac{t-t_j}{t_i-t_j} dt,
+        \quad t_j = \frac{x_j-a}{b-a}.
+    \]
+\end{definition}
+In unserem Fall ist $(b-a)=h$, da wir das Integral $\int_{t_i}^{t_{i+1}} f(s,x(s))ds$ mit einer Quadratur approximieren:
+\[
+    \int_{t_i}^{t_{i+1}} f(s,x(s))ds \approx h \sum_{l=1}^{m}\alpha_l f(s_l,x(s_l)).
+\]
+Die Stützstellen sind also $s_1=t_i$, $s_l=t_i+c_{l} h$ für $l = 2,\dots, m$. Dazu approximieren wir
+$f(s_l,x(s_l))\approx k_{l,i}$ mit
+\begin{align*}
+    k_{1,i} &= f(t_i,u_i)\\
+    k_{l,i} &= f(t_i+c_lh, u_i + h\sum_{o=1}^{l-1}a_{lo}k_{o,i} ), \quad l=2,\dots,m.
+\end{align*}
+
+Dies ergibt das $m-stufige$ explizite Runge-Kutta-Verfahren
+\[
+    u_{i+1} = u_i + h \sum_{l=1}^{m} b_l k_{l,i}.
+\]
+Wir werden später ein klassisches $4$-stufiges RK-Verfahren verwenden, welches wir jetzt herleiten.
+Dazu benötigen wir die Simpsonregel
+\[
+    Q(f) = \frac{b-a}{6} (f(a) + 4f(m) +f(b))
+\]
+mit $m = \frac{a+b}{2}$ und $a=(t_i,x(t_i)), b=(t_{i}+h,x(t_{i}+h))$. Dabei ist !!!TODO: m korrigieren!!!
+\[
+    m=\frac{a+b}{2}=\frac{(t_i,x(t_i)) + (t_{i}+h,x(t_{i}+h))}{2} = \frac{(2t_i + h, x(t_i) + x(t_i + h))}{2}
+    = (t_i + \frac{h}{2}, x(t_i + \frac{h}{2}))
+\]
+Es gilt also die Approximation
+\begin{align*}
+    \int_{t_i}^{t_{i+1}} f(s,x(s)) ds &\approx \frac{h}{6}(f(t_i,x(t_i)) + 4f(m) + f(t_i + h,x(t_i + h))) \\
+    &= h\left(\frac{1}{6}f(t_i,x(t_i)) + \frac{2}{3}f\left( t_i + \frac{h}{2}, x\left( t_i + \frac{h}{2}\right) \right)
+    + \frac{1}{6}f(t_{i+1},x(t_{i+1}))\right). \\
+\end{align*}
+%Nun können wir $x(t_i+\frac{h}{2})$ mit einem Schritt des Euler-Verfahrens
+%\[
+%    x(t_i+\frac{h}{2}) \approx u_i + \frac{h}{2} f(t_i, u_i)
+%\]
+%und $x(t_{i+1})$ mit Hilfe der Taylor-Entwicklung abschätzen
+%\[
+%    x(t_{i+1}) = x(t_i) + hf(t_i,x(t_i)) + \frac{h}{2} x^{\prime \prime}(t_i)\mathcal{O}(h^2)
+%\]
+%\[
+%    h\left(\frac{1}{6}f(t_i,x(t_i)) + \frac{2}{3}f\left( t_i + \frac{h}{2}, x\left( t_i + \frac{h}{2}\right) \right)
+%    + \frac{1}{6}f(t_{i+1},x(t_{i+1}))\right).
+%\]
+Damit ergibt sich das 4-stufige klassische Runge-Kutta-Verfahren
+\[
+    u_{i+1} = u_i + h\left( \frac{1}{6}k_{1,i} + \frac{1}{3} k_{2,i} + \frac{1}{3} k_{3,i} + \frac{1}{6} k_{4,i} \right)
+\]
+mit den Stufen
+\begin{align*}
+    k_{1,i} &= f(t_i,u_i) \\
+    k_{2,i} &= f(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{1,i}) \\
+    k_{3,i} &= f(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{2,i}) \\
+    k_{4,i} &= f(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{3,i}). \\
+\end{align*}
+In diesem Fall haben wir die Koeffizienten
+\[
+    b := \left( b_1, \dots , b_m \right)^{\intercal}
+    =\left( \begin{matrix}
+                   \frac{1}{6}\\
+                   \frac{1}{3}\\
+                   \frac{1}{3}\\
+                   \frac{1}{6}\\
+               \end{matrix}\right), \quad
+    c := \left( c_1, \dots, c_m \right)^{\intercal}
+    = \left( \begin{matrix}
+                   0\\
+                   \frac{1}{2}\\
+                   \frac{1}{2}\\
+                   1\\
+                \end{matrix} \right), \quad
+    A:=(a)_{lo} = \left( \begin{matrix}
+                             0 & 0 & 0 & 0\\
+                             \frac{1}{2} & 0 & 0 & 0 \\
+                             0 & \frac{1}{2} & 0 & 0 \\
+                             0 & 0 & 1 & 0\\
+                            \end{matrix} \right).
+\]
+Im Allgemeinen gilt für explizite RK-Verfahren, dass $a_{lo} = 0$ für $l \leq o$.\\
+Da RK-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Verfahren mit der Form
+\begin{align*}
+    k_{1,i} &= f(t_i+c_1h, u_i + h(a_{11}k_{1,i} + \dots + a_{1m} k_{m,i})) \\
+    &.\\
+    &.\\
+    &.\\
+    k_{m,i} &= f(t_i+c_mh, u_i + h(a_{m1}k_{1,i} + \dots + a_{mm} k_{m,i}))\\
+    u_{i+1} &= u_i + h(b_1 k_{1,i} + \dots + b_m k_{m,i})
+\end{align*}
+Hier kann $A$ im Gegensatz zu expliziten RK-Verfahren eine volle Matrix sein.
+
+\subsubsection{Konsistenzdiskussion}
+Es wurde bereits gezeigt, dass die Konvergenz eines Einschrittverfahrens aus der Konsistenz folgt. Deshalb genügt es
+sich die Konsistenz(ordnung) der Runge-Kutta-Verfahren zu betrachten. Dabei spielt die Wahl der Koeffizienten eine
+große Rolle. Ziel ist es, die Koeffizienten so zu wählen, dass die Konsistenzordnung unseres Runge-Kutta-Verfahrens
+möglichst hoch ist. Dazu zeigen wir zuerst, dass unter bestimmten Voraussetzungen der Koeffizienen ein explizites
+RK-Verfahren invariant gegenüber Autonomisierung ist, das bedeutet, dass ein RK-Verfahren genau dann ein
+Anfangswertproblem \eqref{eq:5} mit der Näherungslösung $u_i$ approximiert, wenn es das autonomisiserte
+Anfangswertproblem
+\begin{alignat*}{3}
+    z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\       \label{eq:7} \tag{\RNum{7}}
+    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \\
+\end{alignat*}
+mit der Näherungslösung $v_i := \left[ \begin{matrix}
+                                    t_i\\
+                                    u_i\\
+                                \end{matrix} \right]$
+approximiert.
+\begin{satz}
+    Gegeben sei ein explizites Runge-Kutta-Verfahren. Dies ist genau dann invariant gegenüber Autonomisierung, wenn
+    für die Koeffizienten gilt:
+    \[
+        \sum_{j=1}^{m} b_j = 1 \qquad \text{und} \qquad c_l=\sum_{j=1}^{l-1} a_{lj}, \quad l = 1, \dots, m.
+    \]
+\end{satz}
+$Beweis.$ Angenommen ein Runge-Kutta-Verfahren ist im $i$-ten Schritt invariant gegenüber Autonomisierung. Wir zeigen,
+dass die Aussage auch unter den gegebenen Voraussetzungen für $u_{i+1}$ und $v_{i+1}$ gilt.
+Für ein autonomes Anfangsproblem \eqref{eq:7} hat das Runge-Kutta-Verfahren die Form
+\begin{alignat*}{2}
+    \hat{k}_{l,i} &= \begin{bmatrix} \hat{k}^{z}_{l,i} \\ \hat{k}^{x}_{l,i} \end{bmatrix}
+    = \begin{bmatrix} 1 \\
+          f\left( t_i + h \sum\limits_{o=1}^{l-1} a_{lo} \cdot \hat{k}^{z}_{o,i},
+    u_i + h \sum\limits_{o=1}^{l-1} a_{lo} \hat{k}^{x}_{o,i} \right)
+    \end{bmatrix}  \quad l=1,\dots,m, \\
+    v_{i+1} &= v_i + h \sum\limits_{l=1}^{m} b_l \hat{k}_{l,i} = \begin{bmatrix}
+                                                              t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1\\
+                                                              u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i}
+    \end{bmatrix}
+    \overset{!}{=}\begin{bmatrix}t_{i+1}\\u_{i+1}\\\end{bmatrix}.
+\end{alignat*}
+Es gilt also genau dann $t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1 = t_{i+1}$, wenn $\sum\limits_{l=1}^{m} b_l = 1$.
+Für die zweite Komponente gilt genau dann $u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i} = u_{i+1}$,
+wenn $\hat{k}^{x}_{l,i} = k_{l,i}$, $l = 1, \dots, m$. Äquivalent dazu muss gelten
+\[
+    f\left( t_i + h \sum\limits_{o=1}^{l-1} a_{lo} \cdot 1,
+    u_i + h \sum\limits_{o=1}^{l-1} a_{lo} \hat{k}^{x}_{o,i} \right)
+    = f\left( t_i +hc_l, u_i + h \sum_{o=1}^{l-1} a_{lo} k_{o,i} \right), \quad l = 1, \dots, m,
+\]
+was genau dann erfüllt ist, wenn $c_l = \sum\limits_{o=1}^{l-1} a_{lo}, \quad l= 1, \dots, m.$ \qedwhite\\
+
 \subsection{Mehrschrittverfahren}
 \subsection{Fehlerdisskusion}
 \subsubsection{Konsistenz und Konvergenz}
