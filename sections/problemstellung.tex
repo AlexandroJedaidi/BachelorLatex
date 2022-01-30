@@ -5,9 +5,9 @@ das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 \subsection{Gewöhnliche Differentialgleichungen und Anfangswertprobleme}
 \begin{definition}
     Ein System gewöhnlicher Differentialgleichungen $m-ter$ Ordnung hat die Form
-    \[
-        x^{(m)}(t) = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1} \tag{\RNum{1}}
-    \]
+    \begin{align}
+        x^{(m)}(t) = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1}
+    \end{align}
     mit der gegebenen Funktion
     $
     f : D \times \mathbb{R}^{n} \times \mathbb{R}^{n} \times \dots \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
@@ -21,10 +21,11 @@ das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 \begin{definition}
     Ein Anfangswertproblem für eine Differentialgleichung \eqref{eq:1} mit gegebenen Anfangswerten $x_{0,1},
     \dots,x_{0,m} \in \mathbb{R}^{n}$ hat die Form
-    \[
+    \begin{align}
         x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}),\quad x(t_{0})=x_{0,1},\quad x^{\prime}(t_{0})=x_{0,2}
-        ,\dots,x^{(m-1)}(t_{0})=x_{0,m}. \label{eq:2} \tag{\RNum{2}}
-    \]
+        ,\dots,x^{(m-1)}(t_{0})=x_{0,m}. \label{eq:2}
+    \end{align}
+
     Eine Lösung des Problems $\hat{x} : D \rightarrow \mathbb{R}$ muss also zusätzlich zu \eqref{eq:1} auch die
     Anfangswertbedingungen (vgl. \eqref{eq:2}) erfüllen.
 \end{definition}
@@ -34,25 +35,21 @@ und Eindeutigkeit der Lösung(en) $\hat{x}$ zu treffen.
 Betrachte hierzu eine gewöhnliche Differentialgleichung $m-ter$ Ordnung (vgl. \eqref{eq:1}). Diese ist mit Hilfe
 der Funktionen $x_{j}:D \rightarrow \mathbb{R}$ für $j \in \{1,\dots,k\}$ äquivalent zu einem System erster Ordnung
 mit $m$ Gleichungen:
-\begin{align*}
-    x_{1}^{\prime}&=x_{2} \\
-    x_{2}^{\prime}&=x_{3} \\
-    &. \\
-    &. \label{eq:3} \tag{\RNum{3}}\\
-    &. \\
-    x_{m-1}^{\prime}&=x_{m} \\
-    x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \\
-\end{align*}
+\begin{align}
+    x_{1}^{\prime}&=x_{2} \nonumber \\
+    x_{2}^{\prime}&=x_{3} \nonumber \\
+    &\vdots\\
+    x_{m-1}^{\prime}&=x_{m} \nonumber \\
+    x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \nonumber \\ \nonumber
+\end{align}
 Für ein AWP \eqref{eq:2} gilt zusätzlich:
-\begin{align*}
-    x_{1}(t_{0})&=x_{0,1} \\
-    x_{2}(t_{0})&=x_{0,2} \\
-    &. \\
-    &. \label{eq:4} \tag{\RNum{4}}\\
-    &. \\
-    x_{m-1}(t_{0})&=x_{0,m-1} \\
-    x_{m}(t_{0})&=x_{0,m}. \\
-\end{align*}
+\begin{align}
+    x_{1}(t_{0})&=x_{0,1} \nonumber \\
+    x_{2}(t_{0})&=x_{0,2} \nonumber \\
+    &\vdots \\
+    x_{m-1}(t_{0})&=x_{0,m-1} \nonumber \\
+    x_{m}(t_{0})&=x_{0,m}. \nonumber \\ \nonumber
+\end{align}
 \begin{definition}
     Ein System gewöhnlicher Differentialgleichungen \eqref{eq:1} heißt $autonom$, wenn die rechte Seite $f$ nicht
     explizit von der unabhängigen Variable $t$ abhängt. Das bedeutet, es gilt
@@ -78,10 +75,10 @@ Die Lösung hat also die Form $\left[ \begin{matrix}
 
 \subsection{Existenz und Eindeutigkeit}
 In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung
-\begin{align*}
-    x^{\prime}&=f(t,x)\\
-    x(t_{0})&=x_{0} \label{eq:5} \tag{\RNum{5}}
-\end{align*}
+\begin{align}
+    x^{\prime}&=f(t,x) \nonumber \\
+    x(t_{0})&=x_{0} \label{eq:5}
+\end{align}
 und zeigen, unter welchen Bedingungen der rechten Seite $f(t,x(t))$ eine Lösung existiert und ggf. eindeutig ist.
 
 \subsubsection{Existenz von Lösungen}

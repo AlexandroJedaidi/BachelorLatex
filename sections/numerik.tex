@@ -1,4 +1,5 @@
 \section{Numerischer Lösungsansatz}
+Der Großteil dieses Abschnitts beruht im Wesentlichen auf \cite[63-79]{stykelSkriptZurVorlesung2020}.
 Unser Ziel ist es, eine effektive Methode zu verwenden, um eine Lösung eines Anfangswertproblem finden zu können.
 Da es nicht immer möglich ist, eine ODE analytisch zu lösen, gibt es sogenannte Ein- und Mehrschrittverfahren, welche
 eine Lösung der ODE approximiert.
@@ -21,10 +22,10 @@ Quadraturformel ein Einschrittverfahren bildet.
     \]
     mit der Schrittweite $h=\frac{a}{N}$, also $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Intervallzerlegung.
     Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{eq:5} hat die Form
-    \begin{align*}
-        u_0 &= x_0\\
-        u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6} \tag{\RNum{6}}
-    \end{align*}
+    \begin{align}
+        u_0 &= x_0 \nonumber \\
+        u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6}
+    \end{align}
     wobei die Lösung $x:D \rightarrow \mathbb{R}^{n}$ auf ganz $D$ existiert.
     Dabei nennt man
     $\phi:D_h \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n) \rightarrow \mathbb{R}^n$ die
@@ -40,7 +41,7 @@ Quadraturformel ein Einschrittverfahren bildet.
 \subsubsection{Fehlerdiskussion}
 Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erläutert.
 \begin{definition}[lokaler Diskretisierungsfehler]
-    Sei das Anfangswertproblem \eqref{eq:5} mit Lipschitz-stetiger
+    Sei das Anfangswertproblem \eqref{eq:5} mit \\ Lipschitz-stetiger
     rechten Seite und ein explizites Einschrittverfahren \eqref{eq:6} gegeben. Für $\hat{t}\in [t_0,t_0+a]$ und
     $0 < h < t_0 + a - \hat{t}$ ist der lokale Diskretisierungsfehler definiert als
     \[
@@ -157,10 +158,10 @@ In unserem Fall ist $(b-a)=h$, da wir das Integral $\int_{t_i}^{t_{i+1}} f(s,x(s
 \]
 Die Stützstellen sind also $s_1=t_i$, $s_l=t_i+c_{l} h$ für $l = 2,\dots, m$. Dazu approximieren wir
 $f(s_l,x(s_l))\approx k_{l,i}$ mit
-\begin{align*}
-    k_{1,i} &= f(t_i,u_i)\\
-    k_{l,i} &= f(t_i+c_lh, u_i + h\sum_{o=1}^{l-1}a_{lo}k_{o,i} ), \quad l=2,\dots,m.
-\end{align*}
+\begin{align}
+    k_{1,i} &= f(t_i,u_i) \nonumber \\
+    k_{l,i} &= f(t_i+c_lh, u_i + h\sum_{o=1}^{l-1}a_{lo}k_{o,i} ), \quad l=2,\dots,m.   \label{eq:rk}
+\end{align}
 
 Dies ergibt das $m-stufige$ explizite Runge-Kutta-Verfahren
 \[
@@ -232,9 +233,7 @@ Im Allgemeinen gilt für explizite RK-Verfahren, dass $a_{lo} = 0$ für $l \leq 
 Da RK-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Verfahren mit der Form
 \begin{align*}
     k_{1,i} &= f(t_i+c_1h, u_i + h(a_{11}k_{1,i} + \dots + a_{1m} k_{m,i})) \\
-    &.\\
-    &.\\
-    &.\\
+    &\vdots\\
     k_{m,i} &= f(t_i+c_mh, u_i + h(a_{m1}k_{1,i} + \dots + a_{mm} k_{m,i}))\\
     u_{i+1} &= u_i + h(b_1 k_{1,i} + \dots + b_m k_{m,i})
 \end{align*}
@@ -248,10 +247,10 @@ möglichst hoch ist. Dazu zeigen wir zuerst, dass unter bestimmten Voraussetzung
 RK-Verfahren invariant gegenüber Autonomisierung ist, das bedeutet, dass ein RK-Verfahren genau dann ein
 Anfangswertproblem \eqref{eq:5} mit der Näherungslösung $u_i$ approximiert, wenn es das autonomisiserte
 Anfangswertproblem
-\begin{alignat*}{3}
-    z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\       \label{eq:7} \tag{\RNum{7}}
-    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \\
-\end{alignat*}
+\begin{alignat}{3}
+    z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\       \label{eq:7}
+    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \nonumber \\ \nonumber
+\end{alignat}
 mit der Näherungslösung $v_i := \left[ \begin{matrix}
                                     t_i\\
                                     u_i\\
@@ -264,9 +263,7 @@ approximiert.
         \sum_{j=1}^{m} b_j = 1 \qquad \text{und} \qquad c_l=\sum_{j=1}^{l-1} a_{lj}, \quad l = 1, \dots, m.
     \]
 \end{satz}
-$Beweis.$ Angenommen ein Runge-Kutta-Verfahren ist im $i$-ten Schritt invariant gegenüber Autonomisierung. Wir zeigen,
-dass die Aussage auch unter den gegebenen Voraussetzungen für $u_{i+1}$ und $v_{i+1}$ gilt.
-Für ein autonomes Anfangsproblem \eqref{eq:7} hat das Runge-Kutta-Verfahren die Form
+$Beweis.$ Für ein autonomes Anfangswertproblem \eqref{eq:7} hat das Runge-Kutta-Verfahren die Form
 \begin{alignat*}{2}
     \hat{k}_{l,i} &= \begin{bmatrix} \hat{k}^{z}_{l,i} \\ \hat{k}^{x}_{l,i} \end{bmatrix}
     = \begin{bmatrix} 1 \\
@@ -288,6 +285,79 @@ wenn $\hat{k}^{x}_{l,i} = k_{l,i}$, $l = 1, \dots, m$. Äquivalent dazu muss gel
     = f\left( t_i +hc_l, u_i + h \sum_{o=1}^{l-1} a_{lo} k_{o,i} \right), \quad l = 1, \dots, m,
 \]
 was genau dann erfüllt ist, wenn $c_l = \sum\limits_{o=1}^{l-1} a_{lo}, \quad l= 1, \dots, m.$ \qedwhite\\
+Im Folgenden werden wir uns auf autonome Anfangswertprobleme der Form
+\begin{align}
+    x^{\prime0} = f(x), \quad x(t_0) = x_0   \label{eq:9}
+\end{align}
+
+beschränken. Unser Ziel ist es Voraussetzungen an die Koeffizienten des RK-Verfahrens zu setzen, so dass wir eine
+größtmögliche Konsistenzordnung erhalten. Dazu betrachten wir den lokalen Diskretisierungsfehler
+\begin{align}
+    \tau (t_i,h) &= \frac{x(t_i + h) - x(t_i)}{h} - \phi(t_i, x(t_i), h, f) \nonumber \\
+    &= \frac{x(t_i + h) - x(t_i)}{h} - \sum_{l=1}^{m} b_l k_{l,i}.  \label{eq:kon_auto}
+\end{align}
+Wenden wir nun die Taylorentwicklung auf die exakte Lösung $x$ für das AWP \eqref{eq:8} an, erhalten wir
+\begin{align*}
+    x(t_{i+1}) &= x(t_i) + hx^{\prime}(t_i) + \frac{1}{2} h^2 x^{\prime \prime}(t_i) + \mathcal{O}(h^3) \\
+    &= x(t_i) + hf(x(t_i)) + \frac{1}{2} h^2 Df(x(t_i)) f(x(t_i)) + \mathcal{O}(h^3),\\
+\end{align*}
+wobei für die Ableitungen der Lösung $x$ die Kettenregel benutzt wird
+\begin{align*}
+    x^{\prime}(t_i) &= f(x(t_i))\\
+    x^{\prime \prime}(t_i) &= Df(x(t_i))x^{\prime}(t_i) = Df(x(t_i))f(x(t_i))\\
+\end{align*}
+und $Df(t_i)$ die Jacobi-Matrix von $f$ in $x(t_i)$ ist. Da wir uns nur auf autonome AWP´s \eqref{eq:9} beschränken, hat
+das explizite Runge-Kutta-Verfahren die Stufen
+\begin{align*}
+    k_{i,1} &= f(x(t_i)), \\
+    k_{i,2} &= f(x_(t_i) + ha_{21}k_{1,i}), \\
+    &\vdots\\
+    k_{i,m} &= f(x_(t_i) + ha_{m1}k_{1,i} + \dots + ha_{m,m-1}k_{m-1,i}).\\
+\end{align*}
+Nun wenden ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erhalten
+\begin{align*}
+    k_{i,1} &= f(x(t_i)), \\
+    k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))k_{1,i} + \mathcal{O}(h^2), \\
+    &\vdots\\
+    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))k_{1,i} + \dots + ha_{m,m-1}Df(x(t_i))k_{m-1,i} + \mathcal{O}(h^2) \\
+\end{align*}
+Im nächsten Schritt setzen wir die Stufen sukzessive ein und verwenden !!!TODO: checken ob das stimmt:!!!
+\[
+    h k_{j,i} = hf(x(t_i)) + h^2 a_{j-1,l}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2) = hf(x(t_i)) + \mathcal{O}(h^2)
+\]
+\begin{align*}
+    k_{i,1} &= f(x(t_i)), \\
+    k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2), \\
+    &\vdots\\
+    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))f(x(t_i)) + \dots + ha_{m,m-1}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2). \\
+\end{align*}
+Einsetzen in \eqref{eq:kon_auto} ergibt
+\begin{align*}
+    \tau(t_i,h) &= f(x(t_i)) + \frac{1}{2}hD(f(x(t_i)))f(x(t_i)) + \mathcal{O}(h^2) \\
+    &- \sum_{l=1}^{m} b_l \left( f(x(t_i)) + h \sum_{j=1}^{m-1} a_{lj} D(f(x(t_i)))f(x(t_i)) + \mathcal{O}(h^2)\right)\\
+    &= \left( 1 - \sum_{l=1}^{m} b_l  \right)f(x(t_i))
+    + h \left( \frac{1}{2} - \sum_{l=1}^{m} \sum_{j=1}^{l-1} b_l a_lj \right) Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2)
+\end{align*}
+Hieraus kann schnell abgelesen werden, dass für die gegenüber Autonomisierung invariante Runge-Kutta-Verfahren die
+Konsistenzordnung $p=1$ gilt. Außerdem bilden sich weitere Voraussetungen für höhere Konsistenzordnungen, wie
+beispielsweise für $p=2$:
+\[
+    \sum_{l=1}^{m} \sum_{j=1}^{l-1} b_l a_{lj} = \sum_{l=1}^{m} b_l c_l = \frac{1}{2}.
+\]
+Allgemein lassen sich für höhere Konsistenzordnungen weitere Voraussetzung durch Taylorentwicklungen mit höheren
+$h$-Potenzen finden.
+
+\subsubsection{Schrittweitensteuerung}
+Wir haben im letzten Abschnitt gesehen, unter welchen Bedingungen die Konvergenz der Runge-Kutta-Verfahren die exakte
+Lösung der gegebenen Differentialgleichung gewährleistet ist. Unser Ziel ist es nun die bisher konstant gewählte
+Schitteweite $h$ so zu wählen, dass der Rechenaufand zur Approximation der Lösung so gering wie möglich gehalten wird.
+Dazu gibt es im Grunde zwei Fälle:
+Ist der lokale Disktretisierungsfehler zu groß, so sollten wir die Schrittweite verkleinern, um den Fehler zu
+verringern. Ein Beispiel hierfür wäre eine oszillierende Lösung, bei der eine zu große Schrittweite zu hohem lokalen
+Fehler führen würde, da das Einschrittverfahren Wendungspunkte überspringen würde. Ist der lokale Diskretisierungsfehler
+aber sehr  klein, dann können wir die Schrittweite vergrößern, um den Rechenaufwand zu minimieren. Dies tritt
+beispielsweise bei nahezu linearen Lösungsfunktionen auf. Also müssen wir uns zuerst überlegen, wie wir den lokalen
+Diskretisierungsfehler sinnvoll mit minimalen Rechenaufwand abschätzen, ohne die tatsächliche Lösung der DGL zu kennen.
 
 \subsection{Mehrschrittverfahren}
 \subsection{Fehlerdisskusion}
