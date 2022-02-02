@@ -38,7 +38,7 @@ Quadraturformel ein Einschrittverfahren bildet.
     mit $\phi:D_h \times \mathbb{R}^n \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n)
     \rightarrow \mathbb{R}^n$.
 \end{definition}
-\subsubsection{Fehlerdiskussion}
+\subsubsection{Konsistenz und Konvergenz}
 Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erläutert.
 \begin{definition}[lokaler Diskretisierungsfehler]
     Sei das Anfangswertproblem \eqref{eq:5} mit \\ Lipschitz-stetiger
@@ -63,7 +63,7 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
     für alle $\hat{t} \in (t_0, t_0+a]$
     \[
         \lim_{h \rightarrow 0 } e(\hat{t}, h)=0 \quad (e(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
-    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung p).
+    \] dann nennt man das Einschrittverfahren konvergent (von der Ordnung p).
 \end{definition}
 Es ist uns möglich, eine obere Schranke für den globalen Fehler zu finden. Dazu müssen wir zuerst die diskrete Version
 der Gronwall Ungleichung \ref{Satz-gronwall} beweisen.
@@ -131,8 +131,9 @@ Gronwall Ungleichung anwenden und erhalten
 für alle $j=0, \dots, i-1$, also insbesondere
 \[
     \left\lVert e(t_{i},h) \right\rVert
-    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}. \qedwhite
+    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}
 \]
+für $j=i-1$.\qedwhite\\
 Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Im allgemeinen ist
 ein Verfahren genau dann konvergent, wenn es konsistent und stabil ist, wie wir später beweisen werden.
 
@@ -230,6 +231,17 @@ In diesem Fall haben wir die Koeffizienten
                             \end{matrix} \right).
 \]
 Im Allgemeinen gilt für explizite RK-Verfahren, dass $a_{lo} = 0$ für $l \leq o$.\\
+\begin{bem}
+    Die Koeffizienten charakterisieren ein Runge-Kutta-Verfahren, weshalb sie für üblich in sogenannten
+    $Butcher$- $Tabellen$ zusammengefasst werden:
+    \begin{center}
+        \begin{tabular}{c | c}
+            c & A \\
+            \hline
+            & $b^{\intercal}$
+        \end{tabular}
+    \end{center}
+\end{bem}
 Da RK-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Verfahren mit der Form
 \begin{align*}
     k_{1,i} &= f(t_i+c_1h, u_i + h(a_{11}k_{1,i} + \dots + a_{1m} k_{m,i})) \\
@@ -239,7 +251,7 @@ Da RK-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Ver
 \end{align*}
 Hier kann $A$ im Gegensatz zu expliziten RK-Verfahren eine volle Matrix sein.
 
-\subsubsection{Konsistenzdiskussion}
+\subsubsection{Konsistenz}
 Es wurde bereits gezeigt, dass die Konvergenz eines Einschrittverfahrens aus der Konsistenz folgt. Deshalb genügt es
 sich die Konsistenz(ordnung) der Runge-Kutta-Verfahren zu betrachten. Dabei spielt die Wahl der Koeffizienten eine
 große Rolle. Ziel ist es, die Koeffizienten so zu wählen, dass die Konsistenzordnung unseres Runge-Kutta-Verfahrens
@@ -289,14 +301,13 @@ Im Folgenden werden wir uns auf autonome Anfangswertprobleme der Form
 \begin{align}
     x^{\prime0} = f(x), \quad x(t_0) = x_0   \label{eq:9}
 \end{align}
-
 beschränken. Unser Ziel ist es Voraussetzungen an die Koeffizienten des RK-Verfahrens zu setzen, so dass wir eine
 größtmögliche Konsistenzordnung erhalten. Dazu betrachten wir den lokalen Diskretisierungsfehler
 \begin{align}
     \tau (t_i,h) &= \frac{x(t_i + h) - x(t_i)}{h} - \phi(t_i, x(t_i), h, f) \nonumber \\
     &= \frac{x(t_i + h) - x(t_i)}{h} - \sum_{l=1}^{m} b_l k_{l,i}.  \label{eq:kon_auto}
 \end{align}
-Wenden wir nun die Taylorentwicklung auf die exakte Lösung $x$ für das AWP \eqref{eq:8} an, erhalten wir
+Wenden wir nun die Taylorentwicklung auf die exakte Lösung $x$ für das AWP \eqref{eq:9} an, erhalten wir
 \begin{align*}
     x(t_{i+1}) &= x(t_i) + hx^{\prime}(t_i) + \frac{1}{2} h^2 x^{\prime \prime}(t_i) + \mathcal{O}(h^3) \\
     &= x(t_i) + hf(x(t_i)) + \frac{1}{2} h^2 Df(x(t_i)) f(x(t_i)) + \mathcal{O}(h^3),\\
@@ -346,20 +357,103 @@ beispielsweise für $p=2$:
 \]
 Allgemein lassen sich für höhere Konsistenzordnungen weitere Voraussetzung durch Taylorentwicklungen mit höheren
 $h$-Potenzen finden.
+\begin{satz}[Butcherschranken]
+    Für die maximale erreichbare Ordnung $p$ eines expliziten Runge-Kutta-Verfahrens mit $m$ Stufen gilt
+    \[
+        p \leq s.
+    \]
+    Außerdem kann man folgende Abschätzungen finden\\
+    \begin{center}
+        \begin{tabular}{ c | c | c }
+            Stufe $m$ & 1 \quad 2 \quad 3 \quad 4 \quad 5 \quad 6 \quad 7 \quad 8 \quad 9 & \quad $\geq 9$ \\
+            \hline
+            Ordnung p & 1 \quad 2 \quad 3 \quad 4 \quad 4 \quad 5 \quad 6 \quad 6 \quad 7 & \quad  $\leq m-2$
+        \end{tabular}
+    \end{center}
+\end{satz}
+TODO: Beweis
 
 \subsubsection{Schrittweitensteuerung}
 Wir haben im letzten Abschnitt gesehen, unter welchen Bedingungen die Konvergenz der Runge-Kutta-Verfahren die exakte
-Lösung der gegebenen Differentialgleichung gewährleistet ist. Unser Ziel ist es nun die bisher konstant gewählte
-Schitteweite $h$ so zu wählen, dass der Rechenaufand zur Approximation der Lösung so gering wie möglich gehalten wird.
-Dazu gibt es im Grunde zwei Fälle:
-Ist der lokale Disktretisierungsfehler zu groß, so sollten wir die Schrittweite verkleinern, um den Fehler zu
-verringern. Ein Beispiel hierfür wäre eine oszillierende Lösung, bei der eine zu große Schrittweite zu hohem lokalen
-Fehler führen würde, da das Einschrittverfahren Wendungspunkte überspringen würde. Ist der lokale Diskretisierungsfehler
-aber sehr  klein, dann können wir die Schrittweite vergrößern, um den Rechenaufwand zu minimieren. Dies tritt
-beispielsweise bei nahezu linearen Lösungsfunktionen auf. Also müssen wir uns zuerst überlegen, wie wir den lokalen
-Diskretisierungsfehler sinnvoll mit minimalen Rechenaufwand abschätzen, ohne die tatsächliche Lösung der DGL zu kennen.
+Lösung der gegebenen Differentialgleichung gewährleistet ist. Unser Ziel ist es nun die bisher konstante Schritteweite
+$h$ so zu wählen, dass der Rechenaufand zur Approximation der Lösung so gering wie möglich gehalten wird.
+Dazu gibt es im Grunde zwei Fälle:\\
+Ist der lokale Disktretisierungsfehler größer als eine gegebene Toleranz, so sollten wir die Schrittweite verkleinern,
+um den Fehler zu verringern. Ein Beispiel hierfür wäre eine oszillierende Lösung, bei der eine zu große Schrittweite
+zu hohem lokalen Fehler führen würde, da das Einschrittverfahren Wendungspunkte überspringen würde. \\
+Ist der lokale Diskretisierungsfehler aber klein in Relation zur Toleranz, dann können wir die Schrittweite
+vergrößern, um den Rechenaufwand zu minimieren. Dies tritt beispielsweise bei nahezu linearen Lösungsfunktionen auf. \\
+Also müssen wir uns zuerst überlegen, wie wir den lokalen Diskretisierungsfehler sinnvoll mit minimalen Rechenaufwand
+abschätzen, ohne die tatsächliche Lösung der DGL zu kennen. Dazu verwenden wir sogenannte
+$eingebettete$ $Runge$-$Kutta$-$Verfahren$, welche aus zwei Einschrittverfahren
+\[
+    u_{i+1}^{(1)} = u_i + h_i \Phi_{p}(t_i,u_i,h_i,f)
+\]
+und
+\[
+    u_{i+1}^{(2)} = u_i + h_i \Phi_{p+1}(t_i,u_i,h_i,f)
+\]
+mit den Konsistenzordnungen $p$ und $p+1$ bestehen. Die Butcherschranken implizieren, dass die Anzahl
+der Stufen schneller steigt, als die Konsistenzordnung, weshalb es nur bis zu einem gewissen Grad sinnvoll ist, ein
+Runge-Kutta-Verfahren höherer Ordnung für $u^{(2)}$ zu verwenden. Deshalb beschränken wir uns deshalb auf Verfahren
+mit K onsistenzordnung$p+1$.
+Das Verfahren nennt man $eingebettet$, wenn die für $u^{(1)}$ berechneten Stufen bei der Berechnung von $u^{(2)}$ wieder
+verwendet werden. Dabei werden Funktionsauswertungen gespart, was den Rechenaufwand und die Laufzeit reduziert. Die
+dazugehörige Butcher-Tabelle wird dementsprechend zu einer $kombinierten$ Butcher-Tabelle erweitert
+\begin{center}
+    \begin{tabular}{c | c}
+        b & A \\
+        \hline
+        & $(b^{(1)})^{\intercal}$ \\
+        \hline
+        & $(b^{(2)})^{\intercal}$
+    \end{tabular}
+\end{center}
+Dabei sind $b^{(1)}$ Koeffizienten von $u^{(1)}$ und $b^{(2)}$ Koeffizienten von $u^{(2)}$.\\
+Wir definieren
+\begin{align*}
+    \Delta_{p} &:= x(t_i + h_i) - u^{(1)}_{i+1}
+    = x(t_i + h_i) - u_i - h_i \Phi_{p}(t_i,u_i,h_i,f)= h_i\tau^{(1)}(t_i,h_i) = \mathcal{O}(h_i^{p+1})\\
+    \Delta_{p+1} &:= x(t_i + h_i) - u^{(2)}_{i+1}
+    = x(t_i + h_i) - u_i - h_i \Phi_{p+1}(t_i,u_i,h_i,f)= h_i\tau^{(2)}(t_i,h_i)= \mathcal{O}(h_i^{p+2})
+\end{align*}
+Daraus erhalten wir eine Abschätzung des lokalen Diskretisierungsfehlers mit
+\begin{align*}
+    h_i\tau_{p} &= \Delta_{p} = \Delta_{p+1} + h_i(\Phi_{p+1}(t_i,u_i,h_i,f) - \Phi_{p}(t_i,u_i,h_i,f)) \\
+    &\approx h_i(\Phi_{p+1}(t_i,u_i,h_i,f) - \Phi_{p}(t_i,u_i,h_i,f)),
+\end{align*}
+da $\Delta_{p+1} \approx 0$ für kleine $h_i$ gilt. Also erhalten wird mit der alten Schrittweite $h_{\text{alt}}$
+\[
+    \Delta_{p, \text{alt}} \approx h_i(\Phi_{p+1}(t_i,u_i,h_i,f) - \Phi_{p}(t_i,u_i,h_i,f))
+    = \left\lVert u^{(2)} - u^{(1)} \right\rVert_2.
+\]
+
+Da wir nun den lokalen Fehler abgeschätzt haben, können wir uns darum kümmern, die Schrittweite anzupassen. Sei die
+Toleranz mit $\epsilon$ gegeben. Bei zu großem Fehler, also $\Delta_{p, \text{alt}} > \epsilon$, wählen wir eine neue
+Schrittweite $h_{\text{neu}}$ und wiederholen den aktuellen Schritt. Unser Ziel dabei ist es, dass der neue Fehler
+$\Delta_{p, \text{neu}}$ etwas kleiner ist als $\epsilon$, was mit der Approximation
+$\Delta_{p, \text{neu}} \approx \rho \epsilon$ mit $0 < \rho < 1$ gesichert ist. Da
+$\Delta_p = \mathcal{O}(h_i^{p+1}) \approx ch_i^{p+1}$ für jede Schrittweite gilt, kann man folgern
+\begin{align*}
+    \frac{\rho \epsilon}{h_{\text{neu}}^{p+1}}
+    &\approx \frac{\Delta_{p, \text{neu}}}{h_{\text{neu}}^{p+1}}
+    \approx c
+    \approx \frac{\Delta_{p, \text{alt}}}{h_{\text{alt}}^{p+1}}\\
+    \Leftrightarrow h_{\text{neu}} &\approx h_{\text{alt}} \sqrt[p+1]{\frac{\rho \epsilon}{\Delta_{p, \text{alt}}}}
+\end{align*}
+Im anderen Fall ist der Fehler zu klein $\Delta_{p, \text{alt}} \approx 0$. Dann können wir die Schrittweite mit Hilfe
+einer Hochschaltungsbeschränkung anpassen. Dabei setzen wir $h_{\text{neu}} = \min(q h_{\text{alt}}, h_{\text{max}})$,
+wobei $h_{\text{max}}$ die maximale Schrittweite und $q>1$ der Hochschaltfaktor ist. Wird der Schritt akzeptiert, so
+setzen wir $u_{i+1} = u^{(2)}$ und führen die Approximation mit der neuen Schrittweite fort.
+
+\subsection{Extrapolation}
+TODO
 
 \subsection{Mehrschrittverfahren}
-\subsection{Fehlerdisskusion}
+
 \subsubsection{Konsistenz und Konvergenz}
+
 \subsubsection{Stabilität}
+
+\subsection{Verfahren für steife Differentialgleichungen}
+

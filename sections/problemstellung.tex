@@ -6,7 +6,7 @@ das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 \begin{definition}
     Ein System gewöhnlicher Differentialgleichungen $m-ter$ Ordnung hat die Form
     \begin{align}
-        x^{(m)}(t) = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1}
+        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1}
     \end{align}
     mit der gegebenen Funktion
     $
@@ -56,7 +56,7 @@ Für ein AWP \eqref{eq:2} gilt zusätzlich:
     \[
         x^{m} = f(x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)})
     \]
-    auf ganz $D$ gilt.
+    auf ganz $D$.
 \end{definition}
 In ähnlichem Stil zu der Ordnungsreduktion können wir auch eine nichtautonome Differentialgleichung zu einem autonomen
 System gewöhnlicher Differentialgleichungen umwandeln. Dazu führen wir eine neue Variable $z$ ein, für die gilt
@@ -72,6 +72,33 @@ Die Lösung hat also die Form $\left[ \begin{matrix}
                                          t\\
                                          x(t)\\
                                     \end{matrix} \right].$
+
+\subsubsection{lineare gewöhnliche Differentialgleichungen}
+Wir definieren in diesem Abschnitt noch eine Sonderform einer gewöhnlichen Differentialgleichung.
+\begin{definition}
+    Ein System gewöhnlicher Differentialgleichungen $m$-ter Ordnung mit der Form
+    \begin{align} \label{lin-ode}
+        x^{m}(t) = \sum_{i=0}^{m-1} a_k(t) x^{j}(t) + g(t).
+    \end{align}
+    heißt $lineares$ System gewöhnlicher Differentialgleichungen.
+    Dabei sind $a_k : D \rightarrow \mathbb{R}^{n \times n}$ und $g : D \rightarrow \mathbb{R}^n$ stetige Funktionen.\\
+    Falls $g \equiv 0$, so nennt man \eqref{lin-ode} homogen, sonst inhomogen.
+\end{definition}
+Die Lösung einer linearen Differentialgleichung erster Ordnung erfüllt also die Gleichung
+\[
+    x^{\prime}(t) = A(t)x(t) + g(t),
+\]
+worin $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind.
+\begin{definition}
+    Eine lineare Differentialgleicuhng \eqref{lin-ode} mit $A \in \mathbb{R}^{n \times n}$ und
+    $b(t) \in \mathbb{R}^n$ heißt $steif$, wenn
+    \begin{align}
+        1.& \quad Re(\lambda_j(A)) < 0, \qquad \text{ für alle Eigenwerte } \lambda_j(A) \text{ von A, }\\
+        2.& \quad \min\limits_{1 \leq j \leq n} Re(\lambda_j(A)) \ll \max\limits_{1 \leq j \leq n} Re(\lambda_j(A)).
+    \end{align}
+\end{definition}
+Wir werden später ein Verfahren betrachten, welches sich speziell dafür eignet, eine steife gewöhnliche
+Differentialgleichung zu lösen.
 
 \subsection{Existenz und Eindeutigkeit}
 In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung
