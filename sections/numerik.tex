@@ -1,5 +1,12 @@
 \section{Numerischer Lösungsansatz}
 Der Großteil dieses Abschnitts beruht im Wesentlichen auf \cite[63-79]{stykelSkriptZurVorlesung2020}.
+Wir werden uns im Folgenden hauptsächlich das Anfangswertproblem
+\begin{align}
+    \label{first-order-num}
+    x^{\prime} &= f(t,x) \nonumber \\
+    x(t_0) &= x_0
+\end{align}
+betrachten, wobei $f$ stetig ist.\\
 Unser Ziel ist es, eine effektive Methode zu verwenden, um eine Lösung eines Anfangswertproblem finden zu können.
 Da es nicht immer möglich ist, eine ODE analytisch zu lösen, gibt es sogenannte Ein- und Mehrschrittverfahren, welche
 eine Lösung der ODE approximiert.
@@ -21,7 +28,7 @@ Quadraturformel ein Einschrittverfahren bildet.
         t_0 < t_1 < \dots < t_N = t_0 + a
     \]
     mit der Schrittweite $h=\frac{a}{N}$, also $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Intervallzerlegung.
-    Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{eq:5} hat die Form
+    Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{first-order-num} hat die Form
     \begin{align}
         u_0 &= x_0 \nonumber \\
         u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6}
@@ -41,7 +48,7 @@ Quadraturformel ein Einschrittverfahren bildet.
 \subsubsection{Konsistenz und Konvergenz}
 Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erläutert.
 \begin{definition}[lokaler Diskretisierungsfehler]
-    Sei das Anfangswertproblem \eqref{eq:5} mit \\ Lipschitz-stetiger
+    Sei das Anfangswertproblem \eqref{first-order-num} mit \\ Lipschitz-stetiger
     rechten Seite und ein explizites Einschrittverfahren \eqref{eq:6} gegeben. Für $\hat{t}\in [t_0,t_0+a]$ und
     $0 < h < t_0 + a - \hat{t}$ ist der lokale Diskretisierungsfehler definiert als
     \[
@@ -52,14 +59,15 @@ Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erlä
     für alle $\hat{t} \in (t_0, t_0+a]$
     \[
         \lim_{h \rightarrow 0 } \tau(\hat{t}, h)=0 \quad (\tau(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
-    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung m).
+    \] dann nennt man das Einschrittverfahren konsistent (von der Ordnung p).
 \end{definition}
 \begin{definition}[globaler Diskretisierungsfehler]
     Mit $\hat{t} = t_i = t_0+ih, i=1,\dots, N$ ist der globale Diskretisierungsfehler definiert als
     \[
-        e(\hat{t}, h) := x(\hat{t}) - u_i.
+        e(\hat{t}, h) := x(\hat{t}) - u_i,
     \]
-    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung m) in der x-Variable gilt, dass
+    wobei $u_i$ die vom Einschrittverfahren approximierte Lösung im $i$-ten Schritt ist.\\
+    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung p) in der x-Variable gilt, dass
     für alle $\hat{t} \in (t_0, t_0+a]$
     \[
         \lim_{h \rightarrow 0 } e(\hat{t}, h)=0 \quad (e(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
@@ -79,22 +87,22 @@ der Gronwall Ungleichung \ref{Satz-gronwall} beweisen.
 \end{satz}
 $Beweis.$ Da $i=1,\dots,N$ bietet sich ein Induktionsbeweis nach i an:
 \begin{alignat*}{2}
-    (i=0):& \qquad \gamma_1 &&\leq
-    \underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
-    \underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
-    (\text{IV}):& \qquad
-    \gamma_{i} &&\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
-    (i \rightarrow i+1):& \quad
-    \gamma_{i+1} &&\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
-    & &&\underset{\text{IV}}{\leq} (1 + \alpha_i)
-    \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
-    &  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
-    + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
-    &  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
+(i=0):& \qquad \gamma_1 &&\leq
+\underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
+\underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
+(\text{IV}):& \qquad
+\gamma_{i} &&\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
+(i \rightarrow i+1):& \quad
+\gamma_{i+1} &&\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
+& &&\underset{\text{IV}}{\leq} (1 + \alpha_i)
+\left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
+&  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
++ \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
+&  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
 \end{alignat*}
 \begin{satz}
-    Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{eq:5} gegeben. Ist  die Inkrementfunktion
-    $\phi$ in der $x-Variable$ Lipschitz-stetig, also
+    Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{first-order-num} gegeben. Ist  die
+    Inkrementfunktion $\phi$ in der $x-Variable$ Lipschitz-stetig, also
     \[
         \left\lVert \phi(t, x_1, h, f) - \phi(t, x_2, h, f) \right\rVert \leq L \left\lVert x_1 - x_2 \right\rVert
     \]
@@ -211,24 +219,24 @@ In diesem Fall haben wir die Koeffizienten
 \[
     b := \left( b_1, \dots , b_m \right)^{\intercal}
     =\left( \begin{matrix}
-                   \frac{1}{6}\\
-                   \frac{1}{3}\\
-                   \frac{1}{3}\\
-                   \frac{1}{6}\\
-               \end{matrix}\right), \quad
+                \frac{1}{6}\\
+                \frac{1}{3}\\
+                \frac{1}{3}\\
+                \frac{1}{6}\\
+    \end{matrix}\right), \quad
     c := \left( c_1, \dots, c_m \right)^{\intercal}
     = \left( \begin{matrix}
-                   0\\
-                   \frac{1}{2}\\
-                   \frac{1}{2}\\
-                   1\\
-                \end{matrix} \right), \quad
+                 0\\
+                 \frac{1}{2}\\
+                 \frac{1}{2}\\
+                 1\\
+    \end{matrix} \right), \quad
     A:=(a)_{lo} = \left( \begin{matrix}
                              0 & 0 & 0 & 0\\
                              \frac{1}{2} & 0 & 0 & 0 \\
                              0 & \frac{1}{2} & 0 & 0 \\
                              0 & 0 & 1 & 0\\
-                            \end{matrix} \right).
+    \end{matrix} \right).
 \]
 Im Allgemeinen gilt für explizite RK-Verfahren, dass $a_{lo} = 0$ für $l \leq o$.\\
 \begin{bem}
@@ -257,16 +265,16 @@ sich die Konsistenz(ordnung) der Runge-Kutta-Verfahren zu betrachten. Dabei spie
 große Rolle. Ziel ist es, die Koeffizienten so zu wählen, dass die Konsistenzordnung unseres Runge-Kutta-Verfahrens
 möglichst hoch ist. Dazu zeigen wir zuerst, dass unter bestimmten Voraussetzungen der Koeffizienen ein explizites
 RK-Verfahren invariant gegenüber Autonomisierung ist, das bedeutet, dass ein RK-Verfahren genau dann ein
-Anfangswertproblem \eqref{eq:5} mit der Näherungslösung $u_i$ approximiert, wenn es das autonomisiserte
+Anfangswertproblem \eqref{first-order-num} mit der Näherungslösung $u_i$ approximiert, wenn es das autonomisiserte
 Anfangswertproblem
 \begin{alignat}{3}
     z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\       \label{eq:7}
     x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \nonumber \\ \nonumber
 \end{alignat}
 mit der Näherungslösung $v_i := \left[ \begin{matrix}
-                                    t_i\\
-                                    u_i\\
-                                \end{matrix} \right]$
+                                           t_i\\
+                                           u_i\\
+\end{matrix} \right]$
 approximiert.
 \begin{satz}
     Gegeben sei ein explizites Runge-Kutta-Verfahren. Dies ist genau dann invariant gegenüber Autonomisierung, wenn
@@ -279,12 +287,12 @@ $Beweis.$ Für ein autonomes Anfangswertproblem \eqref{eq:7} hat das Runge-Kutta
 \begin{alignat*}{2}
     \hat{k}_{l,i} &= \begin{bmatrix} \hat{k}^{z}_{l,i} \\ \hat{k}^{x}_{l,i} \end{bmatrix}
     = \begin{bmatrix} 1 \\
-          f\left( t_i + h \sum\limits_{o=1}^{l-1} a_{lo} \cdot \hat{k}^{z}_{o,i},
+    f\left( t_i + h \sum\limits_{o=1}^{l-1} a_{lo} \cdot \hat{k}^{z}_{o,i},
     u_i + h \sum\limits_{o=1}^{l-1} a_{lo} \hat{k}^{x}_{o,i} \right)
     \end{bmatrix}  \quad l=1,\dots,m, \\
     v_{i+1} &= v_i + h \sum\limits_{l=1}^{m} b_l \hat{k}_{l,i} = \begin{bmatrix}
-                                                              t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1\\
-                                                              u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i}
+                                                                     t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1\\
+                                                                     u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i}
     \end{bmatrix}
     \overset{!}{=}\begin{bmatrix}t_{i+1}\\u_{i+1}\\\end{bmatrix}.
 \end{alignat*}
@@ -360,7 +368,7 @@ $h$-Potenzen finden.
 \begin{satz}[Butcherschranken]
     Für die maximale erreichbare Ordnung $p$ eines expliziten Runge-Kutta-Verfahrens mit $m$ Stufen gilt
     \[
-        p \leq s.
+        p \leq m.
     \]
     Außerdem kann man folgende Abschätzungen finden\\
     \begin{center}
@@ -450,10 +458,173 @@ setzen wir $u_{i+1} = u^{(2)}$ und führen die Approximation mit der neuen Schri
 TODO
 
 \subsection{Mehrschrittverfahren}
+Durch die Butcherschranken wissen, dass ab einer Konsistenzordnung $p$ eines Runge-Kutta-Verfahren immer mehr Stufen
+ausgerechnet werden müssen, was wiederum eine erhöhte Anzahl an Funktionsauswertungen bedeutet. Dies wollen wir wenn
+möglich verhindern. Deshalb führen wir sogenannte $Mehrschrittverfahren$ ein, welche im Gegensatz zu Einschrittverfahren
+die Information aus bereits berechneten Näherungen nutzen. Mehrschrittverfahren haben also den Vorteil, dass
+(zumindest explizite Verfahren) pro Schritt nur eine Funktionsauswertung benötigen.
+\begin{definition}
+    Sei $D = \left[ t_0, t_0 +a \right]$ ein Zeitintervall und die Zerlegung von $D$
+    \[
+        t_0 < t_1 < \dots >< t_N = t_0 + a
+    \]
+    mit der Schrittweite $h = \frac{a}{N}$, also $D_h \{ t_i = t_0 + ih \text{ für } i = 0, \dots, N\}$ eine
+    Intervallzerlegung. Ein $k$-$Schrittverfahren$ für das Anfangswertproblem \eqref{first-order-num} hat die Form
+    \begin{align}
+        \label{k-step-method}
+        &\text{Startwerte } u_0, \dots, u_{k-1}, \nonumber \\
+        & \sum_{j=0}^{k} \alpha_j u_{i+j} = h \Phi(t_i, u_i, \dots, u_{i+k},h,f), \quad i=0,\dots,N-k,
+    \end{align}
+    wobei $\alpha_k \neq 0$. Falls $\Phi$ unabhängig von $u_{i+k}$ kann man \eqref{k-step-method} nach $u_{i+k}$
+    auflösen und hat ein explizites $k$-Schrittverfahren vorliegen. Im impliziten Fall muss man ein (nichtlineares)
+    Gleichungssystem lösen, um $u_{i+k}$ bestimmen zu können.\\
+    Die Startwerte $u_0, \dots, u_{k-1}$ können durch einmalige Verwendung von Einschrittverfahren ermittelt werden.
+\end{definition}
+\begin{definition}
+    Das $k$-Schrittverfahren \eqref{k-step-method} heißt $linear$, falls
+    \begin{align}
+        \label{k-step-linear}
+        \sum_{j=0}^{k} \alpha_j u_{i+j} = h \sum_{j=0}^{k} \beta_j f(t_{i+j}, u_{i+j}), \quad i = 0, \dots, N-k,
+    \end{align}
+    gilt. Für $\beta_k = 0$ ist das Verfahren $explizit$, sonst $implizit$.
+    Ersetzt man $\beta_j$ mit $\beta_j^{(r,l)}$, so erhält man ein \textit{lineares k-Schrittverfahren vom Typ $(r,l)$}
+    \begin{align}
+        \label{k-step-rl}
+        u_{i+k}-u_{i+r-l} = h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}).
+    \end{align}
+
+\end{definition}
 
 \subsubsection{Konsistenz und Konvergenz}
+Ähnlich wie bei den Einschrittverfahren definieren wir nun zuerst den lokalen Diskretisierungsfehler der
+Mehrschrittverfahren.
+\begin{definition}
+    Sei ein Mehrschrittverfahren \eqref{k-step-method} und das dazugehörige Anfangswertproblem \eqref{first-order-num}
+    gegeben. Dann ist der lokale Diskretisierungsfehler gegeben durch
+    \[
+        \tau(t_i,h) = \frac{1}{h} \sum_{j=0}^{k} \alpha_j x(t_i + jh) -
+        \Phi (t_i,x(t_i), x(t_i+h), \dots, x(t_i+kh),h,f).
+    \]
+    \eqref{k-step-method} heißt \textit{kosistent von der Ordnung $p\geq 1$}, wenn für alle f mit stetiger und
+    beschränkter Ableitung in der $x$-Variable bis zur Ordnung $p$ gilt, dass $\tau(t_i,h) = \mathcal{O}(h^p)$.
+\end{definition}
+Wir können unter bestimmten Bedingungen die Konsistenzordnungen der linearen Mehrschrittverfahren vom Typ $(r,l)$
+\eqref{k-step-rl} explizit angeben.
+\begin{satz}
+    Unter den Bedingungen, dass f $(r+1)$-mal stetig differenzierbar ist, hat das lineare Mehrschrittverfahren vom Typ
+    $(r,l)$ \eqref{k-step-rl} die Konsistenzordnung $p=r+1$.
+\end{satz}
+$Beweis.$ \cite[93,94]{stykelSkriptZurVorlesung2020}\\
+Um die Konsistenz allgemeiner linearer \textit{k-Schrittverfahren} angeben zu können, benötigen wir noch die
+Definitionen für das erste und zweite charakteristische Polynom.
+\begin{definition}
+    Für ein lineares \textit{k-Schrittverfahren} \eqref{k-step-linear} sind die Polynome
+    \[
+        \rho(z) := \sum_{j=0}^{k} \alpha_j z^j \qquad \text{und} \qquad \sigma(z) := \sum_{j=0}^{k} \beta_j z^j
+    \]
+    definiert. $\rho(z)$ nennt man das \textit{erste charakteristische Polynom} und $\sigma(z)$ das
+    \textit{zweite charakteristische Polynom} des gegebenen Verfahrens.
+\end{definition}
+Damit können wir nun folgende Aussage für die Konsistenzordnung der linearen Mehrschrittverfahen beweisen.
+\begin{satz}
+    Für das lineare k-Schrittverfahren \eqref{k-step-linear} sind folgende Aussagen äquivalent:
+    \begin{align*}
+        &\text{1. } \eqref{k-step-linear} \text{ ist konsistent von der Ordnung p.}\\
+        &\text{2. Für das Anfangswertproblem }
+            x^{\prime} = x, \text{ }
+            x(0) = 1
+        \text{ gilt } \tau(t_i,h) = \mathcal{O}(h^p).\\
+        &\text{3. } \frac{\rho(z)}{ln(z)} - \sigma(z) \text{ hat eine $p$-fache Nullstelle in } z= 1, \text{ d.h.}
+            \frac{\rho(z)}{ln(z)} - \sigma(z) = \mathcal{O}((z-1)^p) \quad \text{ für } z \rightarrow 0.\\
+        &\text{4. } \sum_{j=0}^{k} \alpha_j = 0 \quad \text{ zusammen mit } \quad
+        \sum_{j=0}^{k} j^m \alpha_j = \sum_{j=0}^{k} mj^{m-1} \beta_j,  \quad \text{für } m=0,1 \dots, p.
+    \end{align*}\\
+    Insbesondere ist für stetig differenzierbares $f$ das lineare k-Schrittverfahren \eqref{k-step-linear} konsistent,
+    falls
+    \[
+        \rho(1) = 0 \qquad \text{ und } \qquad \rho^{\prime}(1)=\sigma(1).
+    \]
+\end{satz}
+$Beweis.$ Wir beginnen mit $1) \Rightarrow 2)$: Wegen $1)$ ist das Verfahren schon für allgemeine gewöhnliche
+Differentialgleichungen erster Ordnung konsistent also auch für den speziellen Fall $\Rightarrow 2)$.\\
+$2) \Rightarrow 3)$: Wir können die Lösung des Anfangsproblems in $2)$ explizit berechnen: $x(t)=e^{t}$. Jetzt können
+wir den lokalen Diskretisierungsfehler angeben
+\[
+    \tau(t_i,h)= \frac{1}{h} \sum_{j=0}^{k} \alpha_j e^{t_i+jh} - \sum_{j=0}^{k} \beta_j e^{t_i+jh}
+    = e^{t_i} \left( \frac{1}{h} \rho(e^h) - \sigma(e^{h}) \right).
+\]
+Es gilt $\tau(t_i,h)= \mathcal{O}(h^p) \Leftrightarrow \frac{1}{h} \rho(e^h) - \sigma(e^h) = \mathcal{O}(h^p)$.
+Betrachte die Taylor-Entwicklung der Funktion $\ln z$ mit der Entwicklungsstelle $z_0 = 1$. Dann ergibt sich
+\[
+    \ln z = \ln (1 + (z-1)) = \ln 1 + \mathcal{O}(z-1) = \mathcal{O}(z-1).
+\]
+Setzen wir nun $z=e^h \Leftrightarrow h=\ln z$ und es folgt
+\[
+    \frac{\rho(z)}{ln(z)} - \sigma(z) = \mathcal{O}(h^p) = \mathcal{O}((\ln z)^p) = \mathcal{O}((z-1)^p).
+\]
+$3) \Rightarrow 4)$: Mit der umgekehrten Substitution des vorherigen Schritts hat folgt aus
+\[
+    \frac{1}{h} \rho(e^h) - \sigma(e^h) = \mathcal{O}(h^p)
+\]
+mit $\cdot h$ auf beiden Seiten
+\[
+    \mathcal{O}(h^{p+1}) = \rho(e^h) - h \sigma(e^h) = \sum_{j=0}^{k} \alpha_j e^{jk} - h \sum_{j=0}^{k} \beta_j e^{jk}.
+\]
+Für die Taylor-Entwicklung von der Funktion $e^{jk}$ um $0$ bis zur p-ten Ordnung gilt
+\[
+    e^{jk} = \sum_{m=0}^{p} \frac{j^m}{m!}h^m + \mathcal{O}(h^{p+1})
+    = 1 + \sum_{m=1}^{p} \frac{j^m}{m!}h^m + \mathcal{O}(h^{p+1}).
+\]
+Einsetzen in die obige Gleichung ergibt
+\begin{align*}
+    \mathcal{O}(h^{p+1})
+    &= \sum_{j=0}^{k} \alpha_j  \left( 1 + \sum_{m=1}^{p} \frac{j^m}{m!}h^m \right)
+    - h \sum_{j=0}^{k} \beta_j  \left( 1 + \sum_{m=1}^{p} \frac{j^m}{m!}h^m \right) \\
+    &= \sum_{j=0}^{k}\alpha_j + \sum_{m=0}^{p} h^{m} \sum_{j=0}^{k}
+    \left( \frac{j^m}{m!} \alpha_j - \frac{j^{m-1}}{(m-1)!}\beta_j \right) + \mathcal{O}(h^{p+1}).
+\end{align*}
+Wir können die Summationsreihenfolge tauschen, da beide Summen endlich sind. Damit die Gleichung erfüllt ist, muss
+gelten:
+\[
+    \sum_{j=0}^{k} = \alpha_j = 0, \qquad
+    \sum_{j=0}^{k} \left( \frac{j^m}{m!}\alpha_j - \frac{j^{m-1}}{(m-1)!}\beta_j \right) = 0 \quad
+    \text{ für } m = 1, \dots, p.
+\]
+$\Rightarrow 4)$.\\
+$4) \Rightarrow 1)$: Wir betrachten die Taylor-Entwicklungen
+\begin{align*}
+    x(t_i + jh) &= \sum_{m=0}^{p} \frac{(jh)^m}{m!}x^{m}(t_i) + x^{(p+1)}(\xi)\frac{(jh)^{p+1}}{(p+1)!}, \quad
+    \xi \in [t_i, t_i + jh], \\
+    x^{\prime}(t_i + jh) &= \sum_{m=0}^{p-1} \frac{(jh)^m}{m!}x^{m+1}(t_i) + x^{(p+1)}(\eta)\frac{(jh)^{p+1}}{(p+1)!},
+    \quad \eta \in [t_i, t_i + jh].
+\end{align*}
+Für den lokalen Diskretisierungsfehler gilt dann
+\begin{align*}
+    \tau(t_i,h) &= \frac{1}{h} \sum_{J=0}^{k} \alpha_j x(t_i + jh) - \sum_{j=0}^{k} \beta_j f(t_i+jh,x(t_i+jh))\\
+    &= \sum_{j=0}^{k}\left( \frac{1}{h}\alpha_j \left( \sum_{m=0}^{p} \frac{(jh)^m}{m!}x^{\prime}(t_i)  \right)
+    - \beta_j \left( \sum_{m=1}^{p} \frac{(jh)^{m-1}}{(m-1)!}x^{\prime}(t_i) \right) \right) + \mathcal{O}(h^p) \\
+    &= x(t_i) \frac{1}{h} \sum_{j=0}^{k} \alpha_j + \sum_{m=1}^{p} h^{m-1} x^{(m
+    )}(t_i)
+    \sum_{j=0}^{k}\left( \frac{j^m}{m!} \alpha_j - \frac{j^{m-1}}{(m-1)!} \beta_j \right) + \mathcal{O}(h^p)\\
+    &= \mathcal{O}(h^p),
+\end{align*}
+wobei $f(t_i+jh,x(t_i+jh)) = x^{\prime}(t_i+jh)$ und im letzten Schritt wurden die Eigenschaften von $4)$ genutzt.\\
+Mit $\rho(1) = 0$ und $\rho^{\prime}(1)=\sigma(1)$ gilt
+\[
+    \sum_{j=0}^{k} \alpha_j = 0 \qquad \text{ und } \sum_{j=0}^{k} j \alpha_j = \sum_{j=0}^{k} \beta_j
+\]
+Also ist $4)$ für $m=1=p$ erfüllt und daraus folgt mit $1)$ die Konsistenz (von Ordnung $p=1$). \qedwhite
 
-\subsubsection{Stabilität}
+\subsubsection{Stabilität und Stabilitätsgebiete}
+Trotz höherer Konsistenzordnung bei niedrigeren Rechenaufwand können Mehrschrittverfahren bei einfachen
+Differentialgleichungen sehr schlechte Ergebnisse liefern. Das liegt daran, dass die Konvergenz der Mehrschrittverfahren
+im Gegensatz zu den Einschrittverfahren nicht durch alleinige Konsistenz gegeben ist. Die Mehrschrittverfahren müssen
+hier außerdem $stabil$ sein. Diese Eigenschaft werden wir nun erläutern.\\
+
+
 
 \subsection{Verfahren für steife Differentialgleichungen}
-
+Durch Betrachtung einfacher und steifer (\ref{steife-dgl}) Testgleichungen lässt sich leicht bemerken, dass die
+Verwendung allgemeiner Ein- oder Mehrschrittverfahren nicht sinnvoll ist. Deshalb werden wir ein Mehschrittverfahren
+mit möglichst großem Stabilitätsgebiet $\mathcal{S}$ herleiten. Die daraus resultierenden Vefahren werden
+\textit{Rückwärtsdifferenzenverfahren} (oder BDF) genannt.
