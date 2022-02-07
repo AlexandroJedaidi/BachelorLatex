@@ -45,7 +45,7 @@ Quadraturformel ein Einschrittverfahren bildet.
     mit $\phi:D_h \times \mathbb{R}^n \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n)
     \rightarrow \mathbb{R}^n$.
 \end{definition}
-\subsubsection{Konsistenz und Konvergenz}
+\subsubsection{Konsistenz}
 Zur Analyse der Approximationsqualität der Verfahren werden neue Begriffe erläutert.
 \begin{definition}[lokaler Diskretisierungsfehler]
     Sei das Anfangswertproblem \eqref{first-order-num} mit \\ Lipschitz-stetiger
@@ -611,20 +611,79 @@ Für den lokalen Diskretisierungsfehler gilt dann
 wobei $f(t_i+jh,x(t_i+jh)) = x^{\prime}(t_i+jh)$ und im letzten Schritt wurden die Eigenschaften von $4)$ genutzt.\\
 Mit $\rho(1) = 0$ und $\rho^{\prime}(1)=\sigma(1)$ gilt
 \[
-    \sum_{j=0}^{k} \alpha_j = 0 \qquad \text{ und } \sum_{j=0}^{k} j \alpha_j = \sum_{j=0}^{k} \beta_j
+    \sum_{j=0}^{k} \alpha_j = 0 \qquad \text{ und } \qquad \sum_{j=0}^{k} j \alpha_j = \sum_{j=0}^{k} \beta_j
 \]
 Also ist $4)$ für $m=1=p$ erfüllt und daraus folgt mit $1)$ die Konsistenz (von Ordnung $p=1$). \qedwhite
 
 \subsubsection{Stabilität und Stabilitätsgebiete}
 Trotz höherer Konsistenzordnung bei niedrigeren Rechenaufwand können Mehrschrittverfahren bei einfachen
 Differentialgleichungen sehr schlechte Ergebnisse liefern. Das liegt daran, dass die Konvergenz der Mehrschrittverfahren
-im Gegensatz zu den Einschrittverfahren nicht durch alleinige Konsistenz gegeben ist. Die Mehrschrittverfahren müssen
-hier außerdem $stabil$ sein. Diese Eigenschaft werden wir nun erläutern.\\
-
-
+im Gegensatz zu den Einschrittverfahren nicht durch alleinige Konsistenz erfüllt ist. Die Mehrschrittverfahren müssen
+außerdem $stabil$ sein. Dazu definieren  wir zuerst eine sogenannte Differenzengleichung.\\
+\begin{definition}
+    Eine \textit{lineare homogene Differenzengleichung k-ter Ordnung mit konstanten Koeffizienten} ist gegeben durch
+    \begin{equation}
+        \label{differenzengleichung}
+        \alpha_k u_{i+k} + \alpha_{k-1} u_{i+k-1} + \dots + \alpha_0 u_i =0, \qquad i \in \mathbb{N}_0
+    \end{equation}
+    mit $\alpha_0, \dots, \alpha_k \in \mathbb{R}$ und $\alpha_k \neq 0$.\\
+    Ein Polynom $\varrho(z) = \alpha_k z^k$ mit den oben gegebenen Koeffizienten wird \textit{charakteristisches Polynom}
+    von \eqref{differenzengleichung} genannt.\\
+    Man nennt die Differenzengleichung \eqref{differenzengleichung} stabil, wenn alle Lösungen $u$, die
+    \eqref{differenzengleichung} erfüllen, beschränkt sind. Außerden heißt \eqref{differenzengleichung} asymptotisch
+    stabil, wenn $u_i \underset{i \rightarrow \infty}{\rightarrow} 0$.
+\end{definition}
+Nun kann man folgende Aussage beweisen:
+\begin{align*}
+    \eqref{differenzengleichung} \text{ist stabil } \Leftrightarrow \quad &1. \text{ alle Nullstellen } z_j \in
+    \mathbb{C} \text{ von } \varrho(z) \text{ erfüllt die Bedingung } |z_j| \leq 1 \\
+    &2. \text{ alle Nullstellen mit } |z_j| = 1 \text{ sind einfach}.
+\end{align*}
+(Beweisskizze siehe \cite[101]{stykelSkriptZurVorlesung2020})\\
+Weiterhin definieren wir die $Nullstabilität$ eines linearen k-Schrittverfahrens.
+\begin{definition}{Wurzelbedingung nach Dahlquist}
+    Gegeben sei ein lineares k-Schrittverfahren \eqref{k-step-linear}. Für alle Nullstellen $z_j \in \mathbb{C}$
+    des ersten charakteristischen Polynoms $\rho(z)$ gilt $|z_j| \leq 1$ und falls $|z_j| = 1$ noch zusätzlich einfaches
+    Vorkommen. Dann nennt man \eqref{k-step-linear} nullstabil.
+\end{definition}
+Unter der Annahme ein nullstabiles k-Schrittverfahren vorliegen zu haben, können wir eine Schranke ähnlich wie die
+Butcherschranken angeben.
+\begin{satz}{Erste Dahlquist-Schranke}
+    Die maximal erreichbare Konsistenzordnung eines nullstabilen linearen k-Schrittverfahrens erfüllt die Bedingungen
+    \begin{alignat*}{2}
+        p &\leq k+2 \qquad &&\text{falls } \frac{\beta_k}{\alpha_k} > 0 \text{ und } k \text{gerade ist}, \\
+        p &\leq k+1 \qquad &&\text{falls } \frac{\beta_k}{\alpha_k} > 0 \text{ und } k \text{ungerate ist}, \\
+        p &\leq k \qquad &&\text{falls } \frac{\beta_k}{\alpha_k} \leq 0. \\
+    \end{alignat*}
+    Eine Konsistenzordnung $p=k+2$ kann nur erreicht werden, wenn alle Nullstellen von $\rho(z)$ auf dem Rand des
+    Einheitskreises liegen, also $z_j \in \partial B_1$.
+\end{satz}
+$Beweis$ !!!TODO Quelle angeben/finden (E. Hairer, S.P. Nørsett, G. Wanner, Solving Ordinary Differential Equations I:
+Nonstiff Problems, Springer 1993, Kapitel III.3)!!!\\
+Jetzt definieren wir noch die Konvergenzordnung eines linearen k-Schrittverfahrens.
+\begin{definition}
+    Für alle Startwerte gilt $e(t_i,h) = \left\lVert x(t_i)-u_i \right\rVert_2 = \mathcal{O}(h^p)$ für $i=0,\dots,k-1$.
+    Dann ist das lineare k-Schrittverfahren \eqref{k-step-linear} konvergent von der Ordnung, falls für den globalen
+    Diskretisierungsfehler
+    \[
+        \left\lVert x(t_i)-u_i \right\rVert_2 = \mathcal{O}(h^p)
+    \]
+    für $t_i = t_0 + ih \in [t_0,t_0+a]$ gilt.
+\end{definition}
+Mit dieser Definition ist es möglich einen Zusammenhang zwischen Konsistenz, Nullstabilität und Konsvergenz herzustellen.
+\begin{satz}
+    1. \eqref{k-step-linear} ist konvergent $\Rightarrow$
+    \eqref{k-step-linear} ist nullstabil und konstistent.\\
+    2. \eqref{k-step-linear} hat Konistenzordnung $p$ und ist nullstabil
+        $\Rightarrow$ \eqref{k-step-linear} ist konvergent von der Ordnung $p$.
+\end{satz}
+$Beweis$ !!!TODO Quelle angeben/finden (E. Hairer, S.P. Nørsett, G. Wanner, Solving Ordinary Differential Equations I:
+Nonstiff Problems, Springer 1993, Kapitel III.3)!!!\\
+Im Folgenden werden wir eine feste Schrittweite $h > 0$ und ein unendliches Zeitintervall $D=[t_0, \infinity]$
+betrachten.
 
 \subsection{Verfahren für steife Differentialgleichungen}
-Durch Betrachtung einfacher und steifer (\ref{steife-dgl}) Testgleichungen lässt sich leicht bemerken, dass die
-Verwendung allgemeiner Ein- oder Mehrschrittverfahren nicht sinnvoll ist. Deshalb werden wir ein Mehschrittverfahren
-mit möglichst großem Stabilitätsgebiet $\mathcal{S}$ herleiten. Die daraus resultierenden Vefahren werden
-\textit{Rückwärtsdifferenzenverfahren} (oder BDF) genannt.
+Durch Betrachtung steifer (\ref{steife-dgl}) Testgleichungen lässt sich leicht bemerken, dass die
+Verwendung allgemeiner Ein- oder Mehrschrittverfahren nicht sinnvoll ist (evtl bsp in Anhang). Deshalb werden wir ein
+Mehschrittverfahren mit möglichst großem Stabilitätsgebiet $\mathcal{S}$ herleiten. Die daraus resultierenden Vefahren
+werden \textit{Rückwärtsdifferenzenverfahren} (oder BDF) genannt.
