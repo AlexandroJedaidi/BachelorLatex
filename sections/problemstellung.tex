@@ -76,7 +76,6 @@ Die Lösung hat also die Form $\left[ \begin{matrix}
 \subsubsection{Lineare gewöhnliche Differentialgleichungen}
 Wir definieren in diesem Abschnitt noch eine Sonderform einer gewöhnlichen Differentialgleichung.
 \begin{definition}
-    \label{steife-dgl}
     Ein System gewöhnlicher Differentialgleichungen $m$-ter Ordnung mit der Form
     \begin{align} \label{lin-ode}
     x^{m}(t) = \sum_{i=0}^{m-1} a_k(t) x^{j}(t) + g(t).
@@ -89,8 +88,10 @@ Die Lösung einer linearen Differentialgleichung erster Ordnung erfüllt also di
 \[
     x^{\prime}(t) = A(t)x(t) + g(t),
 \]
-worin $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind.
+worin $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind. Wir definieren nun steife lineare
+Differentialgleichungen unter der Bedingung dass die Koeffizienten $A$ konstant, also unabhängig von $t$ sind.
 \begin{definition}
+    \label{steife-dgl}
     Eine lineare Differentialgleicuhng \eqref{lin-ode} mit $A \in \mathbb{R}^{n \times n}$ und
     $b(t) \in \mathbb{R}^n$ heißt $steif$, wenn
     \begin{align}

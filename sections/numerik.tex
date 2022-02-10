@@ -173,9 +173,9 @@ $f(s_l,x(s_l))\approx k_{l,i}$ mit
 \end{align}
 
 Dies ergibt das $m-stufige$ explizite Runge-Kutta-Verfahren
-\[
-    u_{i+1} = u_i + h \sum_{l=1}^{m} b_l k_{l,i}.
-\]
+\begin{align}
+    u_{i+1} = u_i + h \sum_{l=1}^{m} b_l k_{l,i}.   \label{exp-rk-def}
+\end{align}
 Wir werden später ein klassisches $4$-stufiges RK-Verfahren verwenden, welches wir jetzt herleiten.
 Dazu benötigen wir die Simpsonregel
 \[
@@ -640,7 +640,7 @@ Nun kann man folgende Aussage beweisen:
     &2. \text{ alle Nullstellen mit } |z_j| = 1 \text{ sind einfach}.
 \end{align*}
 (Beweisskizze siehe \cite[101]{stykelSkriptZurVorlesung2020})\\
-Weiterhin definieren wir die $Nullstabilität$ eines linearen k-Schrittverfahrens.
+Weiterhin definieren wir die \textit{Nullstabilität} eines linearen k-Schrittverfahrens.
 \begin{definition}{Wurzelbedingung nach Dahlquist}
     Gegeben sei ein lineares k-Schrittverfahren \eqref{k-step-linear}. Für alle Nullstellen $z_j \in \mathbb{C}$
     des ersten charakteristischen Polynoms $\rho(z)$ gilt $|z_j| \leq 1$ und falls $|z_j| = 1$ noch zusätzlich einfaches
@@ -680,10 +680,89 @@ Mit dieser Definition ist es möglich einen Zusammenhang zwischen Konsistenz, Nu
 $Beweis$ !!!TODO Quelle angeben/finden (E. Hairer, S.P. Nørsett, G. Wanner, Solving Ordinary Differential Equations I:
 Nonstiff Problems, Springer 1993, Kapitel III.3)!!!\\
 Im Folgenden werden wir eine feste Schrittweite $h > 0$ und ein unendliches Zeitintervall $D=[t_0, \infty]$
-betrachten.
+betrachten. Mit dem Testproblem
+\begin{align}
+    x^{\prime} &= \lambda x \nonumber \\
+    x(0) &= 1   \label{testprob}
+\end{align}
+kann eine sinnvolle Stabilitätsfunktion für die gegebenen Verfahren hergeleitet werden
+(für k-Schrittverfahren, siehe \cite[103-105]{stykelSkriptZurVorlesung2020})\\
+\begin{definition}
+    Gegeben sei ein konstistentes und nullstabiles lineares k-Schrittverfahren \eqref{k-step-linear}. Man
+    nennt
+    \begin{align}
+        \Pi(z,h \lambda) = \sum_{l=0}^{k} (\alpha_l - h \lambda \beta_l) z^l = \rho(z) - h \lambda \sigma(z)
+        \label{stab-poly}
+    \end{align}
+    das Stabilitätspolynom von \eqref{k-step-linear}. Dabei sind $\rho(z)$ und $\sigma(z)$ das erste und zweite
+    charakteristische Polynom von \eqref{k-step-linear}.\\
+\end{definition}
+\begin{definition}
+    Das Verfahren \eqref{k-step-linear} heißt absolut stabil für $h\lambda$, falls $|z_j(h\lambda)|<1$ für alle
+    Nullstellen $z_j(h\lambda)$ des Stabilitätspolynoms \eqref{stab-poly}. Dabei nennt man die Menge
+    \[
+        \mathcal{S} := \{ h \lambda \in \mathbb{C} : |z_j(h\lambda) < 1 \text{ für } j = 1, \dots, k \}
+    \]
+    Bereich absoluter Stabilität des Verfahrens \eqref{k-step-linear}.
+\end{definition}
+Falls $\mathcal{S}$ die ganze linke komplexe Halbebene $\mathbb{C}^{-}:= \{ z \in \mathcal{C}: Re(z) < 0 \} $ enthält,
+so heißt das Verfahren \eqref{k-step-linear} \textit{A-stabil}. !! TODO: L-stabil?!! \\
+Für ein \textit{m-stufiges} explizites Runge-Kutta-Verfahren \eqref{exp-rk-def} kann mit dem Testproblem
+\eqref{testprob} die Stabilitätsfunktion wie folgt hergeleitet werden. Mit $u_0=x(t_0)=1$ gilt für $i=0$ gilt für die
+Stufen $k_{l,1}$
+\begin{align*}
+    k_{1,0} &= \lambda \cdot 1 \\
+    k_{l,0} &= \lambda \left( 1 + \sum_{o = 1}^{l-1} a_{lo} k_{o,0} \right), \quad l = 2, \dots, m \\
+\end{align*}
+Dies kann zu einem quadratischem linearen Gleichungssystem
+\[
+    (I - yA)k = \lambda e
+\]
+umwandeln, wobei $I$ die Einheitsmatrix, $k:= (k_1, \dots, k_m)^{\intercal}$, $e:=(1, \dots, 1)^{\intercal}$
+und $y := h\lambda$ sind. Wurde das LGS eindeutig gelöst, ist $(I-yA)$ invertierbar, also haben wir
+$k = (I-yA)^{-1} \lambda e$. Nun können wir im nächsten Schritt $i=1$ dann die erste Approximation angeben
+\[
+    u_1 = u_0 + h \sum_{l=1}^{m} b_l k_{l,0} = 1 + h b^{\intercal} k = 1 + yb^{\intercal}( I - yA)^{-1}e.
+\]
+!!TODO: beweis evtl?!!\\
+Dies ergibt die Stabilitätsfunktion $\Pi(h\lambda) = 1 + yb^{\intercal}( I - yA)^{-1}e.$ Da wir ein explizites
+RK-Verfahren betrachten, ist $A$ eine untere Dreiecksmatrix und es kann mit Hilfe von Induktion über $m$ zeigen, dass
+die Stabilitätsfunktion ein Polynom vom Grad $m$ ist.
+!! TODO: stabilitätsfunk RK!!\\
+\begin{satz}{Zweite Dahlquist-Schranke}
+    Ein A-stabiles lineares k-Schrittverfahren \eqref{k-step-linear} hat die Konsistenzordnung $p \leq 2$.
+\end{satz}
+$Beweis.$ !!TODO: P. Deuflhard, F. Bornemann, Numerische Mathematik II, de Gruyter, 2002, Satz 7.36.!!
 
 \subsection{Verfahren für steife Differentialgleichungen}
 Durch Betrachtung steifer (\ref{steife-dgl}) Testgleichungen lässt sich leicht bemerken, dass die
 Verwendung allgemeiner Ein- oder Mehrschrittverfahren nicht sinnvoll ist (evtl bsp in Anhang). Deshalb werden wir ein
 Mehschrittverfahren mit möglichst großem Stabilitätsgebiet $\mathcal{S}$ herleiten. Die daraus resultierenden Vefahren
-werden \textit{Rückwärtsdifferenzenverfahren} (oder BDF) genannt.
+werden \textit{Rückwärtsdifferenzenverfahren} (oder BDF) genannt. Hierbei beschränken wir uns auf lineare steife
+Differentialgleichungen mit konstanten Koeffizienten \eqref{steife-dgl}.\\
+Zur Herleitung eines BDF-Verfahrens interpolieren wir zuerst die Lösung $x(t)$ von \eqref{first-order-num} durch ein
+Polynom $p \in \mathbb{R}_k[t]$ mit $p(t_{i+j}) = x(t_{i+j})$ für $j=0, \dots, k$. Unter Verwendung der
+Lagrange-Interpolationsformel
+\[
+    p(t) = \sum_{l=0}^{k} x(t_{i+j}) \mathcal{L}_{i+j}(t) \quad \text{mit} \quad
+    \mathcal{L}_{i+j}(t) = \prod\limits_{\underset{l \neq j}{l=0}}^{k} \frac{t-t_{i+l}}{t_{i+j}-t_{i+l}}
+\]
+erhalten wir die Abschätzung
+\[
+    f(t_{i+k},x(t_i+k)) = x^{\prime} \approx p^{\prime}(t_{i+k})
+    = \sum_{l=0}^{k} x(t_{i+j})\mathcal{L}^{\prime}_{i+j}(t_{i+k}).
+\]
+Durch Ersetzen der unbekannten Werte $x(t_i+j)$ durch Näherungen $u_{i+j}$ resultiert das BDF-Verfahren
+\[
+    \sum_{j=0}^{k}\alpha_j u_{i+j} = h f(t_{i+k}, u_{i+k})
+\]
+mit
+\[
+    \alpha_j = h \mathcal{L}^{\prime}_{i+j} (t_{i+k}), \quad j=0,\dots,k,
+\]
+welches ein implizites lineares k-Schrittverfahren ist.\\
+\begin{satz}
+    \textit{K-Schritt-BDF-Verfahren} sind genau dann nullstabil, wenn $k \leq 6$.
+\end{satz}
+$Beweis.$ !!TODO: E. Hairer, S.P. Nørsett, G. Wanner, Solving Ordinary Differential Equations I:
+Nonstiff Problems, Springer 1993.!!
