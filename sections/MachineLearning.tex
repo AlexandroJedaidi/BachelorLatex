@@ -1,0 +1,77 @@
+\section{neuronale Netze}
+In diesem Abschnitt werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu lösen.
+Dabei gehen wir genauer auf neuronale Netze ein. Dieser Abschnitt bezieht sich hauptsächlich auf
+\cite{ovidiucalinDeepLearningArchitectures} und auch Grundlagen zu neuronalen Netzen wie Beispielsweise
+\textit{Forward}- und \textit{Backwardpropagation} lassen sich in \cite[Chapter 6]{ovidiucalinDeepLearningArchitectures}
+nachlesen. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und Mehrschrittverfahren heutzutage
+extrem effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, gibt es dennoch Vorteile neuronale Netze zu
+benutzen. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen Differentialgleichung nur in einem
+bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von der Anfangszeit $t_0$ bis zur
+gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz repräsentiert jedoch die gesuchte
+Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen, was im Gegensatz zu den
+numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in unserem Anwendungsgebiet noch einen
+ausschlaggebenden Vorteil in Bezug auf Recheneffizienz, welchen wir in Abschnitt \ref{subsec:lsgpakete} betrachten
+werden.
+
+\subsection{Struktur neuronaler Netze}
+\label{subsec:struktur-eines-neuronalen-netzes}
+Zuerst werden wir die grundlegenden Begrifflichkeiten eines neuronalen Netzes definieren. Zur Übersicht beschränken
+wir uns auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei versteckte Schichten mit jeweils
+3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample} dargestellt. Die gelben Neuronen
+repräsentieren hier jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein
+haben wir $L$ Schichten und $n^{(l)}$, $1\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist.
+Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der
+nächsten Schicht $l$ stehen. Dabei werden die Gewichte der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den
+anderen Gewichten unterschieden.
+\begin{figure}[htp]
+    \centering
+    \begin{neuralnetwork}[height=4]
+        \newcommand{\x}[2]{$x^{(0)}_#2$}
+        \newcommand{\y}[2]{$y_#2$}
+        \newcommand{\hfirst}[2]{\small $x^{(1)}_#2$}
+        \newcommand{\hsecond}[2]{\small $x^{(2)}_#2$}
+        \inputlayer[count=3, bias=true, title=Eingabe-\\schicht, text=\x]
+        \hiddenlayer[count=3, bias=true, title=versteckte\\Schicht 1, text=\hfirst]
+        \linklayers
+        \hiddenlayer[count=3, bias=true, title=versteckte\\Schicht 2, text=\hsecond]
+        \linklayers
+        \outputlayer[count=2, title=Ausgabe-\\schicht, text=\y] \linklayers
+    \end{neuralnetwork}
+    \caption{neuronales Netzwerk mit 3 Eingabeneuronen (grün), bias (gelb), zwei versteckte Schichten
+        (blau) und 2 Ausgabeneuronen (rot)}
+    \label{neuralNetexample}
+\end{figure}
+!! TODO: Frage ob ich das mit Seminararbeit citen muss !!\\
+Die Signale der Neuronen ab der ersten versteckten Schicht bilden sich aus der Summe aller vorherigen
+Signale mit ensprechender Gewichtung:
+\[
+    s_j^{(l)} = \sum_{i=1}^{n^{(l)}} \omega_{ij}^{(l)} x_i^{(l-1)} - b_j^{(l)}.
+\]
+Darauffolgend ergeben sich die Ausgaben der nächsten Schicht $l$
+\[
+    x_j^{(l)}=\Psi(s_j^{(l)}).
+\]
+Dabei ist $\Psi: \mathbb{R} \rightarrow \mathbb{R}$ die sogenannte \textit{Aktivierungsfunktion}. Das Trainieren eines
+neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem einer \textit{Kostenfunktion}
+\[
+    C: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
+\]
+reduziert werden. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
+benötigt, wofür auf \cite[6.2.6]{ovidiucalinDeepLearningArchitectures} verwiesen wird. Wir werden in unserer Anwendung
+hauptsächlich den \textit{Tangens hyperbolicus}
+\[
+    tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
+\]
+als Aktivierungsfunktion nutzen. Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} angeben.
+
+\subsection{Prinzip der Lösungspakete}
+\label{subsec:lsgpakete}
+
+\subsection{Gewichtsinitialisierung}
+\label{subsec:gewichtsinitialisierung}
+
+
+
+
+\subsection{curriculum learning}
+\label{subsec:curriculum-learning}

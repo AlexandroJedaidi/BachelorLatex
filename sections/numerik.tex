@@ -1,6 +1,6 @@
 \section{Numerischer Lösungsansatz}
-Der Großteil dieses Abschnitts beruht im Wesentlichen auf \cite[63-79]{stykelSkriptZurVorlesung2020}.
-Wir werden uns im Folgenden hauptsächlich das Anfangswertproblem
+Der Großteil dieses Abschnitts beruht im Wesentlichen auf \cite[63-79]{stykelSkriptZurVorlesung2020}. Wir werden uns im
+Folgenden hauptsächlich das Anfangswertproblem
 \begin{align}
     \label{first-order-num}
     x^{\prime} &= f(t,x) \nonumber \\
@@ -31,7 +31,7 @@ Quadraturformel ein Einschrittverfahren bildet.
     Ein explizites Einschrittverfahren für das Anfangswertproblem \eqref{first-order-num} hat die Form
     \begin{align}
         u_0 &= x_0 \nonumber \\
-        u_{i+1} &= u_i + h\phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6}
+        u_{i+1} &= u_i + h \phi(t_i,u_i,h,f), \quad i=0,\dots,N-1, \label{eq:6}
     \end{align}
     wobei die Lösung $x:D \rightarrow \mathbb{R}^{n}$ auf ganz $D$ existiert.
     Dabei nennt man
@@ -340,9 +340,9 @@ Nun wenden ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erha
     &\vdots\\
     k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))k_{1,i} + \dots + ha_{m,m-1}Df(x(t_i))k_{m-1,i} + \mathcal{O}(h^2) \\
 \end{align*}
-Im nächsten Schritt setzen wir die Stufen sukzessive ein und verwenden !!!TODO: checken ob das stimmt:!!!
+Im nächsten Schritt setzen wir die Stufen sukzessive ein und verwenden
 \[
-    h k_{j,i} = hf(x(t_i)) + h^2 a_{j-1,l}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2) = hf(x(t_i)) + \mathcal{O}(h^2)
+    h k_{j,i} = hf(x(t_i)) + h^2 a_{j-1,l}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2) = hf(x(t_i)) + \mathcal{O}(h^2),
 \]
 \begin{align*}
     k_{i,1} &= f(x(t_i)), \\
