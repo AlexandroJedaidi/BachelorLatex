@@ -56,13 +56,36 @@ neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem einer \texti
 \[
     C: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
 \]
-reduziert werden. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
-benötigt, wofür auf \cite[6.2.6]{ovidiucalinDeepLearningArchitectures} verwiesen wird. Wir werden in unserer Anwendung
-hauptsächlich den \textit{Tangens hyperbolicus}
+reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
+benötigt, wofür auf \cite[6.2.6]{ovidiucalinDeepLearningArchitectures} verwiesen wird. Zusammengefasst werden die
+Gewichte durch ein Gradientenverfahren angepasst, sodass die Kostenfunktion minimiert wird. In unserer Anwendung werden
+wir hauptsächlich den \textit{Tangens hyperbolicus}
 \[
     tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
 \]
-als Aktivierungsfunktion nutzen. Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} angeben.
+als Aktivierungsfunktion nutzen. Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} betrachten. Unser
+Fokus der Gradientenverfahren wird auf der \textit{Adam} (engl. Adaptive moment Estimation) liegen. Sei
+$g_k = \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
+Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m(0)=0$,
+$v(0)=0$
+\begin{align*}
+    m(k) &= \beta_1 m(k-1) + (1-\beta_1)g_k \\
+    v(k) &= \beta_2 v(k-1) + (1-\beta_2)(g_k)^2
+\end{align*}
+und deren Korrekturen
+\begin{align*}
+    \hat{m}(k) &= \frac{m(k)}{(1-\beta_1^k)} \\
+    \hat{v}(t) &= \frac{v(k)}{(1-\beta_2^k)}
+\end{align*}
+gegeben durch
+\[
+    x(k+1) = x(k) - \eta \frac{\hat{m}(k)}{\sqrt(|\hat{v}(k)|) + \epsilon}.
+\]
+Dabei ist $\eta > 0$ die sogenannte \textit{learning rate} und $\epsilon > 0$ verhindert eine Division durch $0$. Eine
+Voreinstellung der Parameter wäre Beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$.
+Zu Beginn ($k=0$) müssen jedoch schon Gewichte gegeben sein, um $g_k$ berechnen zu können. Die Frage zur sinnvollen
+Initialisierung der Gewichte zu Beginn des Trainings werden wir im Abschnitt\eqref{subsec:gewichtsinitialisierung}
+genauer betrachten.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
