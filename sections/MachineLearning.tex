@@ -65,35 +65,98 @@ wir hauptsächlich den \textit{Tangens hyperbolicus}
 \]
 als Aktivierungsfunktion nutzen. Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} betrachten. Unser
 Fokus der Gradientenverfahren wird auf der \textit{Adam} (engl. Adaptive moment Estimation) liegen. Sei
-$g_k = \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
-Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m(0)=0$,
-$v(0)=0$
+$g_k := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
+Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m_{0}=0$,
+$v_{0}=0$
 \begin{align*}
-    m(k) &= \beta_1 m(k-1) + (1-\beta_1)g_k \\
-    v(k) &= \beta_2 v(k-1) + (1-\beta_2)(g_k)^2
+    m_{k} &= \beta_1 m_{k-1} + (1-\beta_1)g_k \\
+    v_{k} &= \beta_2 v_{k-1} + (1-\beta_2)(g_k)^2
 \end{align*}
 und deren Korrekturen
 \begin{align*}
-    \hat{m}(k) &= \frac{m(k)}{(1-\beta_1^k)} \\
-    \hat{v}(t) &= \frac{v(k)}{(1-\beta_2^k)}
+    \hat{m}_{k} &= \frac{m_{k}}{(1-\beta_1^k)} \\
+    \hat{v}_{k} &= \frac{v_{k}}{(1-\beta_2^k)}
 \end{align*}
 gegeben durch
 \[
-    x(k+1) = x(k) - \eta \frac{\hat{m}(k)}{\sqrt(|\hat{v}(k)|) + \epsilon}.
+    x_{k+1}= x_{k} - \eta \frac{\hat{m}_{k}}{\sqrt(|\hat{v}_{k}|) + \epsilon}.
 \]
 Dabei ist $\eta > 0$ die sogenannte \textit{learning rate} und $\epsilon > 0$ verhindert eine Division durch $0$. Eine
 Voreinstellung der Parameter wäre Beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$.
-Zu Beginn ($k=0$) müssen jedoch schon Gewichte gegeben sein, um $g_k$ berechnen zu können. Die Frage zur sinnvollen
-Initialisierung der Gewichte zu Beginn des Trainings werden wir im Abschnitt\eqref{subsec:gewichtsinitialisierung}
-genauer betrachten.
+Zu Beginn ($k=0$) müssen jedoch schon Gewichte gegeben sein, um $g_k$ berechnen zu können. Dazu werden wir uns in
+Abschnitt\eqref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
+Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X$ iteriert. Dabei nennt man ein
+einzelnes Element von $X$ \textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum \textit{Batch}. Eine
+Iteration über Batches bewirkt eine erhöhte Effizienz des Lernprozesses
+(siehe \cite[6.2.8]{ovidiucalinDeepLearningArchitectures}). Außerdem werden die Lernprozesse auch \textit{Epochen}
+genannt, dessen Anzahl angibt, wie oft das neuronale Netz die gegebenen Eingangsdaten zum Training nutzt.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
+Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit dem wir unser
+neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
+\[
+    x^{\prime} = f(t,x)
+\]
+mit den Anfangsbedingungen $x(t_0)=x_0$ gegeben. Nun werden wir diese parametrisiert durch physikalische Parameter
+$\theta$ nach $0$ auflösen. Dabei definieren wir die Funktion
+\begin{align}
+    \label{g-func}
+    &G:\mathbb{R}^n \times C([t_0,t_f],\mathbb{R}) \times [t_0, t_f] \times \mathbb{R}^p \rightarrow \mathbb{R}^n \nonumber\\
+    &G \left( x, x^{\prime}, t, \theta \right) = 0,
+\end{align}
+wobei $p$ die Anzahl der physikalischen Parametern ist. Hierfür werden wir ein sogenanntes \textit{Lösungspaket}
+(engl. solution bundle) bilden, welches aus den Lösungen der Gleichung \eqref{g-func} besteht.
+\begin{definition}
+    \label{sol-bundle}
+    Seien die Teilmengen $X_0 \subset \mathbb{R}^n$, $\Theta \subset \mathbb{R}^p$ und $[t_0,t_f] \subset \mathbb{R}$
+    gegeben. Dann heißt
+    \[
+        x(t;x_0, \theta)
+    \]
+    Lösungspaket der gewöhnlichen Differentialgleichung \eqref{g-func}, wobei $t \in [t_0,t_f]$, $x_0 \in X_0$ und
+    $\theta \in \Theta$.
+\end{definition}
+Unser Ziel ist es diese Lösungspakete mit Hilfe neuronaler Netze zu approximieren. Wir definieren die Approximation der
+Lösung über $(X_0,\Theta)$ mit
+\begin{align}
+    \label{nn-approx}
+    \hat{x}(t;x_0, \theta) = x_0 + a(t) N(t; x_0, \theta; \omega),
+\end{align}
+wobei $N:\mathbb{R}^{1+n+p} \rightarrow \mathbb{R}^n$ das neuronale Netz mit den Gewichten $\omega$ repräsentiert und
+$a:[t_0,t_f] \rightarrow \mathbb{R}$ hat die Eigenschaft $a(t_0)=0$. Hierdurch wird das Erfüllen der
+Anfangswertbedingungen in der Abschätzung \eqref{nn-approx} sichergestellt. Durch wurde Tests in
+\cite{flamantSolvingDifferentialEquations2020} wurde herausgefunden, dass sich für $a$ die Form
+\[
+    a(t) = 1 - e^{t_0-t}
+\]
+besonders gut eignet. Zusammengefasst wollen wir für jedes Lösungspaket $(t_i,x_{0i}, \theta_i)$ eine Approximation
+$\hat{x}$ finden, so dass
+\[
+    G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i;\theta_i) \approx 0.
+\]
+Die Kostenfunktion ergibt sich dann durch
+\begin{align}
+    \label{cost-func}
+    L = \frac{1}{|B|} \sum_{(t_i,x_{0i},\theta_i) \in B} b(t_i)
+    \left\lVert G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i;\theta_i) \right\rVert_2^2,
+\end{align}
+wobei $b:[t_0,t_f] \rightarrow \mathbb{R}$ durch $b(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
+bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
+$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der batch size $|B|$. Mit vorgegebenen Gebieten
+für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen Differentialgleichung)
+können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige Wahl aus einer
+Gleichverteilung der Intervalle $X_0$ und $\Theta$. In Abschnitt \eqref{subsec:curriculum-learning} werden wir Beispiele
+betrachten, in den eine einfache Gleichverteilung zu fehlerhaften Ergebnisse führen würde. Da wir in unserer Anwendung
+unendlich Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden.
+Stattdessen repräsentiert jeder Batch eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine
+steigende Anzahl der samples eine bessere Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei
+nicht auftreten, da es umgangssprachlich nicht möglich ist "unendlich Daten auswendig zu lernen". !!TODO: fragen ob das
+geht und cite overfitting!!\\
+
 
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
-
-
 
 
 \subsection{curriculum learning}
