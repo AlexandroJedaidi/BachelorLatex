@@ -85,10 +85,11 @@ Wir definieren in diesem Abschnitt noch eine Sonderform einer gewöhnlichen Diff
     Falls $g \equiv 0$, so nennt man \eqref{lin-ode} homogen, sonst inhomogen.
 \end{definition}
 Die Lösung einer linearen Differentialgleichung erster Ordnung erfüllt also die Gleichung
-\[
+\begin{align}
+    \label{linear-first-order-ode}
     x^{\prime}(t) = A(t)x(t) + g(t),
-\]
-worin $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind. Wir definieren nun steife lineare
+\end{align}
+wobei $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind. Wir definieren nun steife lineare 
 Differentialgleichungen unter der Bedingung dass die Koeffizienten $A$ konstant, also unabhängig von $t$ sind.
 \begin{definition}
     \label{steife-dgl}
@@ -281,7 +282,19 @@ für alle $j \in \mathbb{N}$ und $t \in D$, folgt direkt
 \]
 Die Reihe $\sum_{j=1}^{\infty} \frac{(aL)^j}{j!} $ ist nach dem Quotientenkriterium offensichtlich konvergent. Also
 lässt sich der Fixpunktsatz von Weissinger anwenden. Der daraus gewonnene Fixpunkt ist eindeutig und mit ähnlicher
-Äuqivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite
+Äuqivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite \\
+Für lineare Differentialgleichungen erster Ordnung \eqref{linear-first-order-ode} mit konstanten $A$  gilt wegen
+\[
+    \left\lVert Ax + g(t) - Ay - g(t) \right\rVert \leq \left\lVert A \right\rVert \left\lVert x - y \right\rVert,
+\]
+dass die rechte Seite Lipschitz-stetig in der x-Variable ist, wodurch eindeutige Lösbarkeit folgt. Die Lösung $x$ kann
+mit Hilfe der \textit{Matrixexponentialfunktion} \cite{Matrixexponential} angegeben werden:
+\begin{align}
+    \label{linear-ode-solution}
+    x(t) = e^{A(t-t_0)}x_0 + \int_{t_0}^{t}e^{A(t-s)}g(s) ds.
+\end{align}
+Einfaches Ableiten und Einsetzen von $t_0$ zeigt, dass diese Funktion die Differentialgleichung
+\eqref{linear-first-order-ode} tatsächlich löst.
 
 \subsection{Abhängigkeit der Lösungen von den Daten}
 In späteren Abschnitten werden wir gewöhnliche Differentialgleichungen betrachten, die zur Simulation/Vorhersage

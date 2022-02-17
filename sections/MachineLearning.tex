@@ -95,9 +95,10 @@ genannt, dessen Anzahl angibt, wie oft das neuronale Netz die gegebenen Eingangs
 \label{subsec:lsgpakete}
 Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit dem wir unser
 neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
-\[
+\begin{align}
+    \label{dgl-machinelearnung}
     x^{\prime} = f(t,x)
-\]
+\end{align}
 mit den Anfangsbedingungen $x(t_0)=x_0$ gegeben. Nun werden wir diese parametrisiert durch physikalische Parameter
 $\theta$ nach $0$ auflösen. Dabei definieren wir die Funktion
 \begin{align}
@@ -148,12 +149,68 @@ für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenh
 können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige Wahl aus einer
 Gleichverteilung der Intervalle $X_0$ und $\Theta$. In Abschnitt \eqref{subsec:curriculum-learning} werden wir Beispiele
 betrachten, in den eine einfache Gleichverteilung zu fehlerhaften Ergebnisse führen würde. Da wir in unserer Anwendung
-unendlich Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden.
+theoretisch unendlich Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden.
 Stattdessen repräsentiert jeder Batch eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine
 steigende Anzahl der samples eine bessere Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei
 nicht auftreten, da es umgangssprachlich nicht möglich ist "unendlich Daten auswendig zu lernen". !!TODO: fragen ob das
 geht und cite overfitting!!\\
-
+Der Korrekturfaktor $b(t_i)$ wird zur Beeinflussung des lokalen Fehlers
+\begin{align*}
+    \tau(t_i;x_{0i}, \theta_i)
+    := G \left( \hat{x}(t_i;x_{0i}, \theta_i), \hat{x}^{\prime}(t_i;x_{0i}, \theta_i),t_i;\theta_i \right)
+\end{align*}
+eingeführt. Ähnlich wie in Satz \eqref{one-step-error-bound} für Einschrittverfahren können wir auch hier einen
+Zusammenhang des lokalen und dem globalen Fehlers des neuronalen Netzes zeigen. Dabei ist der globale Fehler des
+neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist.
+\begin{satz}
+    Für \eqref{dgl-machinelearnung} ist der lokale Fehler $\tau$ gegeben durch
+    $\tau(t) = \hat{x}^{\prime}(t) - f(t,\hat{x})$. Es gilt
+    \[
+        \left\lVert e(t) \right\rVert = \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0) - 1} \right),
+    \]
+    wobei $\tau_{t_f} = \max\limits_{t_0 \leq t \leq t_f} \left\lVert \tau(t) \right\rVert$ und $L$ die
+    Lipschitz-Konstante der rechten Seite $f$.
+\end{satz}
+$Beweis.$ Der lokale Fehler ergibt sich durch einfaches Konstuierens von $G$.\\
+Für den globalen Fehler gilt
+\begin{alignat*}{2}
+    &e(t) &= \hat{x}(t) - x(t)\\
+    \Leftrightarrow \quad &\hat{x}(t) &= e(t) + x(t).
+\end{alignat*}
+Einsetzen in den lokalen Fehler ergibt
+\begin{alignat*}{2}
+    &\tau(t) &= e^{\prime}(t) + x^{\prime}(t) - f(t,e(t)+x(t))\\
+    \Leftrightarrow \quad &e^{\prime}(t) &= \tau(t) - x^{\prime}(t) + f(t,e(t) + x(t)).
+\end{alignat*}
+$x$ die Lösung von \eqref{dgl-machinelearnung}, also ist $x^{\prime}=f(t,x(t))$. Des Weiteren ist $f$ Lipschitz-stetig,
+das heißt es gilt $\left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert \leq L \left\lVert e(t) \right\rVert$. Also kann
+man die Norm der rechten Seite obiger Gleichung schreiben als
+\begin{align*}
+    \left\lVert \tau(t) + f(t,e(t) + x(t)) - x^{\prime}(t) \right\rVert
+    &= \left\lVert \tau(t) + f(t,e(t) + x(t)) - f(t,x(t)) \right\rVert \\
+    &\leq \left\lVert \tau(t) \right\rVert + L\left\lVert e(t) \right\rVert \\
+    &\leq \tau_{t_f} + L \left\lVert e(t) \right\rVert.
+\end{align*}
+Dabei wurde die Dreiecksungleichung benutzt und der lokale Fehler wurd durch das Maximum aller lokalen Fehler
+abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfüllt
+\[
+    E^{\prime}(t) = \tau_{t_f} + L E(t),
+\]
+wobei $0 \leq \left\lVert e(t) \right\rVert \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
+Differentialgleichung erster Ordnung welche mit \eqref{linear-ode-solution} berechnen lässt
+\begin{align*}
+    E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f} ds \\
+    &= \tau_{t_f} e^{Lt} \int_{t_0}^{t}e^{-Ls} ds \\
+    &= \frac{\tau_{t_f} }{L} \left( e^{L(t-t_0)} - 1 \right).
+\end{align*}
+Daraus folgt
+\[
+    \left\lVert e(t) \right\rVert \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
+\]
+was sich mit \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
+Hierdurch lässt sich sehen, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
+kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
+frühen Zeitpunkten zu skalieren.
 
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
