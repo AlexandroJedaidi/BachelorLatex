@@ -19,7 +19,7 @@ Zuerst werden wir die grundlegenden Begrifflichkeiten eines neuronalen Netzes de
 wir uns auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei versteckte Schichten mit jeweils
 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample} dargestellt. Die gelben Neuronen
 repräsentieren hier jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein
-haben wir $L$ Schichten und $n^{(l)}$, $1\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist.
+haben wir $L$ Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist.
 Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der
 nächsten Schicht $l$ stehen. Dabei werden die Gewichte der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den
 anderen Gewichten unterschieden.
@@ -208,13 +208,77 @@ Daraus folgt
     \left\lVert e(t) \right\rVert \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
 \]
 was sich mit \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
-Hierdurch lässt sich sehen, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
+Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
 kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
 
+\subsubsection{curriculum learning}
+\label{subsec:curriculum-learning}
+Bei Menschen oder auch Tieren lässt sich beobachten, dass sie unter Verfolgung eines Lehrplans effektiver Sachverhalte
+lernen und verstehen. Ein ähnliches Prinzip können sich auf neuronale Netze übertragen. Genauere Disskussion dieses
+Prinzips lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Es gibt in unserer Anwendung der Lösungspakete
+Fälle, in den sich eine "Vereinfachung" der Trainingsdaten bzw. Batches anbietet. Ein genaues Beispiel werden wir in
+\eqref{sec:anwendungsbeispiele} betrachten. Hierzu werden wir die Batches $B$ bearbeiten, in dem wir das Zeitintervall
+verkleinern, also erhalten wir neue Batches $B^{\prime}$ mit
+\[
+    B^{\prime}:=  \{(t_i,x_{0i},\theta_i) \in [t_0,t_m] \times X_0 \times \Theta\},
+\]
+wobei $t_m<f_f$ und $m$ die Anzahl der bereits trainieren Batches ist. Wir lassen also das neuronale Netz zuerst mit
+einer kleinen Menge an Daten trainieren und erhöhen diese in Abhängigkeit der bereits trainierten Batches.
+
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
+Die Gewichtsinitialisierung ist ein entscheidender Faktor um Probleme des explodierenden und verschwindenden Gradienten
+(siehe \cite{wangVanishingGradientProblem2019}) entgegenzuwirken.
+In diesem Abschnitt werden wir ein Intervall bestimmen, welches dann zur Initialisierung der Gewichte $\omega_{ij}$
+genutzt wird. Die Herleitung bezieht sich hauptsächlich auf \cite[191-195]{ovidiucalinDeepLearningArchitectures}.
+Dazu werden betrachten wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
+zugehörigen Gewichte $\omega_{ij}:=\omega_{ij}^{(l)}$ sowie $x_{i}^{(l-1)}$ als unabhängige, identisch verteilte
+Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die bias $b$
+werden mit $0$ initialisiert. Für die Varianz der Ausgabe der $l$-ten Schicht $x_i^{(l)}$ ergibt sich durch
+!!TODO: Berechnung!!
+\begin{align*}
+    Var(x_j^{(l)}) &= Var\left( \Phi\left( \sum_{i} \omega_{ij}x_i^{(l-1)} \right) \right)\\
+    &= n^{(l-1)} \Phi^{\prime}(0)^2 Var(\omega_{ij}) Var(x_i^{(l-1)}).
+\end{align*}
+Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also $Var(x_j^{(l)})=Var(x_j^{(l-1)})$,
+so ergibt sich für die Varianz der Gewichte
+\[
+    Var(\omega_{ij}) = \frac{1}{n^{(l-1)}\Phi^{\prime}(0)}.
+\]
+Die gegebene Voraussetzung macht Sinn um die oben erwähnten Probleme des explodierenden bzw. verschwindenden Gradienten
+zu vermeiden. Genau wie bei der Varianz der Ausgaben $x_j^{(l-1)}$ und $x_j^{(l)}$ ist es auch vorteilhaft die Varianz
+der Kostenfunktion ausgehend von der Backpropagation gleichzustellen. Also folgt aus
+\[
+    Var(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}) = Var(\frac{\partial C}{\partial \omega_{ij}^{(l)}})
+\]
+mit Hilfe einiger stochastischer Umformungen und der Annahme, dass $\Phi(x)=x$, die Gleichung
+\[
+    Var(\delta_j^{(l-1)}) = Var(\delta_j^{((l))}),
+\]
+wobei $\delta_j$ eine aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
+\[
+    Var(\omega_{ij}) = \frac{1}{n^{(l)}}.
+\]
+Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{(l-1)} = n^{(l)}$, weshalb man sich für
+\[
+    Var(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
+\]
+einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit den der
+Gewchichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
+\[
+    \omega_{ij}^{((l))} \raisebox{-0.9ex}{\~{}}
+    \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}} \right]
+\]
+für alle $1\leq i \leq n^{(l-1)}$, $1\leq j \leq n^{l}$, $1\leq l \leq L$ Diese Verteilung heißt \textit{Xavier-} oder
+\textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Phi(x)=tanh(x)$ kann man durch ähnlichs Vorgehen
+eine Initialisierung mit der Gleichverteilung
+\[
+    \omega_{ij}^{((l))} \raisebox{-0.9ex}{\~{}}
+    \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}} \right]
+\]
+erzielen.
 
+\subsection{Initialisierung der Anfangsdaten}
+\label{subsec:intiialisierungderanfangsdaten}
 
-\subsection{curriculum learning}
-\label{subsec:curriculum-learning}
