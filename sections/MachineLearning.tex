@@ -147,13 +147,11 @@ bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
 $B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der batch size $|B|$. Mit vorgegebenen Gebieten
 für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen Differentialgleichung)
 können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige Wahl aus einer
-Gleichverteilung der Intervalle $X_0$ und $\Theta$. In Abschnitt \eqref{subsec:curriculum-learning} werden wir Beispiele
-betrachten, in den eine einfache Gleichverteilung zu fehlerhaften Ergebnisse führen würde. Da wir in unserer Anwendung
-theoretisch unendlich Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden.
-Stattdessen repräsentiert jeder Batch eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine
-steigende Anzahl der samples eine bessere Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei
-nicht auftreten, da es umgangssprachlich nicht möglich ist "unendlich Daten auswendig zu lernen". !!TODO: fragen ob das
-geht und cite overfitting!!\\
+Gleichverteilung der Intervalle $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich Eingangsdaten zur
+Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden. Stattdessen repräsentiert jeder Batch
+eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine steigende Anzahl der samples eine bessere
+Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht auftreten, da es umgangssprachlich nicht
+möglich ist "unendlich Daten auswendig zu lernen". !!TODO: fragen ob das geht und cite overfitting!!\\
 Der Korrekturfaktor $b(t_i)$ wird zur Beeinflussung des lokalen Fehlers
 \begin{align*}
     \tau(t_i;x_{0i}, \theta_i)
@@ -214,6 +212,7 @@ frühen Zeitpunkten zu skalieren.
 
 \subsubsection{curriculum learning}
 \label{subsec:curriculum-learning}
+!!TODO: titel übersetzen!!\\
 Bei Menschen oder auch Tieren lässt sich beobachten, dass sie unter Verfolgung eines Lehrplans effektiver Sachverhalte
 lernen und verstehen. Ein ähnliches Prinzip können sich auf neuronale Netze übertragen. Genauere Disskussion dieses
 Prinzips lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Es gibt in unserer Anwendung der Lösungspakete
@@ -279,6 +278,27 @@ eine Initialisierung mit der Gleichverteilung
 \]
 erzielen.
 
-\subsection{Initialisierung der Anfangsdaten}
-\label{subsec:intiialisierungderanfangsdaten}
+\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
+\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
+Es ist möglich eine Wahrscheinlichkeitsverteilung der Anfangsbedingungen diese mit Hilfe sowohl eines
+Runge-Kutta-Verfahrens als auch neuronalen Netzen fortzusetzen. Der Vorteil hierbei ist es beispielsweise bei der
+die Wahrscheinlichkeit der Position eines Körpers im Weltall zu einem bestimmten Zeitpunkt $t$ berechnen zu können. Für
+Details zur Nutzung von (impliziten) Runge-Kutta-Verfahren wird auf \cite{aristoffIMPLICITRUNGEKUTTAMETHODS} verwiesen.
+Obwohl Runge-Kutta-Verfahren sehr genau sind, haben neuronale Netze den Vorteil, eine Funktion simulieren zu können.
+Es muss also für die gefragte Zeit $t$ nicht iteriert werden, sondern kann einfach eingesetzt werden. Außerdem können
+so für mehrere verschiedene physikalische Parameter Wahrscheinlichkeitsverteilungen angegeben werden, ohne jede
+Approximation einzeln berechnen zu müssen. Sei also ein trainiertes neuronales Netz gegeben. Das Lösungspaket
+$x(t; x_0)$ gibt eine Koordinatentransformation von $x_0$ nach $x_t$ an. Unter der Annahme, dass die Transformation
+$f: X_0 \rightarrow X_t, f(x_0) = x(t;x_0)$ invertierbar und differenzierbar ist, kann die Wahrscheinlichkeitsverteilung
+eines späteren Zeitpunktes $t$ angegeben werden mit
+\[
+    p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert,
+\]
+wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{-1}}= \frac{\partial x_0}{\partial x_t}$
+die Jacobi-Matrix von $f^{-1}$ ist.
 
+Da das Generieren einer Zufallszahl in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
+Dimensionen der Anfangsbedingungen und physikalischen Parametern stattdessen sogenannte
+\textit{Markow-Ketten-Monte-Carlo-Verfahren} (kurz MCMC-Verfahren). Diese wählen die gesuchten Daten mit Hilfe einer
+Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods}nachgelesen
+werden.
