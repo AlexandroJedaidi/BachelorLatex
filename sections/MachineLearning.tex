@@ -15,14 +15,14 @@ werden.
 
 \subsection{Struktur neuronaler Netze}
 \label{subsec:struktur-eines-neuronalen-netzes}
-Zuerst werden wir die grundlegenden Begrifflichkeiten eines neuronalen Netzes definieren. Zur Übersicht beschränken
-wir uns auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei versteckte Schichten mit jeweils
-3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample} dargestellt. Die gelben Neuronen
-repräsentieren hier jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein
-haben wir $L$ Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist.
-Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der
-nächsten Schicht $l$ stehen. Dabei werden die Gewichte der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den
-anderen Gewichten unterschieden.
+Zuerst werden wir die grundlegenden Begrifflichkeiten eines neuronalen Netzes definieren. Dieser Abschnitt basiert im
+Wesentlichen auf das Buch \cite{ovidiucalinDeepLearningArchitectures}. Zur Übersicht beschränken wir uns auf ein
+neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei versteckte Schichten mit jeweils 3 Neuronen und eine
+Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier
+jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$
+Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$
+geben an, in welcher Relation die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen.
+Dabei werden die Gewichte der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
 \begin{figure}[htp]
     \centering
     \begin{neuralnetwork}[height=4]
@@ -41,60 +41,218 @@ anderen Gewichten unterschieden.
         (blau) und 2 Ausgabeneuronen (rot)}
     \label{neuralNetexample}
 \end{figure}
-!! TODO: Frage ob ich das mit Seminararbeit citen muss !!\\
 Die Signale der Neuronen ab der ersten versteckten Schicht bilden sich aus der Summe aller vorherigen
-Signale mit ensprechender Gewichtung:
-\[
-    s_j^{(l)} = \sum_{i=1}^{n^{(l)}} \omega_{ij}^{(l)} x_i^{(l-1)} - b_j^{(l)}.
-\]
+Signale mit entsprechender Gewichtung:
+\begin{align}
+    s_j^{(l)} = \sum_{i=1}^{n^{(l)}} \omega_{ij}^{(l)} x_i^{(l-1)} - b_j^{(l)}. \label{eq:signal}
+\end{align}
 Darauffolgend ergeben sich die Ausgaben der nächsten Schicht $l$
+\begin{align}
+    x_j^{(l)}=\Psi(s_j^{(l)}). \label{eq:activ}
+\end{align}
+Dabei ist $\Psi: \mathbb{R} \rightarrow \mathbb{R}$ die sogenannte \textit{Aktivierungsfunktion}. In unserer Anwendung werden wir
+hauptsächlich den \textit{Tangens hyperbolicus}
 \[
-    x_j^{(l)}=\Psi(s_j^{(l)}).
+    tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
 \]
-Dabei ist $\Psi: \mathbb{R} \rightarrow \mathbb{R}$ die sogenannte \textit{Aktivierungsfunktion}. Das Trainieren eines
-neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem einer \textit{Kostenfunktion}
+als Aktivierungsfunktion nutzen. Das Trainieren eines neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem
+einer \textit{Kostenfunktion}
 \[
     C: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
 \]
 reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
-benötigt, wofür auf \cite[6.2.6]{ovidiucalinDeepLearningArchitectures} verwiesen wird. Zusammengefasst werden die
-Gewichte durch ein Gradientenverfahren angepasst, sodass die Kostenfunktion minimiert wird. In unserer Anwendung werden
-wir hauptsächlich den \textit{Tangens hyperbolicus}
-\[
-    tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
-\]
-als Aktivierungsfunktion nutzen. Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} betrachten. Unser
-Fokus der Gradientenverfahren wird auf der \textit{Adam} (engl. Adaptive moment Estimation) liegen. Sei
-$g_k := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
-Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m_{0}=0$,
-$v_{0}=0$
+benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
+
+\subsubsection{Forwardpropagation}
+Forward propagation wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
+Ausgaben der versteckten Schichten zu berechnen. Dabei wird für alle $1 \leq l \leq L$ zuerst \eqref{eq:signal}
+angewendet, um die jeweiligen Signale zu berechnen und im Anschluss nutzen wir \eqref{eq:activ}. Im letzten
+Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $1\leq j \leq n^{L}$. Die Forwardpropagation
+ist eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
+
+\subsubsection{Backwardpropagation}
+Sei $C(Y)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe $Y:=(y_j)_j$.Dabei ist $Y$
+offensichtlich abhängig von den Gewichten $\omega$ und den Bias $b$. Der Gradient der Kostenfunktion ist gegeben durch
+$\nabla C=(\nabla_{\omega}C,\nabla_{b}C).$  !!TODO: Gradient!!\\
+Ds Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons in der $(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten
+Schicht unabhängig von jeglichen anderen Gewichten hinzu Also ergibt sich folgendes für den Gradienten der
+Kostenfunktion.
+\begin{satz}
+    \label{machine-cost-grad}
+    Die Komponenten des Gradienten $\nabla C$ der Kostenfunktion sind gegeben durch
+    \[
+        \frac{\partial C}{\partial \omega_{i,j}^{(l)}} = \frac{\partial C}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{i,j}^{(l)}}
+    \]
+    \[
+        \frac{\partial C}{\partial b_{j}^{(l)}} = \frac{\partial C}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial b_j^{(l)}}
+    \]
+    mit $0\leq i \leq n^{(l-1)}, 1\leq j \leq n^{(l)}, 1 \leq l \leq L$.
+\end{satz}
+$Beweis$ Es ist $x_j^{(l)}=\phi(s_j^{(l)})$ wie in \eqref{eq:activ}. Wir zeigen die Gleichung für
+$\nabla_{\omega}C(w,b)$, der Beweis für  $\nabla_{b}C(w,b)$ funktioniert analog mit $i=0$.
 \begin{align*}
-    m_{k} &= \beta_1 m_{k-1} + (1-\beta_1)g_k \\
-    v_{k} &= \beta_2 v_{k-1} + (1-\beta_2)(g_k)^2
+    \frac{\partial C(\omega,b)}{\partial \omega_{i,j}^{(l)}} &= \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial \omega_{i,j}^{(l)}}
+    = \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial \omega_{i,j}^{(l)}} \\
+    &=\frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial s_j^{(l)}} \frac{\partial s_j^{(l)}}{\partial \omega_{i,j}^{(l)}}
+    = \frac{\partial C(\omega,b)}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{i,j}^{(l)}} \\
+\end{align*}
+Wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
+\[
+    \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial s_j^{(l)}}
+    = \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial s_j^{(l)}}
+    = \frac{\partial C(\omega,b)}{\partial s_j^{(l)}}
+\]
+\qedwhite\\
+Nun definieren wir $\delta_j^{(l)}=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Fehlers im Bezug zum Signal
+$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten kann man mit Hilfe von \eqref{eq:signal} explizit ausgerechnet
+werden und somit folgt
+\begin{align*}
+    \frac{\partial C}{\partial \omega_{i,j}^{(l)}} &= \delta_j^{(l)} x_i^{(l-1)} \\
+    \frac{\partial C}{\partial b_j^{(l)}} &= \delta_j^{(l)} x_{0}^{(l-1)} = -\delta_j^{(l)}.
+\end{align*}
+Hiermit kann der Gradient der Kostenfunktion vereinfacht werden zu
+\[
+    \nabla C=\delta_j^{(l)}(x_i^{(l-1)},-1).
+\]
+Es fällt auf, dass für die Berechnung des Gradienten der Kostenfunktion nur die verschiedenen $\delta_j^{(l)}$ benötigt
+werden, da wir die $x_i^{(l-1)}$ schon in der Forwardpropagation berechnet haben. Diese $\delta_j^{(l)}$ werden mit dem
+sogenannten \textit{Backpropagation}-Algorithmus berechnet. Diesen werden wir im folgenden herleiten. Im Beweis
+von Satz \eqref{machine-cost-grad} haben wir gesehen, dass für $\delta_j^{(L)}$ gilt
+\[
+    \delta_j^{(L)}= \frac{\partial C}{\partial x_j^{(L)}} \frac{\partial x_j^{(L)}}{\partial s_j^{(L)}}= \frac{\partial C}{\partial x_j^{(L)}} \phi '(s_j^{(L)})
+    =\frac{\partial C}{\partial y_j} \phi '(s_j^{(L)}).
+\]
+Betrachtet man nun die vorletzte Schicht bzw. die letzte versteckte Schicht, so fällt auf, dass das Signal
+$s_j^{(L-1)}$ jedes Signal in der Ausgabeschicht beeinflusst und damit folgt mit Hilfe der mehrdimensionalen
+Kettenregel, dass
+\[
+    \delta_i^{(L-1)}= \sum\limits_{j=1}^{n^{(L)}} \frac{\partial C}{\partial s_j^{(L)}}
+    +\frac{\partial s_j^{(L)}}{\partial s_i^{(L-1)}}
+    = \sum\limits_{j=1}^{n^{(L)}} \delta_j^{(L)} \frac{\partial s_j^{(L)}}{\partial s_i^{(L-1)}}.
+\]
+Allgemein betrachtet beeinflusst das Signal $s_j^{(L-1)}$ ausschließlich alle Signale in der nachfolgenden Schicht,
+also folgt aus der oben hergeleiteten Formel
+\begin{align}
+    \delta_i^{(l-1)}= \sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)} \frac{\partial s_j^{(l)}}{\partial s_i^{(l-1)}},
+    \qquad 1 \leq i \leq n^{(l-1)}. \label{eq:delta-1}
+\end{align}
+Der zweiten Teil der Summe kann explizit ausrechnen:
+\begin{align*}
+    \frac{\partial s_j^{(l)}}{\partial s_j^{(l-1)}}
+    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{i=0}^{n^{(l-1)}}\omega_{ij}^{(l)}x_{i}^{(l-1)})\\
+    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{i=1}^{n^{(l-1)}}\omega_{ij}^{(l)}\phi(s_{i}^{(l-1)}) - b_j^{(l)}) \\
+    &= \omega_{ij}^{(l)}\phi'(s_i^{(l-1)}).
+\end{align*}
+Setzen wir jetzt das Ergebnis in \eqref{eq:delta-1}, so erhält man die zentrale Formel des
+\textit{Backpropagation}-Algorithmus:
+\begin{align}
+    \delta_i^{(l-1)} = \phi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)}\omega_{ij}^{(l)}
+    \qquad 1 \leq i \leq n^{(l-1)}. \label{eq:delta-final}
+\end{align}
+
+\subsubsection{Gradientenverfahren}
+Ein allgemeines Gradientenverfahren mit der \textit{learning rate} $\eta > 0$ hat die Form
+\begin{align*}
+    \omega_{ij}^{(l)[k+1]} &= \omega_{ij}^{(l)[k]} - \eta \delta_{j}^{(l)[k]} x_i^{(l-1)[k]}\\
+    b_{ij}^{(l)[k+1]} &= b_{ij}^{(l)[k]} + \eta \delta_{j}^{(l)[k]}.
+\end{align*}
+Unser Fokus in Bezug auf Gradientenverfahren wird auf der \textit{Adam} (engl. Adaptive moment Estimation) liegen. Sei
+$g^{[k]} := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
+Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
+$v^{[0]}=0$
+\begin{align*}
+    m^{[k]} &= \beta_1 m^{[k-1]} + (1-\beta_1)g^[k] \\
+    v^{[k]} &= \beta_2 v^{[k-1]} + (1-\beta_2)(g^{[k]})^2
 \end{align*}
 und deren Korrekturen
 \begin{align*}
-    \hat{m}_{k} &= \frac{m_{k}}{(1-\beta_1^k)} \\
-    \hat{v}_{k} &= \frac{v_{k}}{(1-\beta_2^k)}
+    \hat{m}^{[k]} &= \frac{m^{[k]}}{(1-\beta_1^k)} \\
+    \hat{v}^{[k]} &= \frac{v^{[k]}}{(1-\beta_2^k)}
 \end{align*}
 gegeben durch
 \[
-    x_{k+1}= x_{k} - \eta \frac{\hat{m}_{k}}{\sqrt(|\hat{v}_{k}|) + \epsilon}.
+    \omega_{ij}^{[k+1]}= \omega_{ij}^{[k]} - \eta \frac{\hat{m}^{[k]}}{\sqrt(|\hat{v}^{[k]}|) + \epsilon}.
 \]
-Dabei ist $\eta > 0$ die sogenannte \textit{learning rate} und $\epsilon > 0$ verhindert eine Division durch $0$. Eine
-Voreinstellung der Parameter wäre Beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$.
-Zu Beginn ($k=0$) müssen jedoch schon Gewichte gegeben sein, um $g_k$ berechnen zu können. Dazu werden wir uns in
-Abschnitt\eqref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
-Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X$ iteriert. Dabei nennt man ein
-einzelnes Element von $X$ \textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum \textit{Batch}. Eine
-Iteration über Batches bewirkt eine erhöhte Effizienz des Lernprozesses
-(siehe \cite[6.2.8]{ovidiucalinDeepLearningArchitectures}). Außerdem werden die Lernprozesse auch \textit{Epochen}
-genannt, dessen Anzahl angibt, wie oft das neuronale Netz die gegebenen Eingangsdaten zum Training nutzt.
+Dabei ist $\eta > 0$ die learning rate und $\epsilon > 0$ verhindert eine Division durch $0$. Eine Voreinstellung der Parameter
+wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$) müssen jedoch schon Gewichte
+gegeben sein, um $g_k$ berechnen zu können. Dazu werden wir uns in Abschnitt\eqref{subsec:gewichtsinitialisierung}
+genauere Gedanken machen.\\
+
+\subsubsection{Verschwindender und explodierender Gradient}
+Die Berechnung des Gradienten $\nabla C$ ist ist fehleranfällig wobei zwei folgende Probleme auftreten können: \\
+$\textbf{verschwindender Gradient}$
+Das Problem des verschwindenden Gradienten charakterisiert sich durch immer kleiner werdende $\delta_j^{(l)}$, was wiederum
+direkt zu einem verschwindenden Gradienten, also $\nabla C \approx 0$,führt. \\
+Angenommen: Die Aktivierungsfunktion $\Phi$ ist gegeben durch die Sigmoidfunktion, d.h. $\phi(x) =\frac{1}{1+e^{-x}}$ und
+die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}<1$ gilt.\\
+\begin{figure}
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{axis}[]
+                \addplot[domain = -6:6,blue] {1/(1+exp(-x))};
+                \addplot[domain = -6:6,red] {(exp(-x))/(1+exp(-x))^2};
+                \legend{
+                    $\phi(x)$,
+                    $\phi^{\prime}(x)$
+                }
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Graphen der Aktivierungsfunktion Sigmoid und dessen Ableitung.}
+        \label{sigmoid-figure}
+    \end{center}
+\end{figure}
+Sobald $|x|$ groß wird, ist die Ableitung $\phi'(x) \approx 0$ (siehe Fig \eqref{sigmoid-figure}). Dies hat die Auswirkung, dass
+$\delta_j^{(L)}$ bei betragsmäßig großen Signalen um den Faktor $\phi'(s_j^{(L)})$ kleiner wird. Dadurch werden die
+nachfolgenden Werte
+\[
+    \delta_i^{(l-1)}=\phi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}}\delta_j^{(l)} \omega_{ij}^{(l)}
+\]
+auch immer kleiner, da sowohl $\delta_j^{(l)}$ als auch $\omega_{ij}^{(l)}$ klein sind. Die Werte von $\delta_i$ werden
+so klein, dass sie gewichtet mit hinreichend kleiner learning rate ($\mu <1$) im Gradientenverfahren keine Auswirkung
+auf das neue Gewicht haben. Für ein allgemeines Gradientenverfahren gilt dann
+\[
+    \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\mu \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
+\]
+Um diesem Problem entgegenzuwirken, gibt es mehrere Verbesserungsmöglichkeiten.\newline
+$\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effektivität des Standard-Gradientenverfahren
+sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen für einen
+verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren versteckten
+Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion ($\phi(x)=\max(0,x)$) mit der
+Ableitung $\phi'(x)= \begin {cases} 0 &\text{x}<0\\ 1 &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
+Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
+verschwindet.\\
+$\textbf{Möglichkeit 2}:$ Eine geschicktere Initialisierung der Gewichte $\omega_{ij}^{(l)}$ wie in Abschnitt
+\eqref{subsec:gewichtsinitialisierung}\\
+$\textbf{explodierender Gradient}$
+Analog zum verschwindenden Gradienten existiert auch das Problem des \textit{explodierenden} Gradienten, in dem
+$\delta_j^{(l)}>1$ ist.\\
+Angenommen: Die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}>1$ und $b_j^{(l)}=0$
+gilt. Bei linearer Regression werden die Signale $s_j^{(l)}$  beispielsweise für wachsendes $l$ immer größer, da
+
+\[
+    x_j^{(l)}=\phi(s_j^{(l)})=s_j^{(l)}=\sum\limits_{i=1}^{n^{(l)}} \underbrace{\omega_{ij}^{(l)}x_{i}^{(l-1)}}_{>1}
+\]
+gilt. Bei einer Aktivierungsfunktion mit $\phi'(x)>1$ ist $\delta_j^{(L)}>1$, was zu einem explodierenden Gradienten $\nabla C$
+führt. Falls $\phi'(x)=1$ (wie beispielsweise ReLU bei positiver Eingabe oder linearer Aktivierungsfunktion), so werden
+die Werte der $\delta_i$ zwar nicht direkt von der Ableitung der Aktivierungsfunktion beeinflusst, aber bei einem sehr
+tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim
+verschwindenden Gradienten werden wir später eine geschickte Initialisierung der Gewichte herleiten, um diesem Problem
+entgegenzuwirken.
+
+\subsubsection{Batch training}
+Zusammengefasst werden die Gewichte durch ein Gradientenverfahren angepasst, sodass die Kostenfunktion minimiert wird.
+Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} explizit angeben. Während des Lernprozesses eines
+neuronalen Netzes wird über die gesamten Eingangsdaten $X$ iteriert. Dabei nennt man ein einzelnes Element von $X$
+\textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum \textit{Batch}. Eine Iteration über Batches
+bewirkt eine erhöhte Effizienz des Lernprozesses (siehe \cite[6.2.8]{ovidiucalinDeepLearningArchitectures}). Außerdem
+werden die Lernprozesse auch \textit{Epochen}genannt, dessen Anzahl angibt, wie oft das neuronale Netz die gegebenen
+Eingangsdaten zum Training nutzt.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
-Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit dem wir unser
-neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
+Wir werden uns in diesem Abschnitt an der wissenschaftliche Arbeit \cite{flamantSolvingDifferentialEquations2020}
+orientieren. Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit dem
+wir unser neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
 \begin{align}
     \label{dgl-machinelearnung}
     x^{\prime} = f(t,x)
@@ -150,9 +308,8 @@ können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen 
 Gleichverteilung der Intervalle $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich Eingangsdaten zur
 Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden. Stattdessen repräsentiert jeder Batch
 eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine steigende Anzahl der samples eine bessere
-Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht auftreten, da es umgangssprachlich nicht
-möglich ist "unendlich Daten auswendig zu lernen". !!TODO: fragen ob das geht und cite overfitting!!\\
-Der Korrekturfaktor $b(t_i)$ wird zur Beeinflussung des lokalen Fehlers
+Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht auftreten, da es nicht zu viele
+relevante Variablen bzw. Trainingsdaten gibt. Der Korrekturfaktor $b(t_i)$ wird zur Beeinflussung des lokalen Fehlers
 \begin{align*}
     \tau(t_i;x_{0i}, \theta_i)
     := G \left( \hat{x}(t_i;x_{0i}, \theta_i), \hat{x}^{\prime}(t_i;x_{0i}, \theta_i),t_i;\theta_i \right)
@@ -295,10 +452,14 @@ eines späteren Zeitpunktes $t$ angegeben werden mit
     p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert,
 \]
 wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{-1}}= \frac{\partial x_0}{\partial x_t}$
-die Jacobi-Matrix von $f^{-1}$ ist.
-
-Da das Generieren einer Zufallszahl in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
+die Jacobi-Matrix von $f^{-1}$ ist. Falls jedoch die Wahrscheinlichkeitsverteilung der Anfangszeit $p_0(x_0)$ gesucht
+ist, so lässt sich diese ohne Inverse berechnen lassen:
+\[
+    p_0(x_0) = p_t(f(x_0))|J_f|,
+\]
+wobei $J_f= \frac{\partial x_t}{\partial x_0}$ die Jacobi-Matrix von $f$ ist. Da das Generieren einer Zufallszahl aus
+der Wahrscheinlichkeitsverteilung $p$ in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
 Dimensionen der Anfangsbedingungen und physikalischen Parametern stattdessen sogenannte
 \textit{Markow-Ketten-Monte-Carlo-Verfahren} (kurz MCMC-Verfahren). Diese wählen die gesuchten Daten mit Hilfe einer
-Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods}nachgelesen
+Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods} nachgelesen
 werden.

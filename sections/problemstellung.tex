@@ -120,6 +120,7 @@ Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysi
 \end{satz}
 $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}
 \begin{satz}[Existenzsatz von Peano, quantitative und qualitative Version]
+\label{peano}
     Quantitative Version: Seien
     \[
             {\cal G}=\{(t,x) \in \mathbb{R} \times \mathbb{R}^{n}: |t-t_{0}| \leq \alpha, \quad
@@ -253,6 +254,7 @@ $Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
 %\]
 Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differentialgleichungen beweisen.
 \begin{satz}[Existenzsatz- und Eindeutigkeitssatz von Picard-Lindelöf]
+\label{picard}
     Quantitative Version: Seien
     \[
             {\cal G}=\{(t,x) \in \mathbb{R} \times \mathbb{R}^{n}: |t-t_{0}| \leq \alpha, \quad
@@ -270,25 +272,43 @@ Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differ
     sodass das Anfangswertproblem \eqref{firstorder-ode} auf dem Intervall $[t_{0}-a,t_{0}+a]$ genau eine Lösung
     $\hat{x}$ hat.
 \end{satz}
-! TODO: Ungleichung beweisen !
+! TODO: Induktion beweisen !
 $Beweis$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
-aus dem Beweis von Peano. Aus
+aus dem Beweis von Satz \eqref{peano}. Wir zeigen mit Induktion über $j\in \mathbb{N}$, dass
 \[
     \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert \leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty}
 \]
-für alle $j \in \mathbb{N}$ und $t \in D$, folgt direkt
+
+
+für alle $j \in \mathbb{N}$ und $t \in D$ gilt.
+\begin{alignat*}{2}
+    (j=1):& \qquad \left\lVert (A^j u)(t)- (A^j v)(t) \right\rVert &&\leq
+    \underbrace{\left\lVert u_0 - v_0 \right\rVert}_{=0}
+    + \left\lVert \int_{t_0}^{t} f(s,u(s)) - f(s,v(s)) ds \right\rVert\\
+    & &&\leq L \left\lVert u - v \right\rVert_{\infty} |t - t_0|\\
+    (\text{IV}):& \qquad
+    \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert &&\leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty} \\
+    (j \rightarrow j+1):& \quad \left\lVert (A^{j+1} u)(t)- (A^{j+1} v)(t) \right\rVert
+    &&\leq \underbrace{\left\lVert u_0 - v_0 \right\rVert}_{=0} +
+    \left\lVert\int_{t_0}^{t}f(s,(A^ju)(s)) - f(s,(A^ju)(s))ds \right\rVert\\
+    & &&\leq L |t - t_0| \left\lVert (A^{j}u) - (A^jv) \right\rVert_{\infty} \\
+    &  &&= L |t-t_0| \max\limits_{ t \in [t_0 - a,t_0 + a] } \left\lVert (A^ju)(t) - (A^jv)(t) \right\rVert \\
+    &  &&\underset{\text{IV}}{\leq} L |t-t_0| \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty} \\
+    & &&= \frac{|t-t_0|^{j+1}}{(j+1)!} L^{j+1} \left\lVert u - v \right\rVert_{\infty}
+\end{alignat*}
+Nun folgt direkt
 \[
     \left\lVert A^j u - A^j v \right\rVert_{\infty} \leq \frac{(aL)^j}{j!} \left\lVert u - v \right\rVert_{\infty}.
 \]
 Die Reihe $\sum_{j=1}^{\infty} \frac{(aL)^j}{j!} $ ist nach dem Quotientenkriterium offensichtlich konvergent. Also
 lässt sich der Fixpunktsatz von Weissinger anwenden. Der daraus gewonnene Fixpunkt ist eindeutig und mit ähnlicher
-Äuqivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite \\
+Äquivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite \\
 Für lineare Differentialgleichungen erster Ordnung \eqref{linear-first-order-ode} mit konstanten $A$  gilt wegen
 \[
     \left\lVert Ax + g(t) - Ay - g(t) \right\rVert \leq \left\lVert A \right\rVert \left\lVert x - y \right\rVert,
 \]
-dass die rechte Seite Lipschitz-stetig in der x-Variable ist, wodurch eindeutige Lösbarkeit folgt. Die Lösung $x$ kann
-mit Hilfe der \textit{Matrixexponentialfunktion} \cite{Matrixexponential} angegeben werden:
+dass die rechte Seite Lipschitz-stetig in der x-Variable ist, wodurch mit Satz \eqref{picard} eindeutige Lösbarkeit
+folgt. Die Lösung $x$ kann mit Hilfe der \textit{Matrixexponentialfunktion} \cite{Matrixexponential} angegeben werden:
 \begin{align}
     \label{linear-ode-solution}
     x(t) = e^{A(t-t_0)}x_0 + \int_{t_0}^{t}e^{A(t-s)}g(s) ds.
