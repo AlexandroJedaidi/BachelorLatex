@@ -161,7 +161,7 @@ $g^{[k]} := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gew
 Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
 $v^{[0]}=0$
 \begin{align*}
-    m^{[k]} &= \beta_1 m^{[k-1]} + (1-\beta_1)g^[k] \\
+    m^{[k]} &= \beta_1 m^{[k-1]} + (1-\beta_1)g^{k} \\
     v^{[k]} &= \beta_2 v^{[k-1]} + (1-\beta_2)(g^{[k]})^2
 \end{align*}
 und deren Korrekturen
@@ -240,13 +240,20 @@ verschwindenden Gradienten werden wir später eine geschickte Initialisierung de
 entgegenzuwirken.
 
 \subsubsection{Batch training}
-Zusammengefasst werden die Gewichte durch ein Gradientenverfahren angepasst, sodass die Kostenfunktion minimiert wird.
-Die Kostenfunktion werden wir in Abschnitt \eqref{subsec:lsgpakete} explizit angeben. Während des Lernprozesses eines
-neuronalen Netzes wird über die gesamten Eingangsdaten $X$ iteriert. Dabei nennt man ein einzelnes Element von $X$
-\textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum \textit{Batch}. Eine Iteration über Batches
-bewirkt eine erhöhte Effizienz des Lernprozesses (siehe \cite[6.2.8]{ovidiucalinDeepLearningArchitectures}). Außerdem
-werden die Lernprozesse auch \textit{Epochen}genannt, dessen Anzahl angibt, wie oft das neuronale Netz die gegebenen
-Eingangsdaten zum Training nutzt.
+Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X^{(0)}$ iteriert. Dabei nennt
+man ein einzelnes Element von $X^{(0)}$ \textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum
+\textit{Batch}. Außerdem werden die Lernprozesse auch \textit{Epochen} genannt, dessen Anzahl angibt, wie oft das
+neuronale Netz die gegebenen Eingangsdaten zum Training nutzt. Es macht Sinn, die Eingangsdaten in Batches einzuteilen,
+denn so wird Speicherplatz gespart und an Rechengeschwindigkeit gewonnen, da die Gewichte erst nach dem Durchgang eines
+Batches aktualisiert werden, anstatt sie nach jeder Probe zu berechnen. Dies wird realisiert, indem wir die Gradienten
+der Proben in einem Batch mit Hilfe der Backpropagation berechnen und im Anschluss den Durchschnitt
+\[
+    \tilde{\nabla C} = \frac{1}{|B|} \sum_{i=1}^{|B|} \nabla C(X^{(0,i)})
+\]
+verwendet, wobei $|B|$ die Größe der Batches angibt und $X^{(0,i)}$, $1 \leq i \leq |B|$, eine Probe des Batches $B$ ist.
+Dieser Mittelwert wird dann durch das gegebene Gradientenverfahren verwendet, um die Gewichte $\omega_{ij}^{(l)}$ zu
+aktualisieren. Dabei spielt die Größe der Batches $|B|$ eine wichtige Rolle, denn wenn $|B|$ zu klein ist, so werden die
+Abschätzungen des Durchschnitts zu ungenau, was wiederum den Lernprozess verlangsamen würde.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
