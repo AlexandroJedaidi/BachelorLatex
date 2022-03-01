@@ -1,6 +1,7 @@
 \section{Numerischer Lösungsansatz}
-Der Großteil dieses Abschnitts beruht im Wesentlichen auf \cite[63-79]{stykelSkriptZurVorlesung2020}. Wir werden uns im
-Folgenden hauptsächlich das Anfangswertproblem
+Der Abschnitt beruht im Wesentlichen auf \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche} und
+\cite{ernsthairergerhardwannerSolvingOrdinaryDifferential}. Wir werden uns im Folgenden hauptsächlich das
+Anfangswertproblem
 \begin{align}
     \label{first-order-num}
     x^{\prime} &= f(t,x) \nonumber \\
@@ -87,33 +88,33 @@ der Gronwall Ungleichung \ref{Satz-gronwall} beweisen.
 \end{satz}
 $Beweis.$ Da $i=1,\dots,N$ bietet sich ein Induktionsbeweis nach i an:
 \begin{alignat*}{2}
-(i=0):& \qquad \gamma_1 &&\leq
-\underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
-\underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
-(\text{IV}):& \qquad
-\gamma_{i} &&\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
-(i \rightarrow i+1):& \quad
-\gamma_{i+1} &&\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
-& &&\underset{\text{IV}}{\leq} (1 + \alpha_i)
-\left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
-&  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
-+ \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
-&  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
+    (i=0):& \qquad \gamma_1 &&\leq
+    \underbrace{(1 + \alpha_0)}_{\leq e^{\alpha_0}}\gamma_0 +
+    \underbrace{\beta_0}_{=\beta_0 e^{0} \leq \beta_0 e^{\alpha_0}} \leq (\gamma_0 + \beta_0)e^{\alpha_0}\\
+    (\text{IV}):& \qquad
+    \gamma_{i} &&\leq \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots \alpha_{i-1}} \\
+    (i \rightarrow i+1):& \quad
+    \gamma_{i+1} &&\leq (1 + \alpha_{i})\gamma_{i} + \beta_i\\
+    & &&\underset{\text{IV}}{\leq} (1 + \alpha_i)
+    \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}+\beta_{i}\\
+    &  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
+    + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
+    &  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) + e^{\alpha_0 + \dots + \alpha_{i}}
 \end{alignat*}\qedwhite\\
 \begin{satz}
     \label{one-step-error-bound}
     Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{first-order-num} gegeben. Ist  die
     Inkrementfunktion $\phi$ in der $x-Variable$ Lipschitz-stetig, also
     \[
-        \left\lVert \phi(t, x_1, h, f) - \phi(t, x_2, h, f) \right\rVert \leq L \left\lVert x_1 - x_2 \right\rVert
+        \left\lVert \phi(t, x_1, h, f) - \phi(t, x_2, h, f) \right\rVert_2 \leq L \left\lVert x_1 - x_2 \right\rVert_2
     \]
     für alle $(t, x_1, h),(t, x_2, h) \in D \times \mathbb{R}^n \times [0, h_0]$ mit $h_0, L>0$, dann gilt für den
     globalen Fehler in $t_i = t_0 + ih$ die obere Schranke
     \[
-        \left\lVert e(t_i,h) \right\rVert \leq \left( \left\lVert e_0 \right\rVert + (t_i-t_0)\tau_h \right)
+        \left\lVert e(t_i,h) \right\rVert_2 \leq \left( \left\lVert e_0 \right\rVert_2 + (t_i-t_0)\tau_h \right)
         e^{L(t_i-t_0)}, \quad i = 1, \dots, N.
     \]
-    Dabei ist $e_0 = x(t_0)-u_0$ und $\tau_h= \max\limits_{k=1,\dots,N} \left\lVert \tau(t_k,h) \right\rVert $.
+    Dabei ist $e_0 = x(t_0)-u_0$ und $\tau_h= \max\limits_{k=1,\dots,N} \left\lVert \tau(t_k,h) \right\rVert_2 $.
 \end{satz}
 $Beweis.$ Löse zuerst die Gleichung des lokalen Diskretisierungsfehlers auf $x(t_{j+1})$ auf:
 \[
@@ -126,21 +127,21 @@ Dann nutzen wir das Ergebnis für den globalen Fehler
 \]
 und schätzen ab
 \[
-    \left\lVert e(t_{j+1},h) \right\rVert \leq \left\lVert e(t_j, h) \right\rVert + h\tau_h
-    + hL\left\lVert e(t_j,h) \right\rVert = (1 + hL) \left\lVert e(t_j,h) \right\rVert + h\tau_h.
+    \left\lVert e(t_{j+1},h) \right\rVert_2 \leq \left\lVert e(t_j, h) \right\rVert_2 + h\tau_h
+    + hL\left\lVert e(t_j,h) \right\rVert_2 = (1 + hL) \left\lVert e(t_j,h) \right\rVert_2 + h\tau_h.
 \]
-Nun können wir mit $\alpha_j=hL$, $\gamma_j =\left\lVert e(t_j,h) \right\rVert$ und $\beta_j = h\tau_h$ die diskrete
+Nun können wir mit $\alpha_j=hL$, $\gamma_j =\left\lVert e(t_j,h) \right\rVert_2$ und $\beta_j = h\tau_h$ die diskrete
 Gronwall Ungleichung anwenden und erhalten
 \begin{align*}
-    \left\lVert e(t_{j+1},h) \right\rVert
-    &\leq \left( \left\lVert e_0 \right\rVert \sum_{i=0}^{j} h\tau_h e^{\sum_{i=0}^{j} hL } \right)\\
-    &= \left( \left\lVert e_0 \right\rVert + (j+1)h \tau_h \right)e^{(j+1)hL} \\
-    &= \left( \left\lVert e_0 \right\rVert + (t_{j+1} - t_0) \tau_h \right)e^{L(t_{j+1} - t_0)} \\
+    \left\lVert e(t_{j+1},h) \right\rVert_2
+    &\leq \left( \left\lVert e_0 \right\rVert_2 \sum_{i=0}^{j} h\tau_h e^{\sum_{i=0}^{j} hL } \right)\\
+    &= \left( \left\lVert e_0 \right\rVert_2 + (j+1)h \tau_h \right)e^{(j+1)hL} \\
+    &= \left( \left\lVert e_0 \right\rVert_2 + (t_{j+1} - t_0) \tau_h \right)e^{L(t_{j+1} - t_0)} \\
 \end{align*}
 für alle $j=0, \dots, i-1$, also insbesondere
 \[
-    \left\lVert e(t_{i},h) \right\rVert
-    = \left( \left\lVert e_0 \right\rVert + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}
+    \left\lVert e(t_{i},h) \right\rVert_2
+    = \left( \left\lVert e_0 \right\rVert_2 + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}
 \]
 für $j=i-1$.\qedwhite\\
 Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Im allgemeinen ist
@@ -183,7 +184,7 @@ Dazu benötigen wir die Simpsonregel
     Q(f) = \frac{b-a}{6} (f(a) + 4f(\frac{a+b}{2}) +f(b))
 \]
 mit $a=(t_i,x(t_i)), b=(t_{i}+h,x(t_{i}+h))$. Es gilt also die Approximation
-!!TODO: Taylor angeben evtl!!
+TODO: Taylor Entwicklung
 \begin{align*}
     \int_{t_i}^{t_{i+1}} f(s,x(s)) ds &\approx
     \frac{h}{6}(f(t_i,x(t_i)) + 4f((t_i + \frac{h}{2}), x(t_i+\frac{h}{2})) + f(t_i + h,x(t_i + h))) \\

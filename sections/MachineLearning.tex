@@ -1,28 +1,25 @@
 \section{neuronale Netze}
 In diesem Abschnitt werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu lösen.
 Dabei gehen wir genauer auf neuronale Netze ein. Dieser Abschnitt bezieht sich hauptsächlich auf
-\cite{ovidiucalinDeepLearningArchitectures} und auch Grundlagen zu neuronalen Netzen wie Beispielsweise
-\textit{Forward}- und \textit{Backwardpropagation} lassen sich in \cite[Chapter 6]{ovidiucalinDeepLearningArchitectures}
-nachlesen. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und Mehrschrittverfahren heutzutage
-extrem effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, gibt es dennoch Vorteile neuronale Netze zu
-benutzen. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen Differentialgleichung nur in einem
-bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von der Anfangszeit $t_0$ bis zur
-gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz repräsentiert jedoch die gesuchte
-Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen, was im Gegensatz zu den
-numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in unserem Anwendungsgebiet noch einen
-ausschlaggebenden Vorteil in Bezug auf Recheneffizienz, welchen wir in Abschnitt \ref{subsec:lsgpakete} betrachten
-werden.
+\cite{ovidiucalinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
+Mehrschrittverfahren heutzutage extrem effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, gibt es dennoch
+Vorteile neuronale Netze zu benutzen. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen
+Differentialgleichung nur in einem bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von
+der Anfangszeit $t_0$ bis zur gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz
+repräsentiert jedoch die gesuchte Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen,
+was im Gegensatz zu den numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in unserem Anwendungsgebiet
+noch einen ausschlaggebenden Vorteil in Bezug auf Recheneffizienz, welchen wir in Abschnitt \ref{subsec:lsgpakete}
+betrachten werden.
 
 \subsection{Struktur neuronaler Netze}
 \label{subsec:struktur-eines-neuronalen-netzes}
-Zuerst werden wir die grundlegenden Begrifflichkeiten eines neuronalen Netzes definieren. Dieser Abschnitt basiert im
-Wesentlichen auf das Buch \cite{ovidiucalinDeepLearningArchitectures}. Zur Übersicht beschränken wir uns auf ein
-neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei versteckte Schichten mit jeweils 3 Neuronen und eine
-Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier
-jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$
-Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$
-geben an, in welcher Relation die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen.
-Dabei werden die Gewichte der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
+Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei
+versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample}
+dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches
+konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht,
+wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$geben an, in welcher Relation die Neuronen der vorherigen
+Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte der Bias-Neuronen mit
+$b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
 \begin{figure}[htp]
     \centering
     \begin{neuralnetwork}[height=4]
@@ -67,13 +64,13 @@ benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
 Forward propagation wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
 Ausgaben der versteckten Schichten zu berechnen. Dabei wird für alle $1 \leq l \leq L$ zuerst \eqref{eq:signal}
 angewendet, um die jeweiligen Signale zu berechnen und im Anschluss nutzen wir \eqref{eq:activ}. Im letzten
-Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $1\leq j \leq n^{L}$. Die Forwardpropagation
-ist eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
+Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $1\leq j \leq n^{(L)}$. Die Forwardpropagation ist
+eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
 
 \subsubsection{Backwardpropagation}
 Sei $C(Y)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe $Y:=(y_j)_j$.Dabei ist $Y$
 offensichtlich abhängig von den Gewichten $\omega$ und den Bias $b$. Der Gradient der Kostenfunktion ist gegeben durch
-$\nabla C=(\nabla_{\omega}C,\nabla_{b}C).$  !!TODO: Gradient!!\\
+$\nabla C=(\nabla_{\omega}C,\nabla_{b}C).$  (Definition Gradient siehe Appendix)\\
 Ds Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons in der $(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten
 Schicht unabhängig von jeglichen anderen Gewichten hinzu Also ergibt sich folgendes für den Gradienten der
 Kostenfunktion.
@@ -214,11 +211,11 @@ auf das neue Gewicht haben. Für ein allgemeines Gradientenverfahren gilt dann
     \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\mu \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
 \]
 Um diesem Problem entgegenzuwirken, gibt es mehrere Verbesserungsmöglichkeiten.\newline
-$\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effektivität des Standard-Gradientenverfahren
-sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen für einen
-verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren versteckten
-Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion ($\phi(x)=\max(0,x)$) mit der
-Ableitung $\phi'(x)= \begin {cases} 0 &\text{x}<0\\ 1 &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
+$\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effektivität des allgemeinen
+Gradientenverfahren sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen
+für einen verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren
+versteckten Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion ($\phi(x)=\max(0,x)$) mit
+der Ableitung $\phi'(x)= \begin {cases} 0 &\text{x}<0\\ 1 &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
 Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
 verschwindet.\\
 $\textbf{Möglichkeit 2}:$ Eine geschicktere Initialisierung der Gewichte $\omega_{ij}^{(l)}$ wie in Abschnitt
@@ -232,12 +229,12 @@ gilt. Bei linearer Regression werden die Signale $s_j^{(l)}$  beispielsweise fü
 \[
     x_j^{(l)}=\phi(s_j^{(l)})=s_j^{(l)}=\sum\limits_{i=1}^{n^{(l)}} \underbrace{\omega_{ij}^{(l)}x_{i}^{(l-1)}}_{>1}
 \]
-gilt. Bei einer Aktivierungsfunktion mit $\phi'(x)>1$ ist $\delta_j^{(L)}>1$, was zu einem explodierenden Gradienten $\nabla C$
-führt. Falls $\phi'(x)=1$ (wie beispielsweise ReLU bei positiver Eingabe oder linearer Aktivierungsfunktion), so werden
-die Werte der $\delta_i$ zwar nicht direkt von der Ableitung der Aktivierungsfunktion beeinflusst, aber bei einem sehr
-tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim
-verschwindenden Gradienten werden wir später eine geschickte Initialisierung der Gewichte herleiten, um diesem Problem
-entgegenzuwirken.
+gilt. Solange $\frac{\partial C}{\partial y_i} > 1$ gilt bei einer Aktivierungsfunktion mit $\phi'(x)>1$ auch $\delta_j^{(L)}>1$,
+was zu einem explodierenden Gradienten $\nabla C$ führt. Falls $\phi'(x)=1$ (wie beispielsweise ReLU bei positiver Eingabe oder
+linearer Aktivierungsfunktion), so werden die Werte der $\delta_i$ zwar nicht direkt von der Ableitung der
+Aktivierungsfunktion beeinflusst, aber bei einem sehr tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem
+groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim verschwindenden Gradienten werden wir später eine geschickte
+Initialisierung der Gewichte herleiten, um diesem Problem entgegenzuwirken.
 
 \subsubsection{Batch training}
 Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X^{(0)}$ iteriert. Dabei nennt
@@ -248,7 +245,7 @@ denn so wird Speicherplatz gespart und an Rechengeschwindigkeit gewonnen, da die
 Batches aktualisiert werden, anstatt sie nach jeder Probe zu berechnen. Dies wird realisiert, indem wir die Gradienten
 der Proben in einem Batch mit Hilfe der Backpropagation berechnen und im Anschluss den Durchschnitt
 \[
-    \tilde{\nabla C} = \frac{1}{|B|} \sum_{i=1}^{|B|} \nabla C(X^{(0,i)})
+    \widetilde{\nabla C} = \frac{1}{|B|} \sum_{i=1}^{|B|} \nabla C(X^{(0,i)})
 \]
 verwendet, wobei $|B|$ die Größe der Batches angibt und $X^{(0,i)}$, $1 \leq i \leq |B|$, eine Probe des Batches $B$ ist.
 Dieser Mittelwert wird dann durch das gegebene Gradientenverfahren verwendet, um die Gewichte $\omega_{ij}^{(l)}$ zu
@@ -328,9 +325,9 @@ neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung 
     Für \eqref{dgl-machinelearnung} ist der lokale Fehler $\tau$ gegeben durch
     $\tau(t) = \hat{x}^{\prime}(t) - f(t,\hat{x})$. Es gilt
     \[
-        \left\lVert e(t) \right\rVert = \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0) - 1} \right),
+        \left\lVert e(t) \right\rVert_2 = \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0) - 1} \right),
     \]
-    wobei $\tau_{t_f} = \max\limits_{t_0 \leq t \leq t_f} \left\lVert \tau(t) \right\rVert$ und $L$ die
+    wobei $\tau_{t_f} = \max\limits_{t_0 \leq t \leq t_f} \left\lVert \tau(t) \right\rVert_2$ und $L$ die
     Lipschitz-Konstante der rechten Seite $f$.
 \end{satz}
 $Beweis.$ Der lokale Fehler ergibt sich durch einfaches Konstuierens von $G$.\\
@@ -345,20 +342,20 @@ Einsetzen in den lokalen Fehler ergibt
     \Leftrightarrow \quad &e^{\prime}(t) &= \tau(t) - x^{\prime}(t) + f(t,e(t) + x(t)).
 \end{alignat*}
 $x$ die Lösung von \eqref{dgl-machinelearnung}, also ist $x^{\prime}=f(t,x(t))$. Des Weiteren ist $f$ Lipschitz-stetig,
-das heißt es gilt $\left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert \leq L \left\lVert e(t) \right\rVert$. Also kann
+das heißt es gilt $\left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert_2 \leq L \left\lVert e(t) \right\rVert_2$. Also kann
 man die Norm der rechten Seite obiger Gleichung schreiben als
 \begin{align*}
-    \left\lVert \tau(t) + f(t,e(t) + x(t)) - x^{\prime}(t) \right\rVert
-    &= \left\lVert \tau(t) + f(t,e(t) + x(t)) - f(t,x(t)) \right\rVert \\
-    &\leq \left\lVert \tau(t) \right\rVert + L\left\lVert e(t) \right\rVert \\
-    &\leq \tau_{t_f} + L \left\lVert e(t) \right\rVert.
+    \left\lVert \tau(t) + f(t,e(t) + x(t)) - x^{\prime}(t) \right\rVert_2
+    &= \left\lVert \tau(t) + f(t,e(t) + x(t)) - f(t,x(t)) \right\rVert_2 \\
+    &\leq \left\lVert \tau(t) \right\rVert_2 + L\left\lVert e(t) \right\rVert_2 \\
+    &\leq \tau_{t_f} + L \left\lVert e(t) \right\rVert_2.
 \end{align*}
 Dabei wurde die Dreiecksungleichung benutzt und der lokale Fehler wurd durch das Maximum aller lokalen Fehler
 abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfüllt
 \[
     E^{\prime}(t) = \tau_{t_f} + L E(t),
 \]
-wobei $0 \leq \left\lVert e(t) \right\rVert \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
+wobei $0 \leq \left\lVert e(t) \right\rVert_2 \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
 Differentialgleichung erster Ordnung welche mit \eqref{linear-ode-solution} berechnen lässt
 \begin{align*}
     E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f} ds \\
@@ -367,7 +364,7 @@ Differentialgleichung erster Ordnung welche mit \eqref{linear-ode-solution} bere
 \end{align*}
 Daraus folgt
 \[
-    \left\lVert e(t) \right\rVert \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
+    \left\lVert e(t) \right\rVert_2 \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
 \]
 was sich mit \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
 Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
@@ -376,7 +373,7 @@ frühen Zeitpunkten zu skalieren.
 
 \subsubsection{curriculum learning}
 \label{subsec:curriculum-learning}
-!!TODO: titel übersetzen!!\\
+TODO: Titel überarbeiten\\
 Bei Menschen oder auch Tieren lässt sich beobachten, dass sie unter Verfolgung eines Lehrplans effektiver Sachverhalte
 lernen und verstehen. Ein ähnliches Prinzip können sich auf neuronale Netze übertragen. Genauere Disskussion dieses
 Prinzips lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Es gibt in unserer Anwendung der Lösungspakete
@@ -392,20 +389,17 @@ einer kleinen Menge an Daten trainieren und erhöhen diese in Abhängigkeit der 
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
 Die Gewichtsinitialisierung ist ein entscheidender Faktor um Probleme des explodierenden und verschwindenden Gradienten
-(siehe \cite{wangVanishingGradientProblem2019}) entgegenzuwirken.
-In diesem Abschnitt werden wir ein Intervall bestimmen, welches dann zur Initialisierung der Gewichte $\omega_{ij}$
-genutzt wird. Die Herleitung bezieht sich hauptsächlich auf \cite[191-195]{ovidiucalinDeepLearningArchitectures}.
-Dazu werden betrachten wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
+entgegenzuwirken. In diesem Abschnitt werden wir ein Intervall bestimmen, welches dann zur Initialisierung der Gewichte
+$\omega_{ij}$ genutzt wird. Dazu werden betrachten wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
 zugehörigen Gewichte $\omega_{ij}:=\omega_{ij}^{(l)}$ sowie $x_{i}^{(l-1)}$ als unabhängige, identisch verteilte
 Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die bias $b$
 werden mit $0$ initialisiert. Für die Varianz der Ausgabe der $l$-ten Schicht $x_i^{(l)}$ ergibt sich durch
-!!TODO: Berechnung!!
 \begin{align*}
     Var(x_j^{(l)}) &= Var\left( \Phi\left( \sum_{i} \omega_{ij}x_i^{(l-1)} \right) \right)\\
     &= n^{(l-1)} \Phi^{\prime}(0)^2 Var(\omega_{ij}) Var(x_i^{(l-1)}).
 \end{align*}
-Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also $Var(x_j^{(l)})=Var(x_j^{(l-1)})$,
-so ergibt sich für die Varianz der Gewichte
+(Berechnung siehe Anhang) Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also
+$Var(x_j^{(l)})=Var(x_j^{(l-1)})$, so ergibt sich für die Varianz der Gewichte
 \[
     Var(\omega_{ij}) = \frac{1}{n^{(l-1)}\Phi^{\prime}(0)}.
 \]
@@ -428,16 +422,16 @@ Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{
     Var(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
 \]
 einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit den der
-Gewchichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
+Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
 \[
-    \omega_{ij}^{((l))} \raisebox{-0.9ex}{\~{}}
+    \omega_{ij}^{((l))} \sim
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}} \right]
 \]
 für alle $1\leq i \leq n^{(l-1)}$, $1\leq j \leq n^{l}$, $1\leq l \leq L$ Diese Verteilung heißt \textit{Xavier-} oder
 \textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Phi(x)=tanh(x)$ kann man durch ähnlichs Vorgehen
 eine Initialisierung mit der Gleichverteilung
 \[
-    \omega_{ij}^{((l))} \raisebox{-0.9ex}{\~{}}
+    \omega_{ij}^{((l))} \sim
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}} \right]
 \]
 erzielen.
@@ -456,7 +450,7 @@ $x(t; x_0)$ gibt eine Koordinatentransformation von $x_0$ nach $x_t$ an. Unter d
 $f: X_0 \rightarrow X_t, f(x_0) = x(t;x_0)$ invertierbar und differenzierbar ist, kann die Wahrscheinlichkeitsverteilung
 eines späteren Zeitpunktes $t$ angegeben werden mit
 \[
-    p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert,
+    p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert_2,
 \]
 wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{-1}}= \frac{\partial x_0}{\partial x_t}$
 die Jacobi-Matrix von $f^{-1}$ ist. Falls jedoch die Wahrscheinlichkeitsverteilung der Anfangszeit $p_0(x_0)$ gesucht
