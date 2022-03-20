@@ -33,6 +33,7 @@
 \usepackage{breqn}
 \usepackage{neuralnetwork}
 \usepackage{pgfplots}
+\graphicspath{ {./images/} }
 
 \pagestyle{scrheadings}                  % Kopfzeilen nach scr-Standard
 \usetikzlibrary{automata}                % Tikz-Library zum Zeichnen von Automaten
@@ -90,8 +91,7 @@
 
     \subfile{sections/MachineLearning.tex}
 
-    \section{Anwendungsbeispiele}
-    \label{sec:anwendungsbeispiele}
+    \subfile{sections/anwendungsbeispiele.tex}
 
     \newpage
     \printbibliography[heading=bibintoc]

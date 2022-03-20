@@ -205,7 +205,7 @@ nachfolgenden Werte
     \delta_i^{(l-1)}=\phi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}}\delta_j^{(l)} \omega_{ij}^{(l)}
 \]
 auch immer kleiner, da sowohl $\delta_j^{(l)}$ als auch $\omega_{ij}^{(l)}$ klein sind. Die Werte von $\delta_i$ werden
-so klein, dass sie gewichtet mit hinreichend kleiner learning rate ($\mu <1$) im Gradientenverfahren keine Auswirkung
+so klein, dass sie gewichtet mit hinreichend kleiner learning rate ($\eta <1$) im Gradientenverfahren keine Auswirkung
 auf das neue Gewicht haben. Für ein allgemeines Gradientenverfahren gilt dann
 \[
     \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\mu \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
@@ -371,21 +371,6 @@ Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehle
 kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
 
-\subsubsection{curriculum learning}
-\label{subsec:curriculum-learning}
-TODO: Titel überarbeiten\\
-Bei Menschen oder auch Tieren lässt sich beobachten, dass sie unter Verfolgung eines Lehrplans effektiver Sachverhalte
-lernen und verstehen. Ein ähnliches Prinzip können sich auf neuronale Netze übertragen. Genauere Disskussion dieses
-Prinzips lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Es gibt in unserer Anwendung der Lösungspakete
-Fälle, in den sich eine "Vereinfachung" der Trainingsdaten bzw. Batches anbietet. Ein genaues Beispiel werden wir in
-\eqref{sec:anwendungsbeispiele} betrachten. Hierzu werden wir die Batches $B$ bearbeiten, in dem wir das Zeitintervall
-verkleinern, also erhalten wir neue Batches $B^{\prime}$ mit
-\[
-    B^{\prime}:=  \{(t_i,x_{0i},\theta_i) \in [t_0,t_m] \times X_0 \times \Theta\},
-\]
-wobei $t_m<f_f$ und $m$ die Anzahl der bereits trainieren Batches ist. Wir lassen also das neuronale Netz zuerst mit
-einer kleinen Menge an Daten trainieren und erhöhen diese in Abhängigkeit der bereits trainierten Batches.
-
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
 Die Gewichtsinitialisierung ist ein entscheidender Faktor um Probleme des explodierenden und verschwindenden Gradienten
@@ -456,7 +441,7 @@ wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{
 die Jacobi-Matrix von $f^{-1}$ ist. Falls jedoch die Wahrscheinlichkeitsverteilung der Anfangszeit $p_0(x_0)$ gesucht
 ist, so lässt sich diese ohne Inverse berechnen lassen:
 \[
-    p_0(x_0) = p_t(f(x_0))|J_f|,
+    p_0(x_0) = p_t(f(x_0))\left\lVert J_f \right\rVert_2,
 \]
 wobei $J_f= \frac{\partial x_t}{\partial x_0}$ die Jacobi-Matrix von $f$ ist. Da das Generieren einer Zufallszahl aus
 der Wahrscheinlichkeitsverteilung $p$ in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
