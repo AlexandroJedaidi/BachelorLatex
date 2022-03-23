@@ -1,61 +1,81 @@
 \section{Problemstellung}
-In diesem Abschnitt wird die Theorie zu den gewöhnlichen Differentialgleichungen erläutert. Dieser orientiert sich
+In diesem Abschnitt wird die Theorie zu gewöhnlicher Differentialgleichungen erläutert. Diese orientiert sich
 hauptsächlich an den Arbeiten \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche},
 \cite{ernsthairergerhardwannerSolvingOrdinaryDifferential} und \cite{berndaulbachGewohnlicheDifferentialgleichungen2004}.
 Folgendes ist Grundlage für das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 
 \subsection{Gewöhnliche Differentialgleichungen und Anfangswertprobleme}
+Wir beginnen mit der allgemeinen Definition einer gewöhnlichen Differentialgleichung erster Ordnung.
 \begin{definition}
-    Ein System gewöhnlicher Differentialgleichungen $m-ter$ Ordnung hat die Form
+    Ein System {\em gewöhnlicher Differentialgleichungen erster Ordnung} hat die Form
     \begin{align}
-        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1}
+        x^{\prime} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}) \label{eq:1}
     \end{align}
     mit der gegebenen Funktion
     $
-    f : D \times \mathbb{R}^{n} \times \mathbb{R}^{n} \times \dots \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
+    f : D \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
     $
-    wobei $D \subseteq \mathbb{R}$ ein Zeitintervall ist. Eine dazugehörige Lösung (falls existent)
-    $\hat{x} : D \rightarrow \mathbb{R}$ ist eine $m-mal$ differenzierbare Funktion und erfüllt die Bedingung
+    wobei $D \subseteq \mathbb{R}$ ein Zeitintervall ist. Eine dazugehörige {\em Lösung} (falls existent)
+    $\hat{x} : D \rightarrow \mathbb{R}^n$ ist eine stetig, differenzierbare Funktion welche die Bedingung
+    \[
+        \hat{x}^{\prime} = f(t, \hat{x}).
+    \]
+    erfüllt.
+\end{definition}
+\begin{definition}
+    Ein {\em Anfangswertproblem} für eine Differentialgleichung \eqref{eq:1} mit gegebenen Anfangswerten
+    $x_{0} \in \mathbb{R}^{n}$ und der Anfangszeit $t_0 \in D \subset \mathbb{R}$ hat die Form
+    \begin{align}
+        x^{\prime} = f(t, x),\quad x(t_{0})=x_{0}. \label{eq:2}
+    \end{align}
+\end{definition}
+Eine Lösung des Problems $\hat{x} : D \rightarrow \mathbb{R}$ muss also zusätzlich zu \eqref{eq:1} auch die
+Anfangswertbedingungen\eqref{eq:2} erfüllen.
+\begin{bem}
+    Neben Differentialgleichungen erster Ordnung existieren auch gewöhnliche Differentialgleichungen $m$-ter Ordnung.
+    Diese haben die Form
+    \begin{align}
+        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}),
+    \end{align}
+    $
+    f : D \times \mathbb{R}^{n} \times \mathbb{R}^{n} \times \dots \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}
+    $
+    und $D \subseteq \mathbb{R}$ ein Zeitintervall ist. Eine dazugehörige \textit{Lösung} (falls existent)
+    $\hat{x} : D \rightarrow \mathbb{R}^n$ ist eine $m-mal$ stetig, differenzierbare Funktion welche die Bedingung
     \[
         \hat{x}^{(m)} = f(t, \hat{x},\hat{x}^{\prime},\hat{x}^{\prime\prime}, \dots,\hat{x}^{(m-1)}).
     \]
-\end{definition}
-\begin{definition}
-    Ein Anfangswertproblem für eine Differentialgleichung \eqref{eq:1} mit gegebenen Anfangswerten $x_{0,1},
-    \dots,x_{0,m} \in \mathbb{R}^{n}$ hat die Form
+    erfüllt. Das zugehörige Anfangswertproblem $m$-ter Ordnung mit gegebenen Anfangswerten
+    $x_{0,1},\dots,x_{0,m} \in \mathbb{R}^{n}$ und der Anfangszeit $t_0 \in D \subset \mathbb{R}$ erfüllt zusätzlich die
+    Bedingungen \[
+        x(t_{0})=x_{0,1},\quad x^{\prime}(t_{0})=x_{0,2},\dots,x^{(m-1)}(t_{0})=x_{0,m}.
+    \]
+    Außerdem ist es möglich jede gewöhnliche Differentialgleichung $m$-ter Ordnung zu einem System gewöhnlicher
+    Differentialgleichungen $erster$ Ordnung umzuwandeln. Diese ist mit Hilfe der Funktionen
+    $x_{j}:D \rightarrow \mathbb{R}$ für $j = 1,\dots,m$ äquivalent zu einem System erster Ordnung mit $m$ Gleichungen:
     \begin{align}
-        x^{(m)} = f(t, x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)}),\quad x(t_{0})=x_{0,1},\quad
-        x^{\prime}(t_{0})=x_{0,2},\dots,x^{(m-1)}(t_{0})=x_{0,m}. \label{eq:2}
+        x_{1}^{\prime}&=x_{2}, \nonumber \\
+        x_{2}^{\prime}&=x_{3}, \nonumber \\
+        &\vdots\\
+        x_{m-1}^{\prime}&=x_{m}, \nonumber \\
+        x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \nonumber \\ \nonumber
     \end{align}
-    Eine Lösung des Problems $\hat{x} : D \rightarrow \mathbb{R}$ muss also zusätzlich zu \eqref{eq:1} auch die
-    Anfangswertbedingungen (vgl. \eqref{eq:2}) erfüllen.
-\end{definition}
-Es ist möglich jede gewöhnliche Differentialgleichung $m-ter$ Ordnung zu einem System gewöhnlicher Differential
-gleichungen $erster$ Ordnung umzuwandeln. Dies erleichtert uns in späteren Abschnitten Aussagen über die Existenz
-und Eindeutigkeit der Lösung(en) $\hat{x}$ zu treffen.
-Betrachte hierzu eine gewöhnliche Differentialgleichung $m-ter$ Ordnung (vgl. \eqref{eq:1}). Diese ist mit Hilfe
-der Funktionen $x_{j}:D \rightarrow \mathbb{R}$ für $j \in \{1,\dots,k\}$ äquivalent zu einem System erster Ordnung
-mit $m$ Gleichungen:
-\begin{align}
-    x_{1}^{\prime}&=x_{2} \nonumber \\
-    x_{2}^{\prime}&=x_{3} \nonumber \\
-    &\vdots\\
-    x_{m-1}^{\prime}&=x_{m} \nonumber \\
-    x_{m}^{\prime}&=f(t, x_{1}, x_{2}, x_{3}, \ldots, x_{m}). \nonumber \\ \nonumber
-\end{align}
-Für ein AWP \eqref{eq:2} gilt zusätzlich:
-\begin{align}
-    x_{1}(t_{0})&=x_{0,1} \nonumber \\
-    x_{2}(t_{0})&=x_{0,2} \nonumber \\
-    &\vdots \\
-    x_{m-1}(t_{0})&=x_{0,m-1} \nonumber \\
-    x_{m}(t_{0})&=x_{0,m}. \nonumber \\ \nonumber
-\end{align}
+    Für ein AWP \eqref{eq:2} gilt zusätzlich:
+    \begin{align}
+        x_{1}(t_{0})&=x_{0,1}, \nonumber \\
+        x_{2}(t_{0})&=x_{0,2}, \nonumber \\
+        &\vdots \\
+        x_{m-1}(t_{0})&=x_{0,m-1}, \nonumber \\
+        x_{m}(t_{0})&=x_{0,m}. \nonumber \\ \nonumber
+    \end{align}
+    Deshalb werden wir uns in dieser Arbeit ohne Beschränkung der Allgemeinheit auf gewöhnliche Differentialgleichungen
+    erster Ordnung beschränken.
+\end{bem}
 \begin{definition}
-    Ein System gewöhnlicher Differentialgleichungen \eqref{eq:1} heißt $autonom$, wenn die rechte Seite $f$ nicht
+    Eine gewöhnliche Differentialgleichung \eqref{eq:1} heißt {\em autonom}, wenn die rechte Seite $f$ nicht
     explizit von der unabhängigen Variable $t$ abhängt. Das bedeutet, es gilt
     \[
-        x^{m} = f(x, x^{\prime}, x^{\prime\prime}, \dots, x^{(m-1)})
+        x^{\prime} = f(x)
     \]
     auf ganz $D$.
 \end{definition}
@@ -64,38 +84,32 @@ System gewöhnlicher Differentialgleichungen umwandeln. Dazu führen wir eine ne
 \[
     z^{\prime} = 1, \quad z(t_0) = t_0.
 \]
-Dann ist das Anfangswertproblem \eqref{eq:2} äquivalent zu dem autonomen Anfangswertproblem $m+1$-ter Ordnung
+Dann ist das Anfangswertproblem \eqref{eq:2} äquivalent zu dem autonomen Anfangswertproblem zweiter Ordnung
 \begin{alignat*}{3}
     z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \\
     x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \\
 \end{alignat*}
-Die Lösung hat also die Form $\left[ \begin{matrix}
+Die Lösung von dem Anfangswertproblem \eqref{eq:2} hat also die Form $\left[ \begin{matrix}
                                          t\\
                                          x(t)\\
 \end{matrix} \right].$
-
-\subsubsection{Lineare gewöhnliche Differentialgleichungen}
-Wir definieren in diesem Abschnitt noch eine Sonderform einer gewöhnlichen Differentialgleichung.
+Weiterhin definieren wir in diesem Abschnitt noch eine Sonderform einer gewöhnlichen Differentialgleichung.
 \begin{definition}
-    Ein System gewöhnlicher Differentialgleichungen $m$-ter Ordnung mit der Form
-    \begin{align} \label{lin-ode}
-    x^{m}(t) = \sum_{i=0}^{m-1} a_k(t) x^{j}(t) + g(t).
+    Ein System gewöhnlicher Differentialgleichungen
+    \begin{align}
+        \label{linear-first-order-ode}
+        x^{\prime}(t) = A(t)x(t) + g(t)
     \end{align}
-    heißt $lineares$ System gewöhnlicher Differentialgleichungen.
-    Dabei sind $a_k : D \rightarrow \mathbb{R}^{n \times n}$ und $g : D \rightarrow \mathbb{R}^n$ stetige Funktionen.\\
-    Falls $g \equiv 0$, so nennt man \eqref{lin-ode} homogen, sonst inhomogen.
+    mit $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ heißt
+        {\em lineares System gewöhnlicher Differentialgleichungen}. Falls $g \equiv 0$, so nennt man
+    \eqref{linear-first-order-ode} homogen, sonst inhomogen.
 \end{definition}
-Die Lösung einer linearen Differentialgleichung erster Ordnung erfüllt also die Gleichung
-\begin{align}
-    \label{linear-first-order-ode}
-    x^{\prime}(t) = A(t)x(t) + g(t),
-\end{align}
-wobei $A:D \rightarrow \mathbb{R}^{n \times n}$ und $g:D \rightarrow \mathbb{R}^n$ stetig sind. Wir definieren nun steife lineare 
-Differentialgleichungen unter der Bedingung dass die Koeffizienten $A$ konstant, also unabhängig von $t$ sind.
+Wir definieren nun steife lineare Differentialgleichungen unter der Bedingung dass die Koeffizientenmatrix $A$ konstant,
+also unabhängig von $t$ ist.
 \begin{definition}
     \label{steife-dgl}
-    Eine lineare Differentialgleicuhng \eqref{linear-first-order-ode} mit $A \in \mathbb{R}^{n \times n}$ und
-    $b(t) \in \mathbb{R}^n$ heißt $steif$, wenn
+    Eine lineare Differentialgleichung \eqref{linear-first-order-ode} mit $A \in \mathbb{R}^{n \times n}$ und
+    $g(t) \in \mathbb{R}^n$ heißt $steif$, wenn
     \begin{align}
         1.& \quad Re(\lambda_j(A)) < 0, \qquad \text{ für alle Eigenwerte } \lambda_j(A) \text{ von A, }\\
         2.& \quad \min\limits_{1 \leq j \leq n} Re(\lambda_j(A)) \ll \max\limits_{1 \leq j \leq n} Re(\lambda_j(A)).
@@ -116,136 +130,142 @@ und zeigen, unter welchen Bedingungen der rechten Seite $f(t,x(t))$ eine Lösung
 Hier beweisen wir einen Satz, welcher zeigt, dass die Stetigkeit der rechten Seite $f$ für die Existenz einer
 Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysis.
 \begin{satz}[Fixpunktsatz von Schauder, 2. Version]
+    \label{fixpunktsatzvonschauder}
     Sei M eine nichtleere, abgeschlossene und konvexe Teilmenge eines Banachraums $X$ und $A:M \rightarrow M$ stetig.
     Dann besitzt $A$ wenigstens einen Fixpunkt $x$, sofern die Bildmenge $A(M)$ relativ kompakt ist.
 \end{satz}
 $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}\\
 In dieser Arbeit wird mit $\left\lVert \cdot \right\rVert_2$ die euklidische Norm
-$\left\lVert x \right\rVert_2 = \left( \sum_{i=0}^{n} (x_i)^2  \right)^{\frac{1}{2}}$ beschreiben. Der Beweis des
-folgenden Satzes beruht auf Überlegungen von H. Heuser in
-\cite{harroheuserGewohnlicheDifferentialgleichungen}.
-\begin{satz}[Existenzsatz von Peano, quantitative und qualitative Version]
+$\left\lVert x \right\rVert_2 = \left( \sum_{i=1}^{n} (x_i)^2  \right)^{\frac{1}{2}}$ für $x \in \mathbb{R}^n$
+beschreiben. Der Beweis des folgenden Satzes beruht auf das Buch \cite{harroheuserGewohnlicheDifferentialgleichungen}.
+\begin{satz}[Existenzsatz von Peano]
 \label{peano}
-    Quantitative Version: Seien
+    Seien $t_0 \in \mathbb{R}$, $x_0 \in \mathbb{R}^n$,
     \[
         {\cal G}=\{(t,x) \in \mathbb{R} \times \mathbb{R}^{n}: |t-t_{0}| \leq \alpha, \quad
         \left\lVert x-x_{0} \right\rVert_2 \leq\beta, \quad \alpha,\beta > 0 \}
     \]
     und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig. Dann besitzt das Anfangswertproblem \eqref{firstorder-ode}
-    mindestens eine Lösung $\hat{x}$ auf dem Intervall $D=\{t_{0}-a,t_{0}+a\}$, wobei
+    mindestens eine Lösung $\hat{x}$ auf dem Intervall $D=(t_{0}-a,t_{0}+a)$, wobei
     \[
         a=\min\{\alpha, \frac{\beta}{M}\}, \qquad M= \max_{(t,y)\in {\cal G}}\left\lVert f(t,x)\right\rVert_2.
-    \]\\
-    Qualitative Version: Seien ${\cal G}\in \mathbb{R} \times \mathbb{R}^{n}$ offen und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig.
-    Dann besitzt das Anfangswertproblem \eqref{firstorder-ode} für jedes Paar $(t_{0},x_{0}) \in {\cal G}$ mindestens eine
-    lokale Lösung, d.h., es existiert ein $a=a(t_{0},x_{0}) \geq 0$, sodass das Anfangswertproblem \eqref{firstorder-ode} auf
-    dem Intervall $[t_{0}-a,t_{0}+a]$ mindestens eine Lösung $\hat{x}$ hat.
+    \]
 \end{satz}
-$Beweis.$ (Quantitative Lösung) Sei $J\subset D$ abgeschlossen mit $t_0 \in J$ und $\hat{x}(t)$ eine Lösung von \eqref{firstorder-ode}.
-Da die rechte Seite $f$ auf J stetig ist, gilt nach dem Hauptsatz der Differential- und Integralrechnung:
-\[
+$Beweis.$ Sei $J\subset D$ abgeschlossen mit $t_0 \in J$ und $\hat{x}(t)$ eine Lösung von \eqref{firstorder-ode}.
+Da die rechte Seite $f$ auf ${\cal G}$ stetig ist, gilt nach dem Hauptsatz der Differential- und Integralrechnung:
+\begin{align}
     \hat{x}(t) = \hat{x}_0 + \int_{t_0}^{t} f(s, \hat{x}(s)) ds \quad \text{für alle} \quad t \in J.
-\]
-Außerdem gilt für jede auf J stetige Funktion $\hat{x}(t)$, die obige Gleichung erfüllt, dass sie auf J differenzierbar
-ist. Dies bedeutet, dass eine auf J stetige Funktion $\hat{x}(t)$ löst genau dann das Anfangswertproblem \eqref{firstorder-ode},
-wenn es die obige Integralgleichung erfüllt.
-für eine auf $J$ stetige Funktion $\hat{x}(t)$ gilt also:
+    \label{peano-proof}
+\end{align}
+Außerdem gilt für jede auf $J$ stetige Funktion $\hat{x}(t)$, die obige Gleichung erfüllt, dass sie auf $J$
+differenzierbar ist. Dies bedeutet, dass eine auf $J$ stetige Funktion $\hat{x}(t)$ löst genau dann das
+Anfangswertproblem \eqref{firstorder-ode}, wenn es die obige Integralgleichung erfüllt. Für eine auf $J$ stetige
+Funktion $\hat{x}(t)$ gilt also:
 \[
-    \hat{x}(t) \text{ löst das AWP \eqref{firstorder-ode}}  \Leftrightarrow \hat{x}(t) \text{ erfüllt obige Gleichung.}
+    \hat{x}(t) \text{ löst das AWP \eqref{firstorder-ode}}  \Leftrightarrow \hat{x}(t)
+    \text{ erfüllt die Gleichung} \eqref{peano-proof}.
 \]
-Betrachte nun die Menge $K := \{ x \in C(D): \left\lVert x(t) - x_0 \right\rVert_2 \leq \beta \text{ für alle } t \in D \}$,
-wobei $C(D)=\{f: f(t) \text{ ist stetig für alle } t \in D \}$. K ist offensichtlich nicht leer (Betrachte bspw. die
-konstante Funktion $x \equiv x_0$). Jedem $x \in K$ wird nun eine Funktion $Ax \in C(D)$ zugewiesen mit der Definition
+Betrachte nun die Menge $K := \{ x \in C(D): \left\lVert x(t) - x_0 \right\rVert_2 \leq \beta \text{ für alle }
+t \in D \}$, wobei $C(D)=\{g: g(t) \text{ ist stetig für alle } t \in D \}$. Die Menge K ist offensichtlich nicht leer
+(betrachte bspw. die konstante Funktion $x \equiv x_0$). Jedem $x \in K$ wird nun eine Funktion $Ax \in C(D)$ zugewiesen
+mit der Definition
 \[
     (Ax)(t) := x_0 + \int_{t_0}^{t} f(s, x(s)) ds \quad \text{ für alle } \quad t \in D.
 \]
-Also löst $Ax$ nach obiger Äquivalenz das Anfangswertproblem auf $D$. Außerdem gilt:
+Also gilt für $(Ax)(t)$ die Gleichung \eqref{peano-proof} und somit löst $Ax$ nach obiger Äquivalenz das
+Anfangswertproblem auf $D$. Außerdem gilt:
 \begin{align*}
     \left\lVert (Ax)(t) - x_0 \right\rVert_2 &= \left\lVert \int_{t_0}^{t} f(s, x(s)) ds \right\rVert_2 \\
     &\leq \int_{t_0}^{t} \left\lVert f(s, x(s)) \right\rVert_2 ds \\
     &\leq |t - t_0| \max_{(t,y)\in {\cal G}}\left\lVert f(t,x)\right\rVert_2 \\
     &\leq |t_0 + a - t_0| M \\
-    &\leq \frac{\beta}{M}M = \beta \quad \text{ für alle } t \in D
+    &\leq \frac{\beta}{M}M = \beta \quad \text{ für alle } t \in D.
 \end{align*}
-Für $A$ wird hier jedoch die Operatornorm
-$\left\lVert A \right\rVert = \sup\limits_{\left\lVert x \right\rVert = 1} \left\lVert Ax \right\rVert$ benutzt.
-Das bedeutet, dass $Ax \in K$, bzw. $AK = K$. Nun können wir die hergeleitete Äquivalenz umformulieren:
-Für eine Funktion $\hat{x} \in K$ gilt
+%Für $A$ wird hier jedoch die Operatornorm
+%$\left\lVert A \right\rVert = \sup\limits_{\left\lVert x \right\rVert = 1} \left\lVert Ax \right\rVert$ benutzt.
+Das bedeutet, dass $Ax \in K$ für $x \in K$, bzw. $K \subset AK$.
+\\!!TODO: $AK \subset K $!!\\
+Nun können wir die hergeleitete Äquivalenz umformulieren: Für eine Funktion $\hat{x} \in K$ gilt
 \[
-    \hat{x} \text{ löst auf D das Anfangswertproblem } \eqref{firstorder-ode} \Leftrightarrow \hat{x}
+    \hat{x} \text{ löst auf $D$ das Anfangswertproblem } \eqref{firstorder-ode} \Leftrightarrow \hat{x}
     \text{ ist ein Fixpunkt der Abbildung } A:K \rightarrow K.
 \]
-Dazu nutzen wir den Fixpunktsatz von Schauder. Betrachte den Banachraum $C(D)$ mit der Maximumsnorm
+Dazu nutzen wir den Fixpunktsatz von Schauder \eqref{fixpunktsatzvonschauder}. Betrachte den Banachraum $C(D)$ mit der
+Maximumsnorm
 \[
     \left\lVert x \right\rVert_{\infty}:=\max_{t \in D} \left\lVert x(t) \right\rVert_2.
 \]
-Sei $(x_n)_{n \in \mathbb{N}} \subset K$ eine konvergente Folge mit Grenzwert $x \in C(D)$. Dann ist
+Sei $(x_k)_{k \in \mathbb{N}} \subset K$ eine konvergente Folge mit einem Grenzwert $x \in C(D)$. Dann ist
 \[
-    \left\lVert x - x_0 \right\rVert_2 = \left\lVert \lim_{n \rightarrow \infty}(x_n) - x_0 \right\rVert_2
-    = \lim_{n \rightarrow \infty} \left\lVert (x_n) - x_0 \right\rVert_2 \leq \lim_{n \rightarrow \infty} \beta = \beta.
+    \left\lVert x - x_0 \right\rVert_2 = \left\lVert \lim_{k \rightarrow \infty}(x_k) - x_0 \right\rVert_2
+    = \lim_{k \rightarrow \infty} \left\lVert (x_k) - x_0 \right\rVert_2 \leq \lim_{k \rightarrow \infty} \beta = \beta.
 \]
-Also ist $x \in K$ und somit ist K abgeschlossen. Sei $x,y \in K $ bel. und betrachte $v:=\lambda x + (1-\lambda)y$
+Also ist $x \in K$ und somit ist K abgeschlossen. Sei $x,y \in K $ beliebig und betrachte $v:=\lambda x + (1-\lambda)y$
 mit $0 \leq \lambda \leq 1$. Dann ist $v \in K$, da
 \begin{align*}
-    \left\lVert v(t) - v_0 \right\rVert_2
-    &= \left\lVert \lambda x(t) + (1-\lambda)y(t) - \lambda x(t_0) - (1-\lambda)y(t_0) \right\rVert_2 \\
+    \left\lVert v(t) - x_0 \right\rVert_2
+    &= \left\lVert \lambda x(t) + (1-\lambda)y(t) - \lambda x_0 - (1-\lambda)y_0 \right\rVert_2 \\
     &= \lambda \left\lVert x(t) - x_0 \right\rVert_2 + (1 - \lambda) \left\lVert y(t) - y_0 \right\rVert_2 \\
-    &\leq \beta (\lambda + 1 - \lambda) = \beta.
+    &\leq \beta (\lambda + 1 - \lambda) = \beta,
 \end{align*}
+für alle $t \in D$.
 Das heißt, K ist außerdem konvex. Die Stetigkeit der Abbildung $A:K \rightarrow K$ lässt sich wie folgt zeigen.
-Wegen der gleichmäßigen Stetigkeit von f auf ${\cal G}$ können wir ein $\delta > 0$ so bestimmen, sodass gilt:
+Wir können ein $\delta > 0$ so bestimmen, sodass mit $\left\lVert x - y \right\rVert_2 < \delta$ gilt:
 \[
-    \left\lVert f(t,x) - f(t,y) \right\rVert_2 < \frac{\epsilon}{a} \text{ für } \left\lVert x - y \right\rVert_2 < \delta.
+    \left\lVert f(t,x) - f(t,y) \right\rVert_2 < \frac{\epsilon}{a}, \quad t \in D.
 \]
+Somit ist f gleichmäßig stetig.
 Betrachte nun $x, y \in K$ mit $\left\lVert x - y \right\rVert_{\infty}$ also auch $\left\lVert x(t) - y(t) \right\rVert_2$
 für alle $t \in D$, so ist für $t \in D$ immer $\left\lVert f(t,x(t)) - f(t,y(t)) \right\rVert_2 < \frac{\epsilon}{a}$ und
 es folgt
 \[
-    \left\lVert (Ax)(t) - (Ay)(t) \right\rVert_2 \leq |t - t_0| \frac{\epsilon}{a} = \epsilon \text{ für jedes } t \in D,
+    \left\lVert (Ax)(t) - (Ay)(t) \right\rVert_2 \leq |t - t_0| \frac{\epsilon}{a} = \epsilon \text{ für alle } t \in D,
 \]
 also auch $\left\lVert Ax - Ay \right\rVert_{\infty} \leq \epsilon$. Es bleibt jetzt nur noch zu zeigen, dass die
-Bildmenge $A(K)$ relativ kompakt ist. Sei hierfür $x \in K$ beliebig, dann ist
+Bildmenge $AK$ relativ kompakt ist. Sei hierfür $x \in K$ beliebig, dann ist
 \[
     \left\lVert (Ax)(t) \right\rVert_2 \leq \left\lVert x_0 \right\rVert_2 + aM \quad \text{ für jedes } \quad t \in D
 \] und
 \[
     \left\lVert (Ax)(t_1) - (Ax)(t_2) \right\rVert_2 \leq |t_1 - t_2| M \quad \text{ für alle } \quad t_1,t_2 \in D.
 \]
-Somit ist $A(K)$ punktweise beschränkt und gleichgradig stetig auf dem kompakten Intervall D. Nach dem Satz von
-Arzela-Ascoli \cite[49]{beckGewohnlicheDifferentialgleichungen2018} hat also jede Folge $(Ax)_n\subset A(K)$ eine
-gleichmäßig konvergente Teilfolge. Dies gilt offensichtlich auch für die Maximimsnorm wodurch $A(K)$
-relativ kompakt ist. \qedwhite\\
+Somit ist $A(K)$ punktweise beschränkt und gleichgradig stetig auf dem kompakten Intervall $D$. Nach dem Satz von
+Arzela-Ascoli \cite[49]{beckGewohnlicheDifferentialgleichungen2018} hat also jede Folge $(Ax)_n\subset AK$ eine
+gleichmäßig konvergente Teilfolge. Dies gilt offensichtlich auch für die Maximimsnorm, wodurch $AK$ relativ kompakt
+ist. \qedwhite\\
 
 \subsubsection{Eindeutigkeit von Lösungen}
-Ähnlich wie im vorherigen Kapitel existiert ein Satz, welcher zeigt, dass eine $Lipschitz$-stetige
-rechte Seite $f$ ausreicht, damit eine eindeutige Lösung für eine
-gewöhnliche Differentialgleichung erster Ordnung existiert. Dazu definieren wir zuerst eine Lipschitz-stetige Funktion.
+Ähnlich wie im vorherigen Abschnitt existiert ein Satz, welcher zeigt, dass eine im zweiten Argument $Lipschitz$-stetige
+rechte Seite $f$ ausreicht, damit eine eindeutige Lösung für ein Anfangswertproblem \eqref{eq:2} existiert. Dazu
+definieren wir zuerst eine Lipschitz-stetige Funktion.
 \begin{definition}
-    Sei $M \subset \mathbb{R} \times \mathbb{R}^{n}$ und $f: M \rightarrow \mathbb{R}^n$ eine Funktion. Dann heißt genau
-    dann f Lipschitz-stetig auf $M$ bezüglich der x-Variable, wenn ein $L>0$ existiert, sodass gilt:
+    Sei $\mathcal{M} \subset \mathbb{R} \times \mathbb{R}^{n}$. Eine Funktion $f: \mathcal{M} \rightarrow \mathbb{R}^n$
+    heißt genau dann Lipschitz-stetig auf $\mathcal{M}$ bezüglich des zweiten Arguments, wenn ein $L>0$ existiert,
+    sodass gilt:
     \[
         \left\lVert f(t,x) - f(t,y) \right\rVert_2 \leq L \left\lVert x - y  \right\rVert_2
     \]
-    für alle $(t,x), (t,y) \in M$.
+    für alle $(t,x), (t,y) \in \mathcal{M}$.
 \end{definition}
-Außerdem benötigen wir für den Beweis noch den Fixpunktsatz von Weissinger. Sowohl Satz als auch Beweis lassen
-sich in \cite{harroheuserGewohnlicheDifferentialgleichungen} wiederfinden.
+Außerdem benötigen wir für den Beweis noch den Fixpunktsatz von Weissinger aus
+\cite{harroheuserGewohnlicheDifferentialgleichungen}.
 \begin{satz}[Fixpunktsatz von Weissinger]
-    Sei $\left( B, \left\lVert . \right\rVert_2 \right) $ ein Banachraum und $U \subset B$ abgeschlossen und nichtleer.
+    \label{Fixpunktsatzvonweissinger}
+    Sei $\left( B, \left\lVert . \right\rVert \right) $ ein Banachraum und $U \subset B$ abgeschlossen und nichtleer.
     Ferner ist $\sum_{j=1}^{\infty} \alpha_j$ eine konvergente Reihe positiver Zahlen, also
     $\sum_{j=1}^{\infty} \alpha_j < \infty $, $\alpha_j \geq 0$, sowie $A:U \rightarrow U$ eine Selbstabbildung, für die
     \[
-        \left\lVert A^{j}u - A^{j}v \right\rVert_2 \leq \alpha_j \left\lVert u - v \right\rVert_2 \quad \text{ für alle }
+        \left\lVert A^{j}u - A^{j}v \right\rVert \leq \alpha_j \left\lVert u - v \right\rVert \quad \text{ für alle }
         \quad u,v \in U \quad \text{ und } \quad j \in \mathbb{N}
     \]
     gilt. Dann besitzt $A$ genau einen Fixpunkt in $U$, nämlich
     \[
         u = \lim_{n\rightarrow \infty} A^{n}u_0
     \]
-    mit beliebigem $u_0 \in U$. $u$ ist also der Grenzwert der rekursiven Folge $u_j:=Au_{j-1}$ für $j \geq 1$
-    mit $u_0 \in U$ beliebig. Außerdem gilt die Fehlerabschätzung
+    mit beliebigem $u_0 \in U$. Außerdem ist $u$ der Grenzwert der rekursiven Folge $u_j:=Au_{j-1}$ für $j \geq 1$
+    mit $u_0 \in U$ beliebig und es gilt die Fehlerabschätzung
     \[
-        \left\lVert u - u_n \right\rVert_2 \leq \sum_{j=n}^{\infty} \alpha_j \left\lVert u_1 - u_0 \right\rVert_2.
+        \left\lVert u - u_n \right\rVert \leq \sum_{j=n}^{\infty} \alpha_j \left\lVert u_1 - u_0 \right\rVert.
     \]
 \end{satz}
 $Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
@@ -260,47 +280,42 @@ $Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
 %    \leq \underbrace{\left( \alpha_{j+k-1} + \dots + \alpha_{j} \right)}_{\rightarrow 0 \text{ für } j,k
 %    \rightarrow\infty} \left\lVert u_1 - u_0\right\rVert_2
 %\]
-Nun können wir einen grundlegenden Satz in der Theorie für gewöhnliche Differentialgleichungen beweisen, welcher sich
+Nun können wir einen grundlegenden Satz in der Theorie gewöhnlicher Differentialgleichungen beweisen, welcher sich
 ähnlich wie der Beweis des Satzes von Peano an auf Überlegungen von H. Heuser in
 \cite{harroheuserGewohnlicheDifferentialgleichungen} beruht. Wir werden in dieser Arbeit die gegebene Beweisidee etwas
 genauer ausführen.
 \begin{satz}[Existenzsatz- und Eindeutigkeitssatz von Picard-Lindelöf]
 \label{picard}
-    Quantitative Version: Seien
+    Seien $t_0 \in \mathbb{R}$, $x_0 \in \mathbb{R}^n$,
     \[
-            {\cal G}=\{(t,x) \in \mathbb{R} \times \mathbb{R}^{n}: |t-t_{0}| \leq \alpha, \quad
-        \left\lVert x-x_{0} \right\rVert_2 \leq\beta, \quad \alpha,\beta \geq 0 \},
+        {\cal G}=\{(t,x) \in \mathbb{R} \times \mathbb{R}^{n}: |t-t_{0}| \leq \alpha, \quad
+        \left\lVert x-x_{0} \right\rVert_2 \leq\beta, \quad \alpha,\beta > 0 \},
     \]
-    $(t_{o},x_{0})\in {\cal G}$ und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig und Lipschitz-stetig bzgl $x$.
+    und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig und Lipschitz-stetig im zweiten Argument.
     Dann besitzt das Anfangswertproblem \eqref{firstorder-ode} genau eine Lösung $\hat{x}$ auf dem Intervall
-    $D=\{t_{0}-a,t_{0}+a\}$, wobei
+    $D=(t_{0}-a,t_{0}+a)$, wobei
     \[
         a=\min\{\alpha, \frac{\beta}{M}\}, \qquad M= \max_{(t,y)\in {\cal G}}\left\lVert f(t,x)\right\rVert_2 .
     \]\\
-    Qualitative Version: Seien ${\cal G}\in \mathbb{R} \times \mathbb{R}^{n}$ offen und $f:{\cal G} \rightarrow \mathbb{R}^{n}$ stetig
-    und lokal Lipschitz-stetig bzgl. $x$ auf $\cal{G}$. Dann besitzt das Anfangswertproblem \eqref{firstorder-ode} für
-    jedes Paar $(t_{0},x_{0}) \in {\cal G}$ genau eine lokale Lösung, d.h., es existiert ein $a=a(t_{0},x_{0}) \geq 0$,
-    sodass das Anfangswertproblem \eqref{firstorder-ode} auf dem Intervall $[t_{0}-a,t_{0}+a]$ genau eine Lösung
-    $\hat{x}$ hat.
 \end{satz}
 TODO: Induktion korrigieren \\
 $Beweis$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
 aus dem Beweis von Satz \eqref{peano}. Wir zeigen mit Induktion über $j\in \mathbb{N}$, dass
 \[
-    \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert_2 \leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty}
+    \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert_2 \leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty},
+    \qquad u,v \in K
 \]
-
-für alle $j \in \mathbb{N}$ und $t \in D$ gilt. Die Unendlichkeitsnorm $\left\lVert \cdot \right\rVert_{\infty}$ wurde
+für alle $j \in \mathbb{N}$ und $t \in D$ gilt. Die Maximumsnorm $\left\lVert \cdot \right\rVert_{\infty}$ wurde
 bereits in dem Beweis von Satz \eqref{peano} definiert.
 \begin{alignat*}{2}
-    (j=1):& \qquad \left\lVert (A^j u)(t)- (A^j v)(t) \right\rVert_2 &&\leq
-    \underbrace{\left\lVert u_0 - v_0 \right\rVert_2}_{=0}
+    (j=1):& \qquad \left\lVert (A u)(t)- (A v)(t) \right\rVert_2 &&\leq
+    \underbrace{\left\lVert x_0 - x_0 \right\rVert_2}_{=0}
     + \left\lVert \int_{t_0}^{t} f(s,u(s)) - f(s,v(s)) ds \right\rVert_2\\
     & &&\leq L \left\lVert u - v \right\rVert_{\infty} |t - t_0|\\
     (\text{IV}):& \qquad
     \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert_2 &&\leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty} \\
     (j \rightarrow j+1):& \quad \left\lVert (A^{j+1} u)(t)- (A^{j+1} v)(t) \right\rVert_2
-    &&\leq \underbrace{\left\lVert u_0 - v_0 \right\rVert_2}_{=0} +
+    &&\leq \underbrace{\left\lVert x_0 - x_0 \right\rVert_2}_{=0} +
     \left\lVert\int_{t_0}^{t}f(s,(A^ju)(s)) - f(s,(A^ju)(s))ds \right\rVert_2\\
     & &&\leq L |t - t_0| \left\lVert (A^{j}u) - (A^jv) \right\rVert_{\infty} \\
     &  &&= L |t-t_0| \max\limits_{ t \in [t_0 - a,t_0 + a] } \left\lVert (A^ju)(t) - (A^jv)(t) \right\rVert_2 \\
@@ -312,14 +327,17 @@ Nun folgt direkt
     \left\lVert A^j u - A^j v \right\rVert_{\infty} \leq \frac{(aL)^j}{j!} \left\lVert u - v \right\rVert_{\infty}.
 \]
 Die Reihe $\sum_{j=1}^{\infty} \frac{(aL)^j}{j!} $ ist nach dem Quotientenkriterium offensichtlich konvergent. Also
-lässt sich der Fixpunktsatz von Weissinger anwenden. Der daraus gewonnene Fixpunkt ist eindeutig und mit ähnlicher
-Äquivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige Lösung ist. \qedwhite \\
-Für lineare Differentialgleichungen erster Ordnung \eqref{linear-first-order-ode} mit konstanten $A$  gilt wegen
+lässt sich der Fixpunktsatz von Weissinger \eqref{Fixpunktsatzvonweissinger} anwenden. Der daraus gewonnene Fixpunkt
+ist eindeutig und mit ähnlicher Äquivalenz zu dem Beweis von Peano folgt, dass der Fixpunkt die gesuchte eindeutige
+Lösung ist. \qedwhite \\
+Für lineare Differentialgleichungen erster Ordnung \eqref{linear-first-order-ode} mit einer konstanter Matrix $A$ gilt
+wegen
 \[
     \left\lVert Ax + g(t) - Ay - g(t) \right\rVert_2 \leq \left\lVert A \right\rVert_2 \left\lVert x - y \right\rVert_2,
 \]
-dass die rechte Seite Lipschitz-stetig in der x-Variable ist, wodurch mit Satz \eqref{picard} eindeutige Lösbarkeit
-folgt. Die Lösung $x$ kann mit Hilfe der \textit{Matrixexponentialfunktion} \cite{Matrixexponential} angegeben werden:
+dass die rechte Seite Lipschitz-stetig in dem zweiten Argument ist, wodurch mit Satz \eqref{picard} eindeutige
+Lösbarkeit folgt. Die Lösung $x$ kann mit Hilfe der \textit{Matrixexponentialfunktion} \cite{Matrixexponential}
+angegeben werden:
 \begin{align}
     \label{linear-ode-solution}
     x(t) = e^{A(t-t_0)}x_0 + \int_{t_0}^{t}e^{A(t-s)}g(s) ds.
@@ -329,18 +347,17 @@ Einfaches Ableiten und Einsetzen von $t_0$ zeigt, dass diese Funktion die Differ
 
 \subsection{Abhängigkeit der Lösungen von den Daten}
 In späteren Abschnitten werden wir gewöhnliche Differentialgleichungen betrachten, die zur Simulation/Vorhersage
-natürlicher Systeme genutzt werden. Darin ist es üblich, dass Anfangsdaten durch Messfehler oder unüblicher Verhalten
+abgeschlossener Systeme genutzt werden. Darin ist es üblich, dass Anfangsdaten durch Messfehler
 von tatsächlichen Daten abweichen. Deshalb ist es sinnvoll Aussagen zu betrachten, die zeigen, welche Auswirkungen
-kleine Störungen auf die Lösung der Differentialgleichungen haben. In diesem Sektion ist die rechte Seite $f$ stetig und
-Lipschitz-stetig bezüglich der x-Variable, sodass wir die Eindeutigkeit der Lösung durch Picard-Lindelöff garantieren.
-Der große Vorteil hierfür ist, dass wir keine Maximal- und Minimallösungen betrachten müssen.
-Um eine Aussage über die stetige Abhängigkeit der Anfangsdaten treffen zu können, beweisen wir zuerst einen wichtigen
-Hilfssatz. Die grundsätzlichen Überlegungen und Ergebnisse in diesem Kapitel stammen aus
+kleine Störungen auf die Lösung der Differentialgleichungen haben. In diesem Abschnitt ist die rechte Seite $f$ stetig
+und Lipschitz-stetig im zweiten Argument, sodass wir die Eindeutigkeit der Lösung durch den Satz von Picard-Lindelöff
+\eqref{picard} garantieren. Um eine Aussage über die stetige Abhängigkeit von den Daten treffen zu können, beweisen
+wir zuerst einen wichtigen Hilfssatz. Die grundsätzlichen Überlegungen und Ergebnisse in diesem Abschnitt stammen aus
 \cite{beckGewohnlicheDifferentialgleichungen2018}.
 \begin{theorem}[Gronwallsche Ungleichung]
     \label{Satz-gronwall}
     Seien $D=[t_{0}, t_{f}]$ ein Intervall und die stetige, nichtnegative Funktion $u : D \rightarrow \mathbb{R}$
-    sowie $a \geq 0, b > 0$ gegeben. Des Weiteren gilt folgende Ungleichung:
+    sowie $a \geq 0, b > 0$ gegeben. Des Weiteren gilt folgende Ungleichung
     \[
         u(t) \leq \alpha \int_{t_{0}}^{t}u(s)ds + \beta
     \]
@@ -358,7 +375,7 @@ $Beweis.$ Definiere zuerst eine Hilfsfunktion
     v^\prime(t) = \alpha u(t) \leq \alpha v(t)
 \] für alle $t \in D$. Daraus folgt
 \[
-    (e^{-\alpha t}v(t))^\prime = e^{-\alpha t}(v(t)^\prime-\alpha v(t)) \leq 0, \qquad t \in D.
+    (e^{-\alpha t}v(t))^\prime = e^{-\alpha t}(v^\prime(t)-\alpha v(t)) \leq 0, \qquad t \in D.
 \]
 Die Funktion $e^{-\alpha t} v(t)$ ist also monoton fallend, das bedeutet
 \[
@@ -366,37 +383,37 @@ Die Funktion $e^{-\alpha t} v(t)$ ist also monoton fallend, das bedeutet
 \] Daraus folgt die Behauptung. \qedwhite \\
 Außerdem benötigen wir noch folgendes Lemma.
 \begin{lemma}
-    Sei $T \subset \mathbb{R}^{1 + n}$ offen und $f:T \rightarrow \mathbb{R}$ eine stetige Funktion, die zusätzlich
-    Lipschitz-stetig bezüglich der x-Variable ist mit
+    Sei $\mathcal{M} \subset \mathbb{R} \times \mathbb{R}^{n}$ offen und $f:\mathcal{M} \rightarrow \mathbb{R}$ eine
+    stetige Funktion, die zusätzlich Lipschitz-stetig im zweiten Argument ist mit
     \[
         \left\lVert f(t, x) - f(t,y) \right\rVert_2 \leq L \left\lVert x - y \right\rVert_2
     \]
-    für alle $(t,x),(t,y) \in T$ mit $L > 0$.
-    Ist $\hat{x}$ eine stetig-differenzierbare Funktion auf dem Intervall $D \subset \mathbb{R}$ und eine Lösung des
-    Anfangswertproblems \eqref{firstorder-ode} und ist $\hat{x}_a$ eine stetig-differenzierbare Funktion und eine
-    Näherungslösung mit $(t,\hat{x}_a(t))\in T$ für alle $t \in D$ und es gilt
+    für alle $(t,x),(t,y) \in \mathcal{M}$ mit $L > 0$.
+    Ist $\hat{x}$ eine stetig differenzierbare Funktion auf dem Intervall $D \subset \mathbb{R}$ und eine Lösung des
+    Anfangswertproblems \eqref{firstorder-ode} und ist $\hat{x}_a$ eine stetig differenzierbare Funktion und eine
+    Näherungslösung mit $(t,\hat{x}_a(t))\in \mathcal{M}$ für alle $t \in D$ und es gilt
     \begin{align*}
-        \left\lVert \hat{x}_a^{\prime}(t) - f(t,\hat{x}_a(t)) \right\rVert_2 &\leq d_e \qquad t \in D,\\
-        |t_{0} - \tilde{t_0}| &\leq d_t,\\
-        \left\lVert x_0 - \hat{x}_a(\tilde{t_0}) \right\rVert_2 &\leq d_a\\
+        \left\lVert \hat{x}_a^{\prime}(t) - f(t,\hat{x}_a(t)) \right\rVert_2 &\leq d_f \qquad t \in D,\\
+        |t_{0} - \tilde{t}_0| &\leq d_t,\\
+        \left\lVert x_0 - \hat{x}_a(\tilde{t}_0) \right\rVert_2 &\leq d_a\\
     \end{align*}
-    ($d_g$ representiert die Störung der rechten Seite, $d_t$ die Störung der Anfangszeit und $d_a$ die Störung
+    ($d_f$ representiert die Störung der rechten Seite, $d_t$ die Störung der Anfangszeit und $d_a$ die Störung
     des Anfangswerts).
     Dann gilt die Abschätzung
     \[
         \left\lVert \hat{x}(t) - \hat{x}_a(t) \right\rVert_2 \leq
-        e^{L|t-t_0|}(d_a + d_t(d_g + \sup_{s \in D} \left\lVert f(s, \hat{x}_a(s)) \right\rVert_2)
-        + \frac{d_g}{L}) - \frac{d_g}{L}.
+        e^{L|t-t_0|}(d_a + d_t(d_f + \sup_{s \in D} \left\lVert f(s, \hat{x}_a(s)) \right\rVert_2)
+        + \frac{d_f}{L}) - \frac{d_f}{L}.
     \]
 \end{lemma}
-$Beweis.$ Betrachte zuerst die Differenz der Lösung $\hat{x}$ und $\hat{x}_a$ bei $t = t_0$.
+$Beweis.$ Betrachte zuerst die Differenz der Lösung $\hat{x}$ und $\hat{x}_a$ bei $t = t_0$:
 \begin{align*}
     \left\lVert \hat{x}(t_0) - \hat{x}_a(t_0) \right\rVert_2 &= \left\lVert \hat{x}_0 -
     \int_{\tilde{t}_0}^{t_0} \hat{x}_a^\prime(s)ds - \hat{x}_a(\tilde{t}_{0}) \right\rVert_2 \\
-    & \leq \left\lVert \hat{x}_0 - \hat{x}_a(\tilde{t}_0)\right\rVert_2
-    \left\lVert \int_{\tilde{t}_0}^{t_0} [\hat{x}_a^\prime(s) - f(s, \hat{x}_a(s))] ds \right\rVert_2
+    & \leq \left\lVert \hat{x}_0 - \hat{x}_a(\tilde{t}_0)\right\rVert_2 +
+    \left\lVert \int_{\tilde{t}_0}^{t_0} [\hat{x}_a^\prime(s) - f(s, \hat{x}_a(s))] ds \right\rVert_2 +
     \left\lVert \int_{\tilde{t}_0}^{t_0} f(s,\hat{x}_a(s)) ds \right\rVert_2 \\
-    & \leq d_a + d_t(d_g + \sup_{s \in D} \left\lVert f(s,\hat{x}_a(s)) \right\rVert_2).
+    & \leq d_a + d_t(d_f + \sup_{s \in D} \left\lVert f(s,\hat{x}_a(s)) \right\rVert_2).
 \end{align*}
 Nun können wir mit Hilfe der Lipschitz-Eigenschaft der rechten Seite $f$ die Differenz für allgemeines
 $t \in D , t > t_0$ abschätzen:
@@ -406,39 +423,34 @@ $t \in D , t > t_0$ abschätzen:
     &\leq \left\lVert \hat{x}_0 - \hat{x}_a(t_0) \right\rVert_2 +
     \int_{t_0}^{t} [\left\lVert f(s,\hat{x}(s)) - f(s,\hat{x}_a(s)) \right\rVert_2 +
     \left\lVert \hat{x}_a^{\prime}(s) - f(s,\hat{x}_a(s)) \right\rVert_2] ds \\
-    &\leq d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) +
-    \int_{t_0}^{t} [L \left\lVert \hat{x}(s) - \hat{x}_a(s) \right\rVert_2 + d_g] ds.
+    &\leq d_a + d_t(d_f + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) +
+    \int_{t_0}^{t} [L \left\lVert \hat{x}(s) - \hat{x}_a(s) \right\rVert_2 + d_f] ds.
 \end{align*}
-Um das gronwallsche Lemma verwenden zu können, setzen wir
-$u(t):=\left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L}$,
+Um das Gronwallsche Lemma verwenden zu können, setzen wir
+$u(t):=\left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_f}{L}$,
 \[
-    \beta:=d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2 + \frac{d_g}{L})
+    \beta:=d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) + \frac{d_f}{L})
 \] und $\alpha:=L$.
 Offensichtlich gilt
 \begin{align*}
-    &u(t) \leq \alpha \int_{t_0}^{t} u(s) ds + \beta\\
-    \Leftrightarrow & \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L} \leq
-    L \int_{t_0}^{t} \left[\left\lVert \hat{x}(s) - \hat{x}_a(s)\right\rVert_2 + \frac{d_g}{L}\right] ds + \beta \\
-    \Leftrightarrow & \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 \leq
-    d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2) +
-    \int_{t_0}^{t} \left[ L \left\lVert \hat{x}(s) - \hat{x}_a(s) \right\rVert_2 + d_g \right] ds - \frac{d_g}{L}
+    &u(t) \leq \alpha \int_{t_0}^{t} u(s) ds + \beta.\\
 \end{align*}
-Also können wir das gronwallsche Lemma anwenden und somit folgt
+Also können wir das Gronwallsche Lemma anwenden und somit folgt
 \[
     \left\lVert \hat{x}(t) - \hat{x}_a(t)\right\rVert_2 + \frac{d_g}{L} \leq
-    e^{L(t-t_0)}\left[d_a + d_t(d_g + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2 + \frac{d_g}{L})\right].
+    e^{L(t-t_0)}\left[d_a + d_t(d_f + \sup_{s\in D}\left\lVert f(s,\hat{x}_a(s)) \right\rVert_2 + \frac{d_g}{L})\right].
 \]
 Der Beweis für $t \in D$ mit $t<t_0$ funktioniert analog. \qedwhite\\
-Mit diesem Lemma können wir etwas über die stetige Abhängigkeit der Lösung von der Zeitvariable aussagen.
+Mit diesem Lemma können wir etwas über die stetige Abhängigkeit der Lösung von den Daten aussagen.
 \begin{satz}
     \label{Satz-stet-abh}
-    Sei $T \subset \mathbb{R}^{1+n}$ offen und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die
-    Lipschitz-stetig bezüglich der x-Variable mit Konstante $L>0$ gegeben. Dann hängt die Lösung $x$ des
-    Anfangswertproblems \eqref{firstorder-ode} stetig von den Anfangsdaten $(t_0, x_0) \in T$ und der rechten Seite $f$ ab.
-    Darunter versteht man:
-    ist eine Lösung $x$ auf einem kompakten Intervall $D \subset \mathbb{R}$, eine Umgebung U des Graphen
-    $\{(t,x(t): t \in D)$ in T und ein $\epsilon>0$ gegeben, dann existiert ein $\delta(\epsilon, U, f, D) >0$ in,
-    sodass die Lösung $\hat{x}$ des gestörten Anfangswertproblems
+    Sei $\mathcal{M} \subset \mathbb{R} \times \mathbb{R}^{1+n}$ offen und $f:\mathcal{M} \rightarrow \mathbb{R}^{n}$
+    eine stetige Funktion, die Lipschitz-stetig im zweiten Argument mit Konstante $L>0$ gegeben. Dann hängt die
+    Lösung $x$ des Anfangswertproblems \eqref{firstorder-ode} stetig von den Anfangsdaten $(t_0, x_0) \in \mathcal{M}$
+    und der rechten Seite $f$ ab. Darunter versteht man:
+    sind eine Lösung $x$ auf einem kompakten Intervall $D \subset \mathbb{R}$, eine Umgebung U des Graphen
+    $\{(t,x(t)): t \in D\}$ in $\mathcal{M}$ und ein $\epsilon>0$ gegeben, dann existiert ein
+    $\delta(\epsilon, U, f, D) >0$, sodass die Lösung $\hat{x}$ des gestörten Anfangswertproblems
     \begin{align*}
         \hat{x}^{\prime} &= \hat{f}(t,\hat{x})\\
         \hat{x}(\hat{t}_0) &= \hat{x}_0 \\
@@ -447,46 +459,47 @@ Mit diesem Lemma können wir etwas über die stetige Abhängigkeit der Lösung v
     \[
         \left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon \qquad t \in D
     \]
-    erfüllt. Voraussetzungen hierfür sind, dass $\hat{t}_0 \in D$, $(\hat{t}_0, \hat{x}_0) \in T$, $\hat{f}$ stetig auf
-    U, Lipschitz-stetig bezüglich der x-Variable und
+    erfüllt. Voraussetzungen hierfür sind, dass $\hat{t}_0 \in D$, $(\hat{t}_0, \hat{x}_0) \in \mathcal{M}$, $\hat{f}$
+    stetig auf U, Lipschitz-stetig im zweiten Argument und
     \[
         |t_0 - \hat{t}_0| \leq \delta, \quad \left\lVert x_0 - \hat{x}_0 \right\rVert_2 \leq \delta, \quad
-        \left\lVert f(t,x) - \hat{f}(t,x) \right\rVert_2 \leq \delta \quad \forall (t,x) \in U
+        \left\lVert f(t,x) - \hat{f}(t,x) \right\rVert_2 \leq \delta, \quad (t,x) \in U
     \] gilt.
 \end{satz}
 $Beweis.$ \cite[67,68]{beckGewohnlicheDifferentialgleichungen2018}\\
-Um die Abhängigkeit der Anfangsdaten $(t_0,x_0)$ formulieren zu können, wird im Folgenden eine Notation eingeführt.
-\begin{definition}
-    Seien $T \subset \mathbb{R}^{1+n}$ offen und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die
-    Lipschitz-stetig bezüglich der x-Variable ist. Die Abbildung
-    \[
-        (t, t_0, x_0) \mapsto x(t; t_0, x_0)
-    \]
-    mit $(t_0, x_0)\in T$ und $t \in I_{max}(t_0,x_0) = \left( I^{-}(t_0,x_0), I^{+}(t_0,x_0) \right)$ bezüglich der
-    maximalen Lösung des Anfangswertproblems \eqref{firstorder-ode} und dem maximalen Existenzintervall $I_{max}(t_0,x_0)$ heißt
-    charakteristische Funktion der gewöhnlichen Differentialgleichung.
-    Dabei nennt man
-    \[
-        I^{-}(t_0,x_0)=\sup\{ t\in\mathbb{R}: \text{das AWP \eqref{firstorder-ode} ist auf } \left[ t_0, t \right] \text{ lösbar}\}
-    \] und
-    \[
-        I^{+}(t_0,x_0)=\inf\{ t\in\mathbb{R}: \text{das AWP \eqref{firstorder-ode} ist auf } \left[ t, t_0 \right] \text{ lösbar}\}
-    \]
-    die Lebensdauerfunktion.
-\end{definition}
-Satz \ref{Satz-stet-abh} besagt, dass die charakteristische Funktion in allen Argumenten $(t, t_0, x_0)$ stetig ist und
-dass $I^{-}(t_0,x_0)$ bzw. $I^{+}(t_0,x_0)$ ober- bzw. unterhalbstetig sind. Dies bedeutet, dass durch kleine Störungen der
-Anfangswerte $(t_0,x_0)$ sich das maximale Existenzintervall nur stetig verkleinern kann.
-\begin{satz}
-    \label{Satz-diff-abh}
-    Seien $T \subset \mathbb{R}^{1+n}$ und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die in der x-Variable
-    stetig differenzierbar ist. Dann ist die charaktistische Funktion $x(t; t_0, x_0)$ stetig differenzierbar in
-    $(t_0, x_0) \in T$ und $t \in I_{max}(t_0, x_0)$.
-\end{satz}
-$Beweis.$ \cite[69,70]{beckGewohnlicheDifferentialgleichungen2018}
-\begin{bem}
-    Man kann zeigen, dass für $T \subset \mathbb{R}^{1+n}$ und eine stetige Funktion $f:T \rightarrow \mathbb{R}^{n}$,
-    die stetig differenzierbar in der x-Variable ist, gilt: $f$ ist lokal Lipschitz-stetig in der x-Variable.
-    Das bedeutet, dass in Satz \ref{Satz-diff-abh} eine verstärkte Vorraussetzung an die rechte Seite
-    im Gegensatz zu Satz \ref{Satz-stet-abh} verlangt wird.
-\end{bem}
+!!TODO: Beweis!!\\
+%Um die Abhängigkeit der Anfangsdaten $(t_0,x_0)$ formulieren zu können, wird im Folgenden eine Notation eingeführt.
+%\begin{definition}
+%    Seien $T \subset \mathbb{R}^{1+n}$ offen und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die
+%    Lipschitz-stetig bezüglich der x-Variable ist. Die Abbildung
+%    \[
+%        (t, t_0, x_0) \mapsto x(t; t_0, x_0)
+%    \]
+%    mit $(t_0, x_0)\in T$ und $t \in I_{max}(t_0,x_0) = \left( I^{-}(t_0,x_0), I^{+}(t_0,x_0) \right)$ bezüglich der
+%    maximalen Lösung des Anfangswertproblems \eqref{firstorder-ode} und dem maximalen Existenzintervall $I_{max}(t_0,x_0)$ heißt
+%    charakteristische Funktion der gewöhnlichen Differentialgleichung.
+%    Dabei nennt man
+%    \[
+%        I^{-}(t_0,x_0)=\sup\{ t\in\mathbb{R}: \text{das AWP \eqref{firstorder-ode} ist auf } \left[ t_0, t \right] \text{ lösbar}\}
+%    \] und
+%    \[
+%        I^{+}(t_0,x_0)=\inf\{ t\in\mathbb{R}: \text{das AWP \eqref{firstorder-ode} ist auf } \left[ t, t_0 \right] \text{ lösbar}\}
+%    \]
+%    die Lebensdauerfunktion.
+%\end{definition}
+%Satz \ref{Satz-stet-abh} besagt, dass die charakteristische Funktion in allen Argumenten $(t, t_0, x_0)$ stetig ist und
+%dass $I^{-}(t_0,x_0)$ bzw. $I^{+}(t_0,x_0)$ ober- bzw. unterhalbstetig sind. Dies bedeutet, dass durch kleine Störungen der
+%Anfangswerte $(t_0,x_0)$ sich das maximale Existenzintervall nur stetig verkleinern kann.
+%\begin{satz}
+%    \label{Satz-diff-abh}
+%    Seien $T \subset \mathbb{R}^{1+n}$ und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die in der x-Variable
+%    stetig differenzierbar ist. Dann ist die charaktistische Funktion $x(t; t_0, x_0)$ stetig differenzierbar in
+%    $(t_0, x_0) \in T$ und $t \in I_{max}(t_0, x_0)$.
+%\end{satz}
+%$Beweis.$ \cite[69,70]{beckGewohnlicheDifferentialgleichungen2018}
+%\begin{bem}
+%    Man kann zeigen, dass für $T \subset \mathbb{R}^{1+n}$ und eine stetige Funktion $f:T \rightarrow \mathbb{R}^{n}$,
+%    die stetig differenzierbar in der x-Variable ist, gilt: $f$ ist lokal Lipschitz-stetig in der x-Variable.
+%    Das bedeutet, dass in Satz \ref{Satz-diff-abh} eine verstärkte Vorraussetzung an die rechte Seite
+%    im Gegensatz zu Satz \ref{Satz-stet-abh} verlangt wird.
+%\end{bem}

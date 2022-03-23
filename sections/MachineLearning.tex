@@ -1,5 +1,5 @@
-\section{neuronale Netze}
-In diesem Abschnitt werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu lösen.
+\section{Neuronale Netze}
+In diesem Kapitel werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu lösen.
 Dabei gehen wir genauer auf neuronale Netze ein. Dieser Abschnitt bezieht sich hauptsächlich auf
 \cite{ovidiucalinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
 Mehrschrittverfahren heutzutage extrem effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, gibt es dennoch
@@ -7,19 +7,19 @@ Vorteile neuronale Netze zu benutzen. Falls Beispielsweise die Interesse besteht
 Differentialgleichung nur in einem bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von
 der Anfangszeit $t_0$ bis zur gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz
 repräsentiert jedoch die gesuchte Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen,
-was im Gegensatz zu den numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in unserem Anwendungsgebiet
-noch einen ausschlaggebenden Vorteil in Bezug auf Recheneffizienz, welchen wir in Abschnitt \ref{subsec:lsgpakete}
-betrachten werden.
+was im Gegensatz zu den numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in Bezug auf das
+Approximieren mehrerer Differentialgleichungen noch einen ausschlaggebenden Vorteil für die Recheneffizienz, welchen
+wir in Abschnitt \ref{subsec:lsgpakete}betrachten werden.
 
 \subsection{Struktur neuronaler Netze}
 \label{subsec:struktur-eines-neuronalen-netzes}
 Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei
-versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in \eqref{neuralNetexample}
-dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder \textit{bias}, welches
-konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$Schichten und $n^{(l)}$, $0\leq l \leq L$, Neuronen pro Schicht,
-wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$geben an, in welcher Relation die Neuronen der vorherigen
-Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte der Bias-Neuronen mit
-$b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
+versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in Abbildung
+\eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder
+\textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=0, \dots, L$,
+Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation
+die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte
+der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
 \begin{figure}[htp]
     \centering
     \begin{neuralnetwork}[height=4]
@@ -47,24 +47,24 @@ Darauffolgend ergeben sich die Ausgaben der nächsten Schicht $l$
 \begin{align}
     x_j^{(l)}=\Psi(s_j^{(l)}). \label{eq:activ}
 \end{align}
-Dabei ist $\Psi: \mathbb{R} \rightarrow \mathbb{R}$ die sogenannte \textit{Aktivierungsfunktion}. In unserer Anwendung werden wir
-hauptsächlich den \textit{Tangens hyperbolicus}
+Dabei ist $\Psi: \mathbb{R} \rightarrow \mathbb{R}$ die sogenannte \textit{Aktivierungsfunktion}. In unserer Anwendung
+werden wir hauptsächlich den \textit{Tangens hyperbolicus}
 \[
-    tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
+    \tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
 \]
 als Aktivierungsfunktion nutzen. Das Trainieren eines neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem
 einer \textit{Kostenfunktion}
 \[
-    C: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
+    \mathcal{C}: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
 \]
 reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
 benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
 
 \subsubsection{Forwardpropagation}
-Forward propagation wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
-Ausgaben der versteckten Schichten zu berechnen. Dabei wird für alle $1 \leq l \leq L$ zuerst \eqref{eq:signal}
+{\em Forward propagation} wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
+Ausgaben der versteckten Schichten zu berechnen. Dabei wird für alle $l = 1, \dots, L$ zuerst \eqref{eq:signal}
 angewendet, um die jeweiligen Signale zu berechnen und im Anschluss nutzen wir \eqref{eq:activ}. Im letzten
-Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $1\leq j \leq n^{(L)}$. Die Forwardpropagation ist
+Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $j = 1 ,\dots, n^{(L)}$. Die Forwardpropagation ist
 eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
 
 \subsubsection{Backwardpropagation}
@@ -421,31 +421,31 @@ eine Initialisierung mit der Gleichverteilung
 \]
 erzielen.
 
-\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
-\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
-Es ist möglich eine Wahrscheinlichkeitsverteilung der Anfangsbedingungen diese mit Hilfe sowohl eines
-Runge-Kutta-Verfahrens als auch neuronalen Netzen fortzusetzen. Der Vorteil hierbei ist es beispielsweise bei der
-die Wahrscheinlichkeit der Position eines Körpers im Weltall zu einem bestimmten Zeitpunkt $t$ berechnen zu können. Für
-Details zur Nutzung von (impliziten) Runge-Kutta-Verfahren wird auf \cite{aristoffIMPLICITRUNGEKUTTAMETHODS} verwiesen.
-Obwohl Runge-Kutta-Verfahren sehr genau sind, haben neuronale Netze den Vorteil, eine Funktion simulieren zu können.
-Es muss also für die gefragte Zeit $t$ nicht iteriert werden, sondern kann einfach eingesetzt werden. Außerdem können
-so für mehrere verschiedene physikalische Parameter Wahrscheinlichkeitsverteilungen angegeben werden, ohne jede
-Approximation einzeln berechnen zu müssen. Sei also ein trainiertes neuronales Netz gegeben. Das Lösungspaket
-$x(t; x_0)$ gibt eine Koordinatentransformation von $x_0$ nach $x_t$ an. Unter der Annahme, dass die Transformation
-$f: X_0 \rightarrow X_t, f(x_0) = x(t;x_0)$ invertierbar und differenzierbar ist, kann die Wahrscheinlichkeitsverteilung
-eines späteren Zeitpunktes $t$ angegeben werden mit
-\[
-    p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert_2,
-\]
-wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{-1}}= \frac{\partial x_0}{\partial x_t}$
-die Jacobi-Matrix von $f^{-1}$ ist. Falls jedoch die Wahrscheinlichkeitsverteilung der Anfangszeit $p_0(x_0)$ gesucht
-ist, so lässt sich diese ohne Inverse berechnen lassen:
-\[
-    p_0(x_0) = p_t(f(x_0))\left\lVert J_f \right\rVert_2,
-\]
-wobei $J_f= \frac{\partial x_t}{\partial x_0}$ die Jacobi-Matrix von $f$ ist. Da das Generieren einer Zufallszahl aus
-der Wahrscheinlichkeitsverteilung $p$ in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
-Dimensionen der Anfangsbedingungen und physikalischen Parametern stattdessen sogenannte
-\textit{Markow-Ketten-Monte-Carlo-Verfahren} (kurz MCMC-Verfahren). Diese wählen die gesuchten Daten mit Hilfe einer
-Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods} nachgelesen
-werden.
+%\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
+%\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
+%Es ist möglich eine Wahrscheinlichkeitsverteilung der Anfangsbedingungen diese mit Hilfe sowohl eines
+%Runge-Kutta-Verfahrens als auch neuronalen Netzen fortzusetzen. Der Vorteil hierbei ist es beispielsweise bei der
+%die Wahrscheinlichkeit der Position eines Körpers im Weltall zu einem bestimmten Zeitpunkt $t$ berechnen zu können. Für
+%Details zur Nutzung von (impliziten) Runge-Kutta-Verfahren wird auf \cite{aristoffIMPLICITRUNGEKUTTAMETHODS} verwiesen.
+%Obwohl Runge-Kutta-Verfahren sehr genau sind, haben neuronale Netze den Vorteil, eine Funktion simulieren zu können.
+%Es muss also für die gefragte Zeit $t$ nicht iteriert werden, sondern kann einfach eingesetzt werden. Außerdem können
+%so für mehrere verschiedene physikalische Parameter Wahrscheinlichkeitsverteilungen angegeben werden, ohne jede
+%Approximation einzeln berechnen zu müssen. Sei also ein trainiertes neuronales Netz gegeben. Das Lösungspaket
+%$x(t; x_0)$ gibt eine Koordinatentransformation von $x_0$ nach $x_t$ an. Unter der Annahme, dass die Transformation
+%$f: X_0 \rightarrow X_t, f(x_0) = x(t;x_0)$ invertierbar und differenzierbar ist, kann die Wahrscheinlichkeitsverteilung
+%eines späteren Zeitpunktes $t$ angegeben werden mit
+%\[
+%    p_t(x_t) = p_0(f^{-1}(x_t)) \left\lVert J_{f^{-1}} \right\rVert_2,
+%\]
+%wobei $f^{-1}(x_t)$ das Inverse der Transformation $f(x_0)=x(t;x_0)$ und $J_{f^{-1}}= \frac{\partial x_0}{\partial x_t}$
+%die Jacobi-Matrix von $f^{-1}$ ist. Falls jedoch die Wahrscheinlichkeitsverteilung der Anfangszeit $p_0(x_0)$ gesucht
+%ist, so lässt sich diese ohne Inverse berechnen lassen:
+%\[
+%    p_0(x_0) = p_t(f(x_0))\left\lVert J_f \right\rVert_2,
+%\]
+%wobei $J_f= \frac{\partial x_t}{\partial x_0}$ die Jacobi-Matrix von $f$ ist. Da das Generieren einer Zufallszahl aus
+%der Wahrscheinlichkeitsverteilung $p$ in der Regel mit hohem Rechenaufwand verbunden ist, nutzt man bei zu großen
+%Dimensionen der Anfangsbedingungen und physikalischen Parametern stattdessen sogenannte
+%\textit{Markow-Ketten-Monte-Carlo-Verfahren} (kurz MCMC-Verfahren). Diese wählen die gesuchten Daten mit Hilfe einer
+%Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods} nachgelesen
+%werden.
