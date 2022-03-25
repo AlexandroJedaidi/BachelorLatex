@@ -16,7 +16,7 @@ wir in Abschnitt \ref{subsec:lsgpakete}betrachten werden.
 Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei
 versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in Abbildung
 \eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder
-\textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=0, \dots, L$,
+\textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=1, \dots, L$,
 Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation
 die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte
 der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
@@ -53,10 +53,10 @@ werden wir hauptsächlich den \textit{Tangens hyperbolicus}
     \tanh(x)=\frac{e^x - e^{-x}}{e^x + e^{-x}}
 \]
 als Aktivierungsfunktion nutzen. Das Trainieren eines neuronalen Netzes lässt sich im Grunde auf ein Minimierungsproblem
-einer \textit{Kostenfunktion}
-\[
-    \mathcal{C}: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
-\]
+einer \textit{Kostenfunktion} $\mathcal{C}$
+%\[
+%    \mathcal{C}: \mathbb{R}^{\left(n^{(l-1)} + 1\right) \times n^{(l)} \times L} \rightarrow \mathbb{R}
+%\]
 reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie ein \textit{Gradientenverfahren}
 benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
 
@@ -68,119 +68,134 @@ Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $j = 1 
 eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
 
 \subsubsection{Backwardpropagation}
-Sei $C(Y)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe $Y:=(y_j)_j$.Dabei ist $Y$
-offensichtlich abhängig von den Gewichten $\omega$ und den Bias $b$. Der Gradient der Kostenfunktion ist gegeben durch
-$\nabla C=(\nabla_{\omega}C,\nabla_{b}C).$  (Definition Gradient siehe Appendix)\\
-Ds Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons in der $(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten
-Schicht unabhängig von jeglichen anderen Gewichten hinzu Also ergibt sich folgendes für den Gradienten der
-Kostenfunktion.
+Sei $\mathcal{C}(X)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe
+$\mathcal{C}(X)=Y:=(y_j)_j$, wobei $X$ die Gewichte aller Schichten inklusive Bias sind. Dabei ist $Y$
+offensichtlich abhängig von den Gewichten und den Bias. Der Gradient der Kostenfunktion hat für jede Schicht
+$l = 1, \dots, L$ die Form
+\begin{align*}
+    \nabla\mathcal{C}=
+        \begin{bmatrix}
+            \frac{\partial \mathcal{C}}{\partial \omega_{01}^{(l)}} & \dots &
+            \frac{\partial \mathcal{C}}{\partial \omega_{n^{(l)}1}^{(l)}} \\
+            \vdots & & \vdots \\
+            \frac{\partial \mathcal{C}}{\partial \omega_{0n^{(l-1)}}^{(l)}} & \dots &
+            \frac{\partial \mathcal{C}}{\partial \omega_{n^{(l)}n^{(l-1)}}^{(l)}} \\
+        \end{bmatrix}.
+\end{align*}
+Der Gradient der Kostenfunktion $\mathcal{C}$ kann also in $\nabla_{\omega}\mathcal{C}$ und $\nabla_{b}\mathcal{C}$ aufgeteilt werden.
+Dabei ist $\nabla_{b}\mathcal{C}$ die erste Spalte. Das Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons in der
+$(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten Schicht unabhängig von jeglichen anderen Gewichten hinzu
+Also ergibt sich folgendes für den Gradienten der Kostenfunktion.
 \begin{satz}
     \label{machine-cost-grad}
-    Die Komponenten des Gradienten $\nabla C$ der Kostenfunktion sind gegeben durch
+    Die Komponenten des Gradienten $\nabla_{\omega}\mathcal{C}$ und $\nabla_{b}\mathcal{C}$ der Kostenfunktion sind
+    gegeben durch
     \[
-        \frac{\partial C}{\partial \omega_{i,j}^{(l)}} = \frac{\partial C}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{i,j}^{(l)}}
+        \frac{\partial \mathcal{C}}{\partial \omega_{ij}^{(l)}} = \frac{\partial \mathcal{C}}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{ij}^{(l)}},
     \]
     \[
-        \frac{\partial C}{\partial b_{j}^{(l)}} = \frac{\partial C}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial b_j^{(l)}}
+        \frac{\partial \mathcal{C}}{\partial b_{j}^{(l)}} = \frac{\partial \mathcal{C}}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial b_j^{(l)}}
     \]
-    mit $0\leq i \leq n^{(l-1)}, 1\leq j \leq n^{(l)}, 1 \leq l \leq L$.
+    mit $i = 0, \dots, n^{(l-1)}, j= 1, \dots,  n^{(l)}, l=1, \dots, L$.
 \end{satz}
-$Beweis$ Es ist $x_j^{(l)}=\phi(s_j^{(l)})$ wie in \eqref{eq:activ}. Wir zeigen die Gleichung für
-$\nabla_{\omega}C(w,b)$, der Beweis für  $\nabla_{b}C(w,b)$ funktioniert analog mit $i=0$.
+$Beweis$ Es ist $x_j^{(l)}=\psi(s_j^{(l)})$ wie in \eqref{eq:activ}. Wir zeigen die Gleichung für
+$\nabla_{\omega}C(w,b)$, der Beweis für  $\nabla_{b}C(w,b)$ funktioniert analog mit $i=0$:
 \begin{align*}
-    \frac{\partial C(\omega,b)}{\partial \omega_{i,j}^{(l)}} &= \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial \omega_{i,j}^{(l)}}
-    = \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial \omega_{i,j}^{(l)}} \\
-    &=\frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial s_j^{(l)}} \frac{\partial s_j^{(l)}}{\partial \omega_{i,j}^{(l)}}
-    = \frac{\partial C(\omega,b)}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{i,j}^{(l)}} \\
+    \frac{\partial \mathcal{C}(\omega,b)}{\partial \omega_{ij}^{(l)}} &= \frac{\partial \mathcal{C}(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial \omega_{ij}^{(l)}}
+    = \frac{\partial \mathcal{C}(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \Psi(s_j^{(l)})}{\partial \omega_{ij}^{(l)}} \\
+    &=\frac{\partial \mathcal{C}(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \Psi(s_j^{(l)})}{\partial s_j^{(l)}} \frac{\partial s_j^{(l)}}{\partial \omega_{ij}^{(l)}}
+    = \frac{\partial \mathcal{C}(\omega,b)}{\partial s_{j}^{(l)}} \frac{\partial s_{j}^{(l)}}{\partial \omega_{ij}^{(l)}}, \\
 \end{align*}
-Wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
+wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
 \[
-    \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \phi(s_j^{(l)})}{\partial s_j^{(l)}}
+    \frac{\partial \mathcal{C}(\omega,b)}{\partial x_j^{(l)}} \frac{\partial \Psi(s_j^{(l)})}{\partial s_j^{(l)}}
     = \frac{\partial C(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial s_j^{(l)}}
-    = \frac{\partial C(\omega,b)}{\partial s_j^{(l)}}
+    = \frac{\partial C(\omega,b)}{\partial s_j^{(l)}}.
 \]
 \qedwhite\\
-Nun definieren wir $\delta_j^{(l)}=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Fehlers im Bezug zum Signal
-$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten kann man mit Hilfe von \eqref{eq:signal} explizit ausgerechnet
-werden und somit folgt
+Nun definieren wir $\delta_j^{(l)}=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Kostenfunktion im Bezug zum Signal
+$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausgerechne und
+somit folgt
 \begin{align*}
-    \frac{\partial C}{\partial \omega_{i,j}^{(l)}} &= \delta_j^{(l)} x_i^{(l-1)} \\
-    \frac{\partial C}{\partial b_j^{(l)}} &= \delta_j^{(l)} x_{0}^{(l-1)} = -\delta_j^{(l)}.
+    \frac{\partial \mathcal{C}}{\partial \omega_{ij}^{(l)}} &= \delta_j^{(l)} x_i^{(l-1)}, \\
+    \frac{\partial \mathcal{C}}{\partial b_j^{(l)}} &= \delta_j^{(l)} x_{0}^{(l-1)} = -\delta_j^{(l)}.
 \end{align*}
 Hiermit kann der Gradient der Kostenfunktion vereinfacht werden zu
-\[
-    \nabla C=\delta_j^{(l)}(x_i^{(l-1)},-1).
-\]
+\begin{align*}
+    \nabla \mathcal{C}_{\omega}&=\delta_j^{(l)}x_i^{(l-1)} \\
+    \nabla \mathcal{C}_{b}&=-\delta_j^{(l)}.
+\end{align*}
 Es fällt auf, dass für die Berechnung des Gradienten der Kostenfunktion nur die verschiedenen $\delta_j^{(l)}$ benötigt
 werden, da wir die $x_i^{(l-1)}$ schon in der Forwardpropagation berechnet haben. Diese $\delta_j^{(l)}$ werden mit dem
 sogenannten \textit{Backpropagation}-Algorithmus berechnet. Diesen werden wir im folgenden herleiten. Im Beweis
 von Satz \eqref{machine-cost-grad} haben wir gesehen, dass für $\delta_j^{(L)}$ gilt
 \[
-    \delta_j^{(L)}= \frac{\partial C}{\partial x_j^{(L)}} \frac{\partial x_j^{(L)}}{\partial s_j^{(L)}}= \frac{\partial C}{\partial x_j^{(L)}} \phi '(s_j^{(L)})
-    =\frac{\partial C}{\partial y_j} \phi '(s_j^{(L)}).
+    \delta_j^{(L)}= \frac{\partial C}{\partial x_j^{(L)}} \frac{\partial x_j^{(L)}}{\partial s_j^{(L)}}= \frac{\partial C}{\partial x_j^{(L)}} \Psi '(s_j^{(L)})
+    =\frac{\partial C}{\partial y_j} \Psi '(s_j^{(L)}).
 \]
 Betrachtet man nun die vorletzte Schicht bzw. die letzte versteckte Schicht, so fällt auf, dass das Signal
 $s_j^{(L-1)}$ jedes Signal in der Ausgabeschicht beeinflusst und damit folgt mit Hilfe der mehrdimensionalen
 Kettenregel, dass
 \[
     \delta_i^{(L-1)}= \sum\limits_{j=1}^{n^{(L)}} \frac{\partial C}{\partial s_j^{(L)}}
-    +\frac{\partial s_j^{(L)}}{\partial s_i^{(L-1)}}
+    \frac{\partial s_j^{(L)}}{\partial s_i^{(L-1)}}
     = \sum\limits_{j=1}^{n^{(L)}} \delta_j^{(L)} \frac{\partial s_j^{(L)}}{\partial s_i^{(L-1)}}.
 \]
 Allgemein betrachtet beeinflusst das Signal $s_j^{(L-1)}$ ausschließlich alle Signale in der nachfolgenden Schicht,
 also folgt aus der oben hergeleiteten Formel
 \begin{align}
     \delta_i^{(l-1)}= \sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)} \frac{\partial s_j^{(l)}}{\partial s_i^{(l-1)}},
-    \qquad 1 \leq i \leq n^{(l-1)}. \label{eq:delta-1}
+    \qquad i = 1, \dots, n^{(l-1)}. \label{eq:delta-1}
 \end{align}
-Der zweiten Teil der Summe kann explizit ausrechnen:
+Der zweiten Teil der Summe können wir explizit ausrechnen:
 \begin{align*}
-    \frac{\partial s_j^{(l)}}{\partial s_j^{(l-1)}}
-    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{i=0}^{n^{(l-1)}}\omega_{ij}^{(l)}x_{i}^{(l-1)})\\
-    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{i=1}^{n^{(l-1)}}\omega_{ij}^{(l)}\phi(s_{i}^{(l-1)}) - b_j^{(l)}) \\
-    &= \omega_{ij}^{(l)}\phi'(s_i^{(l-1)}).
+    \frac{\partial s_i^{(l)}}{\partial s_i^{(l-1)}}
+    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{k=0}^{n^{(l-1)}}\omega_{kj}^{(l)}x_{k}^{(l-1)})\\
+    &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{k=1}^{n^{(l-1)}}\omega_{kj}^{(l)}\Psi(s_{k}^{(l-1)}) - b_j^{(l)}) \\
+    &= \omega_{ij}^{(l)}\Psi'(s_i^{(l-1)}).
 \end{align*}
 Setzen wir jetzt das Ergebnis in \eqref{eq:delta-1}, so erhält man die zentrale Formel des
 \textit{Backpropagation}-Algorithmus:
 \begin{align}
-    \delta_i^{(l-1)} = \phi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)}\omega_{ij}^{(l)}
-    \qquad 1 \leq i \leq n^{(l-1)}. \label{eq:delta-final}
+    \delta_i^{(l-1)} = \Psi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)}\omega_{ij}^{(l)},
+    \qquad  i = 1, \dots, n^{(l-1)}. \label{eq:delta-final}
 \end{align}
 
 \subsubsection{Gradientenverfahren}
-Ein allgemeines Gradientenverfahren mit der \textit{learning rate} $\eta > 0$ hat die Form
+Ein allgemeines Gradientenverfahren mit der \textit{Lernrate} $\eta > 0$ hat die Form
 \begin{align*}
     \omega_{ij}^{(l)[k+1]} &= \omega_{ij}^{(l)[k]} - \eta \delta_{j}^{(l)[k]} x_i^{(l-1)[k]}\\
     b_{ij}^{(l)[k+1]} &= b_{ij}^{(l)[k]} + \eta \delta_{j}^{(l)[k]}.
 \end{align*}
-Unser Fokus in Bezug auf Gradientenverfahren wird auf der \textit{Adam} (engl. Adaptive moment Estimation) liegen. Sei
-$g^{[k]} := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
-Iteration. Dann ist das Adams-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
+Unser Fokus in Bezug auf Gradientenverfahren wird auf der \textit{ADAM} (engl. adaptive moment estimation) liegen. Sei
+$g^{[k]} := \nabla C(\omega)$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
+Iteration. Dann ist das ADAM-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
 $v^{[0]}=0$
 \begin{align*}
-    m^{[k]} &= \beta_1 m^{[k-1]} + (1-\beta_1)g^{k} \\
+    m^{[k]} &= \beta_1 m^{[k-1]} + (1-\beta_1)g^{[k]} \\
     v^{[k]} &= \beta_2 v^{[k-1]} + (1-\beta_2)(g^{[k]})^2
 \end{align*}
 und deren Korrekturen
 \begin{align*}
-    \hat{m}^{[k]} &= \frac{m^{[k]}}{(1-\beta_1^k)} \\
-    \hat{v}^{[k]} &= \frac{v^{[k]}}{(1-\beta_2^k)}
+    \hat{m}^{[k]} &= \frac{m^{[k]}}{1-\beta_1^k}, \\
+    \hat{v}^{[k]} &= \frac{v^{[k]}}{1-\beta_2^k}
 \end{align*}
 gegeben durch
 \[
-    \omega_{ij}^{[k+1]}= \omega_{ij}^{[k]} - \eta \frac{\hat{m}^{[k]}}{\sqrt(|\hat{v}^{[k]}|) + \epsilon}.
+    \omega_{ij}^{[k+1]}= \omega_{ij}^{[k]} - \eta \frac{\hat{m}^{[k]}}{\sqrt{|\hat{v}^{[k]}|} + \epsilon}.
 \]
-Dabei ist $\eta > 0$ die learning rate und $\epsilon > 0$ verhindert eine Division durch $0$. Eine Voreinstellung der Parameter
-wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$) müssen jedoch schon Gewichte
-gegeben sein, um $g_k$ berechnen zu können. Dazu werden wir uns in Abschnitt\eqref{subsec:gewichtsinitialisierung}
-genauere Gedanken machen.\\
+Eine genauere Herleitung lässt sich in \cite[103-104]{ovidiucalinDeepLearningArchitectures} nachlesen.
+Dabei ist $\eta > 0$ die Lernrate und $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
+Voreinstellung der Parameter wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$)
+müssen jedoch schon Gewichte gegeben sein, um $g^{[k]}$ berechnen zu können. Dazu werden wir uns in
+Abschnitt \eqref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
 
 \subsubsection{Verschwindender und explodierender Gradient}
-Die Berechnung des Gradienten $\nabla C$ ist ist fehleranfällig wobei zwei folgende Probleme auftreten können: \\
-$\textbf{verschwindender Gradient}$
-Das Problem des verschwindenden Gradienten charakterisiert sich durch immer kleiner werdende $\delta_j^{(l)}$, was wiederum
-direkt zu einem verschwindenden Gradienten, also $\nabla C \approx 0$,führt. \\
-Angenommen: Die Aktivierungsfunktion $\Phi$ ist gegeben durch die Sigmoidfunktion, d.h. $\phi(x) =\frac{1}{1+e^{-x}}$ und
+Die Berechnung des Gradienten $\nabla C$ ist fehleranfällig, wobei zwei folgende Probleme auftreten können: \\
+$a)$ $\textbf{verschwindender Gradient}:$
+Das Problem des {\em verschwindenden} Gradienten charakterisiert sich durch immer kleiner werdende $\delta_j^{(l)}$, was wiederum
+direkt zu einem verschwindenden Gradienten, also $\nabla C \approx 0$, führt. \\
+Angenommen: Die Aktivierungsfunktion $\Psi$ ist gegeben durch die Sigmoidfunktion, d.h. $\Psi(x) =\frac{1}{1+e^{-x}}$ und
 die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}<1$ gilt.\\
 \begin{figure}
     \begin{center}
@@ -189,56 +204,56 @@ die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}<1$
                 \addplot[domain = -6:6,blue] {1/(1+exp(-x))};
                 \addplot[domain = -6:6,red] {(exp(-x))/(1+exp(-x))^2};
                 \legend{
-                    $\phi(x)$,
-                    $\phi^{\prime}(x)$
+                    $\Psi(x)$,
+                    $\Psi^{\prime}(x)$
                 }
             \end{axis}
         \end{tikzpicture}
-        \caption{Graphen der Aktivierungsfunktion Sigmoid und dessen Ableitung.}
+        \caption{Graphen der Sigmoid-Aktivierungsfunktion $\Psi(x)=\frac{1}{1+e^{-x}}$ und dessen Ableitung.}
         \label{sigmoid-figure}
     \end{center}
 \end{figure}
-Sobald $|x|$ groß wird, ist die Ableitung $\phi'(x) \approx 0$ (siehe Fig \eqref{sigmoid-figure}). Dies hat die Auswirkung, dass
-$\delta_j^{(L)}$ bei betragsmäßig großen Signalen um den Faktor $\phi'(s_j^{(L)})$ kleiner wird. Dadurch werden die
+Sobald $|x|$ groß wird, ist die Ableitung $\Psi'(x) \approx 0$ (siehe Abbildung \ref{sigmoid-figure}). Dies hat die Auswirkung, dass
+$\delta_j^{(L)}$ bei betragsmäßig großen Signalen um den Faktor $\Psi'(s_j^{(L)})$ kleiner wird. Dadurch werden die
 nachfolgenden Werte
 \[
-    \delta_i^{(l-1)}=\phi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}}\delta_j^{(l)} \omega_{ij}^{(l)}
+    \delta_i^{(l-1)}=\Psi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}}\delta_j^{(l)} \omega_{ij}^{(l)}
 \]
-auch immer kleiner, da sowohl $\delta_j^{(l)}$ als auch $\omega_{ij}^{(l)}$ klein sind. Die Werte von $\delta_i$ werden
-so klein, dass sie gewichtet mit hinreichend kleiner learning rate ($\eta <1$) im Gradientenverfahren keine Auswirkung
+auch immer kleiner, da sowohl $\delta_j^{(l)}$ als auch $\omega_{ij}^{(l)}$ klein sind. Die Werte von $\delta_i^{(l)}$ werden
+so klein, dass sie gewichtet mit hinreichend kleiner Lernrate ($\eta <1$) im Gradientenverfahren keine Auswirkung
 auf das neue Gewicht haben. Für ein allgemeines Gradientenverfahren gilt dann
 \[
-    \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\mu \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
+    \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\eta \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
 \]
 Um diesem Problem entgegenzuwirken, gibt es mehrere Verbesserungsmöglichkeiten.\newline
 $\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effektivität des allgemeinen
 Gradientenverfahren sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen
 für einen verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren
-versteckten Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion ($\phi(x)=\max(0,x)$) mit
-der Ableitung $\phi'(x)= \begin {cases} 0 &\text{x}<0\\ 1 &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
+versteckten Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion $\Psi(x)=\max(0,x)$ mit
+der Ableitung $\Psi'(x)= \begin {cases} 0, &\text{x}\leq 0\\ 1, &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
 Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
 verschwindet.\\
 $\textbf{Möglichkeit 2}:$ Eine geschicktere Initialisierung der Gewichte $\omega_{ij}^{(l)}$ wie in Abschnitt
-\eqref{subsec:gewichtsinitialisierung}\\
-$\textbf{explodierender Gradient}$
+\ref{subsec:gewichtsinitialisierung}\\
+$b)$ $\textbf{explodierender Gradient}:$
 Analog zum verschwindenden Gradienten existiert auch das Problem des \textit{explodierenden} Gradienten, in dem
 $\delta_j^{(l)}>1$ ist.\\
 Angenommen: Die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}>1$ und $b_j^{(l)}=0$
 gilt. Bei linearer Regression werden die Signale $s_j^{(l)}$  beispielsweise für wachsendes $l$ immer größer, da
 
 \[
-    x_j^{(l)}=\phi(s_j^{(l)})=s_j^{(l)}=\sum\limits_{i=1}^{n^{(l)}} \underbrace{\omega_{ij}^{(l)}x_{i}^{(l-1)}}_{>1}
+    x_j^{(l)}=\Psi(s_j^{(l)})=\Psi\left( \sum\limits_{i=1}^{n^{(l)}} \underbrace{\omega_{ij}^{(l)}x_{i}^{(l-1)}}_{>1} \right)
 \]
-gilt. Solange $\frac{\partial C}{\partial y_i} > 1$ gilt bei einer Aktivierungsfunktion mit $\phi'(x)>1$ auch $\delta_j^{(L)}>1$,
-was zu einem explodierenden Gradienten $\nabla C$ führt. Falls $\phi'(x)=1$ (wie beispielsweise ReLU bei positiver Eingabe oder
-linearer Aktivierungsfunktion), so werden die Werte der $\delta_i$ zwar nicht direkt von der Ableitung der
-Aktivierungsfunktion beeinflusst, aber bei einem sehr tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem
+gilt. Solange $\frac{\partial C}{\partial y_i} > 1$ gilt bei einer Aktivierungsfunktion mit $\Psi'(x)>1$ auch $\delta_j^{(L)}>1$,
+was zu einem explodierenden Gradienten $\nabla C$ führt. Falls $\Psi'(x)=1$ (wie beispielsweise für die ReLU-Funktion bei
+positiver Eingabe oder linearer Aktivierungsfunktion), so werden die Werte der $\delta_i^{(l)}$ zwar nicht direkt von der Ableitung
+der Aktivierungsfunktion beeinflusst, aber bei einem sehr tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem
 groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim verschwindenden Gradienten werden wir später eine geschickte
 Initialisierung der Gewichte herleiten, um diesem Problem entgegenzuwirken.
 
-\subsubsection{Batch training}
+\subsubsection{Batch Training}
 Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X^{(0)}$ iteriert. Dabei nennt
-man ein einzelnes Element von $X^{(0)}$ \textit{Probe} (engl. sample). Eine Ansammlung an samples heißt wiederum
+man ein einzelnes Element von $X^{(0)}$ \textit{Probe} (engl. sample). Eine Ansammlung an Proben heißt wiederum
 \textit{Batch}. Außerdem werden die Lernprozesse auch \textit{Epochen} genannt, dessen Anzahl angibt, wie oft das
 neuronale Netz die gegebenen Eingangsdaten zum Training nutzt. Es macht Sinn, die Eingangsdaten in Batches einzuteilen,
 denn so wird Speicherplatz gespart und an Rechengeschwindigkeit gewonnen, da die Gewichte erst nach dem Durchgang eines
@@ -255,18 +270,17 @@ Abschätzungen des Durchschnitts zu ungenau, was wiederum den Lernprozess verlan
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
 Wir werden uns in diesem Abschnitt an der wissenschaftliche Arbeit \cite{flamantSolvingDifferentialEquations2020}
-orientieren. Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit dem
+orientieren. Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit der
 wir unser neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
 \begin{align}
     \label{dgl-machinelearnung}
     x^{\prime} = f(t,x)
 \end{align}
-mit den Anfangsbedingungen $x(t_0)=x_0$ gegeben. Nun werden wir diese parametrisiert durch physikalische Parameter
-$\theta$ nach $0$ auflösen. Dabei definieren wir die Funktion
+mit den Anfangsbedingungen $x(t_0)=x_0$ gegeben. Dabei definieren wir die Funktion
 \begin{align}
     \label{g-func}
-    &G:\mathbb{R}^n \times C([t_0,t_f],\mathbb{R}) \times [t_0, t_f] \times \mathbb{R}^p \rightarrow \mathbb{R}^n \nonumber\\
-    &G \left( x, x^{\prime}, t, \theta \right) = 0,
+    &G:\mathbb{R}^n \times \mathbb{R}^n \times [t_0, t_f] \times \mathbb{R}^p \rightarrow \mathbb{R}^n \nonumber\\
+    &G \left( x, x^{\prime}, t, \theta \right) = x^{\prime} - f(t, x, \theta),
 \end{align}
 wobei $p$ die Anzahl der physikalischen Parametern ist. Hierfür werden wir ein sogenanntes \textit{Lösungspaket}
 (engl. solution bundle) bilden, welches aus den Lösungen der Gleichung \eqref{g-func} besteht.
@@ -288,38 +302,39 @@ Lösung über $(X_0,\Theta)$ mit
 \end{align}
 wobei $N:\mathbb{R}^{1+n+p} \rightarrow \mathbb{R}^n$ das neuronale Netz mit den Gewichten $\omega$ repräsentiert und
 $a:[t_0,t_f] \rightarrow \mathbb{R}$ hat die Eigenschaft $a(t_0)=0$. Hierdurch wird das Erfüllen der
-Anfangswertbedingungen in der Abschätzung \eqref{nn-approx} sichergestellt. Durch wurde Tests in
-\cite{flamantSolvingDifferentialEquations2020} wurde herausgefunden, dass sich für $a$ die Form
+Anfangswertbedingungen in der Approximation \eqref{nn-approx} sichergestellt. Durch Tests in
+\cite{flamantSolvingDifferentialEquations2020} wurde herausgefunden, dass $a$ der Form
 \[
     a(t) = 1 - e^{t_0-t}
 \]
-besonders gut eignet. Zusammengefasst wollen wir für jedes Lösungspaket $(t_i,x_{0i}, \theta_i)$ eine Approximation
+besonders gut geeignet ist. Zusammengefasst wollen wir für jedes Lösungspaket $(t_i,x_{0i}, \theta_i)$ eine Approximation
 $\hat{x}$ finden, so dass
 \[
-    G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i;\theta_i) \approx 0.
+    G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i,\theta_i) \approx 0.
 \]
 Die Kostenfunktion ergibt sich dann durch
 \begin{align}
     \label{cost-func}
-    L = \frac{1}{|B|} \sum_{(t_i,x_{0i},\theta_i) \in B} b(t_i)
-    \left\lVert G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i;\theta_i) \right\rVert_2^2,
+    \mathcal{C} = \frac{1}{|B|} \sum_{(t_i,x_{0i},\theta_i) \in B} \mu(t_i)
+    \left\lVert G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i,\theta_i) \right\rVert_2^2,
 \end{align}
-wobei $b:[t_0,t_f] \rightarrow \mathbb{R}$ durch $b(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
+wobei $\mu:[t_0,t_f] \rightarrow \mathbb{R}$ durch $b(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
 bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
-$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der batch size $|B|$. Mit vorgegebenen Gebieten
-für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen Differentialgleichung)
-können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige Wahl aus einer
-Gleichverteilung der Intervalle $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich Eingangsdaten zur
-Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden. Stattdessen repräsentiert jeder Batch
-eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine steigende Anzahl der samples eine bessere
-Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht auftreten, da es nicht zu viele
-relevante Variablen bzw. Trainingsdaten gibt. Der Korrekturfaktor $b(t_i)$ wird zur Beeinflussung des lokalen Fehlers
+$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der Kardinalität $|B|$, welche batch size genannt wird. Mit
+vorgegebenen Gebieten für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen
+Differentialgleichung) können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige
+Wahl aus einer Gleichverteilung der Mengen $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich
+Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden. Stattdessen
+repräsentiert jeder Batch eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine steigende
+Anzahl der Proben eine bessere Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht
+auftreten, da es nicht zu viele relevante Variablen bzw. Trainingsdaten gibt. Der Korrekturfaktor $\mu(t_i)$ wird zur
+Beeinflussung des lokalen Fehlers
 \begin{align*}
     \tau(t_i;x_{0i}, \theta_i)
     := G \left( \hat{x}(t_i;x_{0i}, \theta_i), \hat{x}^{\prime}(t_i;x_{0i}, \theta_i),t_i;\theta_i \right)
 \end{align*}
-eingeführt. Ähnlich wie in Satz \eqref{one-step-error-bound} für Einschrittverfahren können wir auch hier einen
-Zusammenhang des lokalen und dem globalen Fehlers des neuronalen Netzes zeigen. Dabei ist der globale Fehler des
+eingeführt. Ähnlich wie in Satz \ref{one-step-error-bound} für Einschrittverfahren können wir auch hier einen
+Zusammenhang des lokalen und des globalen Fehlers des neuronalen Netzes zeigen. Dabei ist der globale Fehler des
 neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist.
 \begin{satz}
     Für \eqref{dgl-machinelearnung} ist der lokale Fehler $\tau$ gegeben durch
@@ -331,17 +346,17 @@ neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung 
     Lipschitz-Konstante der rechten Seite $f$.
 \end{satz}
 $Beweis.$ Der lokale Fehler ergibt sich durch einfaches Konstuierens von $G$.\\
-Für den globalen Fehler gilt
-\begin{alignat*}{2}
-    &e(t) &= \hat{x}(t) - x(t)\\
-    \Leftrightarrow \quad &\hat{x}(t) &= e(t) + x(t).
-\end{alignat*}
+Für den globalen Fehler $e(t) = \hat{x}(t) - x(t)$ gilt
+\begin{align*}
+    \hat{x}(t) = e(t) + x(t).
+\end{align*}
 Einsetzen in den lokalen Fehler ergibt
 \begin{alignat*}{2}
     &\tau(t) &= e^{\prime}(t) + x^{\prime}(t) - f(t,e(t)+x(t))\\
-    \Leftrightarrow \quad &e^{\prime}(t) &= \tau(t) - x^{\prime}(t) + f(t,e(t) + x(t)).
+    \text{oder} \quad &e^{\prime}(t) &= \tau(t) - x^{\prime}(t) + f(t,e(t) + x(t)),
 \end{alignat*}
-$x$ die Lösung von \eqref{dgl-machinelearnung}, also ist $x^{\prime}=f(t,x(t))$. Des Weiteren ist $f$ Lipschitz-stetig,
+wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist , also $x^{\prime}=f(t,x(t))$. Des Weiteren ist $f$
+Lipschitz-stetig im zweiten Argument,
 das heißt es gilt $\left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert_2 \leq L \left\lVert e(t) \right\rVert_2$. Also kann
 man die Norm der rechten Seite obiger Gleichung schreiben als
 \begin{align*}
@@ -350,13 +365,13 @@ man die Norm der rechten Seite obiger Gleichung schreiben als
     &\leq \left\lVert \tau(t) \right\rVert_2 + L\left\lVert e(t) \right\rVert_2 \\
     &\leq \tau_{t_f} + L \left\lVert e(t) \right\rVert_2.
 \end{align*}
-Dabei wurde die Dreiecksungleichung benutzt und der lokale Fehler wurd durch das Maximum aller lokalen Fehler
+Dabei wurde die Dreiecksungleichung benutzt und der lokale Fehler wurde durch das Maximum aller lokalen Fehler
 abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfüllt
 \[
     E^{\prime}(t) = \tau_{t_f} + L E(t),
 \]
 wobei $0 \leq \left\lVert e(t) \right\rVert_2 \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
-Differentialgleichung erster Ordnung welche mit \eqref{linear-ode-solution} berechnen lässt
+Differentialgleichung erster Ordnung, dessen Lösung sich mit \eqref{linear-ode-solution} berechnen lässt
 \begin{align*}
     E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f} ds \\
     &= \tau_{t_f} e^{Lt} \int_{t_0}^{t}e^{-Ls} ds \\
@@ -366,7 +381,7 @@ Daraus folgt
 \[
     \left\lVert e(t) \right\rVert_2 \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
 \]
-was sich mit \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
+was sich mit der Abschätzung in Satz \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
 Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
 kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
@@ -375,18 +390,19 @@ frühen Zeitpunkten zu skalieren.
 \label{subsec:gewichtsinitialisierung}
 Die Gewichtsinitialisierung ist ein entscheidender Faktor um Probleme des explodierenden und verschwindenden Gradienten
 entgegenzuwirken. In diesem Abschnitt werden wir ein Intervall bestimmen, welches dann zur Initialisierung der Gewichte
-$\omega_{ij}$ genutzt wird. Dazu werden betrachten wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
+$\omega_{ij}$ genutzt wird. Dazu werden wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
 zugehörigen Gewichte $\omega_{ij}:=\omega_{ij}^{(l)}$ sowie $x_{i}^{(l-1)}$ als unabhängige, identisch verteilte
 Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die bias $b$
-werden mit $0$ initialisiert. Für die Varianz der Ausgabe der $l$-ten Schicht $x_i^{(l)}$ ergibt sich durch
+werden mit $0$ initialisiert. Genaueres zur Berechnung folgender Varianzen lässt sich in
+\cite[191-195]{ovidiucalinDeepLearningArchitectures} nachlesen. Für die Varianz der Ausgabe der $l$-ten Schicht
+$x_i^{(l)}$ ergibt sich
 \begin{align*}
-    Var(x_j^{(l)}) &= Var\left( \Phi\left( \sum_{i} \omega_{ij}x_i^{(l-1)} \right) \right)\\
-    &= n^{(l-1)} \Phi^{\prime}(0)^2 Var(\omega_{ij}) Var(x_i^{(l-1)}).
+    Var(x_j^{(l)}) = n^{(l-1)} \Psi^{\prime}(0)^2 Var(\omega_{ij}) Var(x_i^{(l-1)}).
 \end{align*}
-(Berechnung siehe Anhang) Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also
+Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also \\
 $Var(x_j^{(l)})=Var(x_j^{(l-1)})$, so ergibt sich für die Varianz der Gewichte
 \[
-    Var(\omega_{ij}) = \frac{1}{n^{(l-1)}\Phi^{\prime}(0)}.
+    Var(\omega_{ij}) = \frac{1}{n^{(l-1)}\Psi^{\prime}(0)^2}.
 \]
 Die gegebene Voraussetzung macht Sinn um die oben erwähnten Probleme des explodierenden bzw. verschwindenden Gradienten
 zu vermeiden. Genau wie bei der Varianz der Ausgaben $x_j^{(l-1)}$ und $x_j^{(l)}$ ist es auch vorteilhaft die Varianz
@@ -394,11 +410,11 @@ der Kostenfunktion ausgehend von der Backpropagation gleichzustellen. Also folgt
 \[
     Var(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}) = Var(\frac{\partial C}{\partial \omega_{ij}^{(l)}})
 \]
-mit Hilfe einiger stochastischer Umformungen und der Annahme, dass $\Phi(x)=x$, die Gleichung
+mit Hilfe einiger stochastischer Umformungen und der Annahme, dass $\Psi(x)=x$, die Gleichung
 \[
-    Var(\delta_j^{(l-1)}) = Var(\delta_j^{((l))}),
+    Var(\delta_j^{(l-1)}) = Var(\delta_j^{(l)}),
 \]
-wobei $\delta_j$ eine aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
+wobei $\delta_j^{(l)}$ eine aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
 \[
     Var(\omega_{ij}) = \frac{1}{n^{(l)}}.
 \]
@@ -406,20 +422,20 @@ Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{
 \[
     Var(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
 \]
-einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit den der
-Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
+einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit der
+Varianz der Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
 \[
-    \omega_{ij}^{((l))} \sim
+    \omega_{ij} \sim
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}} \right]
 \]
-für alle $1\leq i \leq n^{(l-1)}$, $1\leq j \leq n^{l}$, $1\leq l \leq L$ Diese Verteilung heißt \textit{Xavier-} oder
-\textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Phi(x)=tanh(x)$ kann man durch ähnlichs Vorgehen
-eine Initialisierung mit der Gleichverteilung
+für alle $i = 1, \dots, n^{(l-1)}$, $j=1,\dots,n^{l}$, $l=1,\dots,L$ Diese Verteilung heißt \textit{Xavier-} oder
+\textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Psi(x)=\tanh(x)$ kann eine Initialisierung mit d
+er Gleichverteilung
 \[
-    \omega_{ij}^{((l))} \sim
-    \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} tanh(2)}} \right]
+    \omega_{ij} \sim
+    \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}} \right]
 \]
-erzielen.
+gefunden werden (vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential}).
 
 %\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
 %\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}

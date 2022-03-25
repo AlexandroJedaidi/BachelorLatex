@@ -332,7 +332,6 @@ und $Df(x(t_i))$ die Jacobi-Matrix von $f$ in $x(t_i)$ ist. Da wir uns nur auf d
     &\vdots\\
     k_{i,m} &= f(x(t_i) + ha_{m1}k_{1,i} + \dots + ha_{m,m-1}k_{m-1,i}).\\
 \end{align*}
-!!TODO: schöner machen!!\\
 Nun wenden ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erhalten
 \begin{align*}
     k_{i,1} &= f(x(t_i)), \\
@@ -342,8 +341,9 @@ Nun wenden ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erha
 \end{align*}
 Im nächsten Schritt setzen wir die Stufen sukzessive ein und verwenden
 \[
-    h k_{j,i} = hf(x(t_i)) + h^2 a_{j-1,l}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2) = hf(x(t_i)) + \mathcal{O}(h^2),
+    h k_{j,i} = hf(x(t_i)) + h^2 a_{j-1,l}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2) = hf(x(t_i)) + \mathcal{O}(h^2).
 \]
+Die resultierenden Stufen haben die Form
 \begin{align*}
     k_{i,1} &= f(x(t_i)), \\
     k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2), \\
@@ -510,8 +510,12 @@ Die Startwerte $u_0, \dots, u_{k-1}$ können durch einmalige Verwendung von Eins
     \textit{lineares k-Schrittverfahren vom Typ $(r,l)$}
     \begin{align}
         \label{k-step-rl}
-        u_{i+k}-u_{i+r-l} = h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}).
+        u_{i+k}-u_{i+r-l} = h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}),
     \end{align}
+    wobei
+    \[
+        \beta_j^{(r,l)} = \int\limits_{-l}^{k-r} \prod\limits_{\overset{q=0}{q \neq j}}^{r} \frac{(r-q+x)}{(j-q)}dx.
+    \]
 \end{definition}
 Ähnlich wie bei den Einschrittverfahren definieren wir nun zuerst den {\em lokalen Diskretisierungsfehler} der
 Mehrschrittverfahren.
@@ -532,8 +536,45 @@ Wir können unter bestimmten Bedingungen die Konsistenzordnungen der linearen Me
     Unter den Bedingungen, dass f $(r+1)$-mal stetig differenzierbar auf $D \times K \subseteq \mathbb{R}$ ist, hat
     das lineare Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} die Konsistenzordnung $p=r+1$.
 \end{satz}
-!!TODO: quelle der quelle!!
-$Beweis.$ \cite[93,94]{stykelSkriptZurVorlesung2020}\\
+$Beweis.$ Da $f$ $(r+1)$-mal stetig differenzierbar auf $D \times K$ ist, folgt für die Lösung $x$ des Anfangswerproblems
+\eqref{first-order-num} ($r+2$)-mal stetige Differenzierbarkeit. Für den lokalen Diskretisierungsfehler der linearen
+Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} gilt
+\begin{align*}
+    \tau(t_i, h) &= \frac{1}{h} (x(t_i + kh) - x(t_i + (r-l)h)) -
+    \sum\limits_{j=0}^{r}\beta_j^{(r,l)}f(t_i+jh, x(t_i +jh))\\
+    &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+k}} x^{\prime}(s)ds -
+    \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} p(s) ds \\
+    &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \left( f(s,x(s)) - p(s) \right) ds \\
+    &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
+    \frac{x^{(r+2)}(\xi(s))}{(r+1)!} ds,
+\end{align*}
+wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die letzte Gleichung aus der Fehlerdarstellung der Polynominterpolation
+ergibt. Substituieren wir nur $s = t_i + rh + xh$ folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
+\begin{align*}
+    \prod\limits_{j=0}^{r} (s - (t_i +jh)) &= h^{r+1} \prod\limits_{j=0}^{r} (x-j+r) = h^{r+1}(x+r)(x+r-1) \dots (x+r-r)\\
+    &= h^{r+1}(-1)^{r+1}(-x)\dots (-x-r) = h^{r+1}(-1)^{r+1}\frac{(-x)!}{(-x-r-1)!}\\
+    &= h^{r+1}(-1)^{r+1}(r+1)! \frac{(-x)!}{(-x-r-1)!(r+1)!}\\
+    &= h^{r+1}(-1)^{r+1}(r+1)! \begin{bmatrix}
+                                   -x \\
+                                   r+1
+    \end{bmatrix}.
+\end{align*}
+Einsetzen in den lokalen Diskretisierungsfehler ergibt
+\begin{align*}
+    \tau(t_i,h) = (-1)^{r+1} h^{r+1} \int\limits_{-l}^{k-r} \begin{bmatrix} -x \\ r+1 \end{bmatrix}
+    x^{(r+2)}(\xi(t_i+rh+xh))dx
+\end{align*}
+und dessen Abschätzung
+\begin{align*}
+    \left\lVert \tau(t_i,h) \right\rVert_2 \leq h^{r+1}
+    \underbrace{
+        \left\lVert x^{(r+2)}\right\rVert_{\infty}\int\limits_{-l}^{k-r} \begin{bmatrix} -x \\ r+1 \end{bmatrix} dx
+    }_{=:c} = h^{r+1}c,
+\end{align*}
+wobei $c$ eine von $h$ unabhängige Konstante ist. Daraus folgt, dass $\tau(t_i, h)=\mathcal{O}(h^{r+1})$ ist. \qedwhite
+
+%\cite[93,94]{stykelSkriptZurVorlesung2020}\\
+!!TODO: Beweis genauer gestalten!!\\
 Um die Konsistenz allgemeiner linearer k-Schrittverfahren \eqref{k-step-linear} angeben zu können, benötigen wir noch
 die Definitionen für das ersten und zweiten charakteristische Polynome.
 \begin{definition}

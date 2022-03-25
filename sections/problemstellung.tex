@@ -383,6 +383,7 @@ Die Funktion $e^{-\alpha t} v(t)$ ist also monoton fallend, das bedeutet
 \] Daraus folgt die Behauptung. \qedwhite \\
 Außerdem benötigen wir noch folgendes Lemma.
 \begin{lemma}
+    \label{abschaetzungslemma}
     Sei $\mathcal{M} \subset \mathbb{R} \times \mathbb{R}^{n}$ offen und $f:\mathcal{M} \rightarrow \mathbb{R}$ eine
     stetige Funktion, die zusätzlich Lipschitz-stetig im zweiten Argument ist mit
     \[
@@ -466,8 +467,34 @@ Mit diesem Lemma können wir etwas über die stetige Abhängigkeit der Lösung v
         \left\lVert f(t,x) - \hat{f}(t,x) \right\rVert_2 \leq \delta, \quad (t,x) \in U
     \] gilt.
 \end{satz}
-$Beweis.$ \cite[67,68]{beckGewohnlicheDifferentialgleichungen2018}\\
-!!TODO: Beweis!!\\
+$Beweis.$ Nach Anpassung von $\epsilon$ können wir annehmen, dass $\overline{B_{\epsilon}((t, u(t)))} \subset U$ für
+jedes $t \in D$ gilt. Wir definieren $\hat{D}_{\text{max}}$ als das maximale Existenzintervall der Lösung $\hat{x}$ des
+gestörten Anfangswertproblems. Nun gilt
+\begin{align*}
+    \left\lVert \hat{x}^{\prime}(t) - f(t, \hat{x}(t)) \right\rVert_2 =
+    \left\lVert f(t,\hat{x}(t)) - \hat{f}(t, \hat{x}(t)) \right\rVert_2 \leq \epsilon
+\end{align*}
+für alle $t \in \hat{D}_{\text{max}}$. Setzen wir $d_f = d_t = d_a = \delta$, so können wir Lemma
+\ref{abschaetzungslemma} anwenden und erhalten
+\begin{align*}
+    \left\lVert x(t) - \hat{x}(t)\right\rVert_2 \leq e^{L|t-t_0|}(\delta + \delta(\delta +
+    \sup\limits_{s \in D}\left\lVert f(s,\hat{x}(s))\right\rVert_2) + \frac{\delta}{L})
+\end{align*}
+für alle $t \in D \cap \hat{D}_{\text{max}}$. Hierbei ist $\delta > 0$ frei wählbar, weshalb wir $\delta$ in
+Abhängigkeit von $\epsilon, \sup\limits_{s \in D}\left\lVert f(s,\hat{x}(s))\right\rVert_2, L$ und $|t-t_0|$ so
+bestimmen, dass
+\[
+    \left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon, \qquad \text{für } t \in D \cap \hat{D}_{\text{max}}
+\]
+gilt. Die Lösung $\hat{x}$ verlässt die kompakte Menge
+\[
+    \{(s,y) \in \mathbb{R} \times \mathbb{R}^n: \left\lVert (s,y) - (t,x(t)) \right\rVert_2 \leq \epsilon
+    \text{ für ein } t \in D \} \subset \mathcal{M}
+\]
+nicht. Also können wir mit einem Satz über das Verhalten der maximalen Lösung welcher in
+\cite[Seite 60, Satz 3.21]{beckGewohnlicheDifferentialgleichungen2018} gefunden werden kann, gilt
+$D \subset \hat{D}_{\text{max}}$. Also haben wir die Fehlerabschätzung $\left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon$
+für $t \in D$ und die Existenz der Lösung $\hat{x}$ des gestörten Anfangswertproblems auf $D$ gezeigt. \qedwhite \\
 %Um die Abhängigkeit der Anfangsdaten $(t_0,x_0)$ formulieren zu können, wird im Folgenden eine Notation eingeführt.
 %\begin{definition}
 %    Seien $T \subset \mathbb{R}^{1+n}$ offen und $f:T \rightarrow \mathbb{R}^{n}$ eine stetige Funktion, die
