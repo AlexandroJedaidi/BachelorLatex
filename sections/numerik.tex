@@ -1,4 +1,5 @@
 \section{Numerischer Lösungsansatz}
+\label{sec:numeric}
 Dieses Kapitel beruht im Wesentlichen auf \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche},
 \cite{ernsthairergerhardwannerSolvingOrdinaryDifferential} und \cite{prof.dr.josefstoerNumerischeMathematik}. Wir
 werden uns im Folgenden hauptsächlich das
@@ -183,7 +184,7 @@ Dazu benötigen wir die Simpsonregel
     Q_3(g) = \frac{b-a}{6} (g(a) + 4g(\frac{a+b}{2}) +g(b)).
 \]
 Es gilt also die Approximation
-TODO: Taylor Entwicklung
+TODO: Taylor Entwicklung - evtl. weglassen da zu viel Aufwand
 \begin{align*}
     \int_{t_i}^{t_{i+1}} f(s,x(s)) ds &\approx
     \frac{h}{6}(f(t_i,x(t_i)) + 4f((t_i + \frac{h}{2}), x(t_i+\frac{h}{2})) + f(t_i + h,x(t_i + h))) \\
