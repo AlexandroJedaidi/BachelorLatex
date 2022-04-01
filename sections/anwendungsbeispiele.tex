@@ -52,7 +52,7 @@ Runge-Kutta-Verfahren $k=3$ und $c=1$.
                      \hline
                      Anzahl der Schichten & $L=10$ \\
                      Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
-                     versteckte Schichten & $n^{(l)}=128$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+                     versteckte Schichten & $n^{(l)}=128$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
                      Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
                      \hline
                      Hyperparameter und Initialisierungsintervalle & \\
@@ -94,8 +94,8 @@ Effizienz liefen zu können. Wir konstruieren nun also ein Fehlermaß, um die Ve
 Die Anfangswertproblem
 \begin{align}
        \label{stiff}
-       x_{1}^{\prime} &= \frac{1}{2} ((\lambda_1 + \lambda_2)x_1 + (\lambda_1 - \lambda_2)x_2) \nonumber \\
-       x_{2}^{\prime} &= \frac{1}{2} ((\lambda_1 - \lambda_2)x_1 + (\lambda_1 + \lambda_2)x_2) \\
+       x_{1}^{\prime} &= \frac{1}{2} ((\lambda_1 + \lambda_2)x_1 + (\lambda_1 - \lambda_2)x_2), \nonumber \\
+       x_{2}^{\prime} &= \frac{1}{2} ((\lambda_1 - \lambda_2)x_1 + (\lambda_1 + \lambda_2)x_2), \\
        x_1(0) &= c_1 + c_2, \quad x_2(0) = c_1 - c_2 \nonumber
 \end{align}
 lässt sich mit der Matrix
@@ -108,7 +108,7 @@ lässt sich mit der Matrix
 \]
 zu
 \begin{align*}
-       x^{\prime} &= Ax \\
+       x^{\prime} &= Ax, \\
        x(0) &=
        \begin{bmatrix}
               c_1 + c_2 \\
@@ -116,7 +116,7 @@ zu
        \end{bmatrix}
 \end{align*}
 umformulieren. Dabei gilt $\lambda_1, \lambda_2 < 0$ und $c_1, c_2 \in \mathbb{R}$. A hat die Eigenwerte
-$\lambda_1(A) = \lambda_1$ und $\lambda_2(A) = \lambda_2$ und für $\lambda_1 = -1000$ und $\lambda_2 = -1$ ist
+$\lambda_1(A) = \lambda_1$ und $\lambda_2(A) = \lambda_2$ und für $\lambda_1 = -100$ und $\lambda_2 = -1$ ist
 das Anfangswertproblem \eqref{stiff} nach Definition \eqref{steife-dgl} $steif$. Da \eqref{stiff} eine lineare
 Differentialgleichung erster Ordnung ist, können wir die Lösung mithilfe \eqref{linear-ode-solution} angeben:
 \[
@@ -147,9 +147,13 @@ $h<\frac{2}{|\lambda_1}$ und $h<\frac{2}{\lambda_2}$. Da $|\lambda_2| \ll |\lamb
 über die Beschränkung der Schrittweite, obwohl dieser in der exakten Lösung für größere Zeiten $t$ fast keinen Einfluss
 hat. Wir werden sehen, dass dieses Problem auch für Runge-Kutta-Verfahren auftreten, weshalb wir außerdem ein
 \textit{BDF-Verfahren}, also ein Mehrschrittverfahren, verwenden werden, um die Ergebnisse mit dem Verfahren der
-Lösungspakete vergleich zu können. Für beide numerische Verfahren setzen wir $c_1=3$ und $c_2=4$. Ähnlich wie in
-Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten zu dem vorliegenden System
-\eqref{stiff} gegeben.
+Lösungspakete vergleich zu können. Für alle Verfahren setzen wir $c_1=3$, $c_2=4$, $\lambda_1 = -100$ und $\lambda_2=-1$.
+Es wird die Bibliothek $scipy.integrate$, genauer die Funktionen $scipy.integrate.RK45$ (Dokumentation siehe
+\cite{ScipyIntegrateRK45}) für ein Runge-Kutta-Verfahren und $scipy.integrate.BDF$ (Dokumentation siehe
+\cite{ScipyIntegrateBDF}) verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$
+und die absolute Toleranz $atol=10^{-7}$ um die Steiffheit des gegebenen Anfangswertproblems \eqref{stiff} beobachten
+zu können. Ähnlich wie in Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten
+zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -157,9 +161,9 @@ Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle rel
               \hline
               Netzwerkstruktur & \\
               \hline
-              Anzahl der Schichten & $L=6$ \\
+              Anzahl der Schichten & $L=10$ \\
               Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               \hline
               Hyperparameter und Initialisierungsintervalle & \\
@@ -183,15 +187,57 @@ Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle rel
               \hline
               Statistiken & \\
               \hline
-              Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingrate & 125 Batches/Sekunde \\
+              Traningszeit & 2,22 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstruktur, Hyperparameter, Initialisierungsintervalle, Optimierungsparameter und Statistiken
-       für das steife Anfangswerproblem \eqref{stiff}.}
+       für das steife Anfangswertproblem \eqref{stiff}.}
        \label{stiff-table}
 \end{table}
 !!TODO: Grafiken!!
+In Abbildung \ref{fig:stiff-trajectories} können wir den Verlauf der Trajektorie mit dem Anfangspunkt
+$x_0=x(0)=(7,-1)^{\intercal}$ für die erwähnten Verfahren betrachten. Wie bereits besprochen beschränkt der betragsmäßig große
+Eigenwert $\lambda_1=-100$ die Schrittweite $h$, was zu einer ungenauen Lösung des Runge-Kutta-Verfahren führt. Die
+Approximation des neuronalen Netzes jedoch lässt sich mit der Perfomance des BDF-Verfahrens vergleichen, da es für ein
+Zeitintervall sogar bessere Ergebnisse liefert als das BDF-Verfahren.
+Dieses Verhalten lässt sich auch in der Abbildung des Fehlers in Abhängigkeit der Zeit \ref{fig:stiff-error-in-time}
+wiederfinden.
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Stiff_plots/stifftrajectories_}
+       \caption{Trajektorie des steifen Anfangswertproblems.}
+       \label{fig:stiff-trajectories}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Stiff_plots/stiffError_in_time}
+       \caption{Globaler Fehler $\left\lVert x(t_i) - u_{\alpha}(t_i) \right\rVert_2$ der jeweiligen Verfahren
+              mit $\alpha=\text{BDF}, \text{RK}, \text{ML}$ in Abhängigkeit der Zeit.}
+       \label{fig:stiff-error-in-time}
+\end{figure}
+Der oszillierende Fehler des Runge-Kutta-Verfahrens stimmt mit dem Verhalten der Trajektorie überein. Des Weiteren fällt
+auf, dass der Fehler des neuronalen Netzes über die Zeit nahezu konstant bleibt, während der Fehler der anderen
+Verfahren im Laufe der Zeit sinkt. Zudem sehen wir in \ref{fig:stiff-error} und \ref{fig:stiff-loss} den Verlauf des
+globalen Fehlers und der Kostenfunktion für steigende Epochen.
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Stiff_plots/stiffML_error_}
+       \caption{Globaler Fehler für steigende Epochen.}
+       \label{fig:stiff-error}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Stiff_plots/stiffML_Loss_}
+       \caption{Kostenfunktion für steigende Epochen.}
+       \label{fig:stiff-loss}
+\end{figure}
+Sowohl der globale Fehler als auch die Kostenfunktion sinken wie erwartet bei steigender Epchenzahl, jedoch wird die
+Steigung beider Graphen betragsmäßig kleiner. Um eine genauere Approximation zu erhalten, müssten wir die Anzahl der
+Epochen erhöhen, wobei dies zu einer Laufzeit von über $\approx 2.2$ Stunden führen würde. Das BDF-Verfahren hat
+trotz einer Beschränkung der globalen und relativen Toleranz das Anfangswertproblem in $0.039$ Sekunden mit akzeptablen
+Fehler gelöst. Deshalb können wir zusammenfassend sagen, dass das BDF-Verfahren allgemein qualifizierter ist zur Lösung
+von steifen Anfangswertproblemen.
 
 \subsection{Harmonischer Oszillator}
 \label{sec:harmonischer-oszillator}
@@ -232,7 +278,7 @@ wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das numerische V
 \end{table}
 Wir werden zuerst eine konstante Anzahl Schichten $L=6$ und learning rate $\eta=0.0001$ verwenden und die Anzahl der
 Neuronen pro Schicht variieren. Dazu betrachten wir versteckte Schichten mit den Längen
-$n^{(l)} = 4,8,16,32$, $1 \leq l \leq L-1$. Tabelle \ref{stiff-table-first} enthält die genauen Netzwerkstrukturen.
+$n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enthält die genauen Netzwerkstrukturen.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -242,7 +288,7 @@ $n^{(l)} = 4,8,16,32$, $1 \leq l \leq L-1$. Tabelle \ref{stiff-table-first} enth
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=4$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=4$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
@@ -252,39 +298,46 @@ $n^{(l)} = 4,8,16,32$, $1 \leq l \leq L-1$. Tabelle \ref{stiff-table-first} enth
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=8$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=8$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingszeit & xx Stunden \\
               \hline
               Netzwerk 3 & \\
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingszeit & xx Stunden \\
               \hline
               Netzwerk 4 & \\
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingszeit & xx Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstrukuren der ersten Variation.}
        \label{stiff-table-first}
 \end{table}
 !TODO:Bilder!
-Nun werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen Schichten
-$n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu den Netzwerken befinden sich in Tabelle
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillatorML_error__neurons_var_loss_and_error}
+       \caption{Kostenfunktion und $\left\lVert \cdot \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
+       \label{fig:harmonic-neurons-variable-loss-error}
+\end{figure}
+Zuletzt werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen
+Schichten$n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu den Netzwerken befinden sich in
+Tabelle
 \ref{stiff-table-second}.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
@@ -295,7 +348,7 @@ $n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
@@ -305,7 +358,7 @@ $n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu
               \hline
               Anzahl der Schichten & $L=10$ \\
               Eingabeschicht & $n^{(0)}=8$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
@@ -315,7 +368,7 @@ $n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu
               \hline
               Anzahl der Schichten & $L=18$ \\
               Eingabeschicht & $n^{(0)}=16$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
               Trainingrate & xx \\
@@ -326,31 +379,4 @@ $n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu
        \label{stiff-table-second}
 \end{table}
 !TODO: Bilder!
-Zuletzt werden wir zwei Netzwerke mit verschiedenen learning rates $\eta_1=0.001$ und $\eta_2=0.0001$ vergleichen. Die
-genauen Netzwerkstrukturen können in Tabelle \ref{stiff-table-third} nachgelesen werden.
-\begin{table}
-       \renewcommand{\arraystretch}{1.0}
-       \centering
-       \begin{tabular}{ l | l }
-              \hline
-              Netzwerk 1 & \\
-              \hline
-              Anzahl der Schichten & $L=6$ \\
-              Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
-              Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.001$ \\
-              \hline
-              Netzwerk 2 & \\
-              \hline
-              Anzahl der Schichten & $L=6$ \\
-              Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $1\leq l \leq L-1$ mit $\Phi(x)=\tanh(x)$ \\
-              Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
-              \hline
-       \end{tabular}
-       \caption{Netzwerkstrukuren der dritten Variation.}
-       \label{stiff-table-third}
-\end{table}
-!TODO:Bilder!
+\newpage

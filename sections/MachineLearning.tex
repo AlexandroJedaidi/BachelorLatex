@@ -338,6 +338,7 @@ eingeführt. Ähnlich wie in Satz \ref{one-step-error-bound} für Einschrittverf
 Zusammenhang des lokalen und des globalen Fehlers des neuronalen Netzes zeigen. Dabei ist der globale Fehler des
 neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist.
 \begin{satz}
+    \label{ml-error}
     Für \eqref{dgl-machinelearnung} ist der lokale Fehler $\tau$ gegeben durch
     $\tau(t) = \hat{x}^{\prime}(t) - f(t,\hat{x})$. Es gilt
     \[
@@ -386,6 +387,30 @@ was sich mit der Abschätzung in Satz \eqref{one-step-error-bound} vergleichen l
 Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
 kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
+
+\subsection{Intervall-Lernen}
+\label{subsec:curriculum-learning}
+Beim Approximieren von gewöhnlichen Differentialgleichungen mithilfe von Lösungspaketen ist es unser Ziel, die
+Kostenfunktion so gut wie möglich zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
+führen, dass das neuronale Netz das gegebene Anfangswertproblem nicht approximiert, wie in Satz \ref{ml-error} zu sehen
+ist. Genauer wird die Trajektorie der approximierten Funktion durch den Fehler in andere Bereiche des Phasenraums
+geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun ein anderes Anfangswertproblem approximiert
+wird. Eine mögliche Behebung dieses Problems ist das Prinzip des sogenannten \textit{Intervall}-\textit{Lernens}
+(eng. curriculum learning). Eine allgemeine Diskussion dieses Prinzips lässt sich in \cite{bengioCurriculumLearning2009}
+nachlesen. Für das Approximieren von gewöhnlichen Differentialgleichungen nutzen wir das Intervall-Lernen so, dass wir
+das Intervall der Zeiten $[t_0, t_f]$ begrenzen. Hierzu werden wir die Batches $B$ bearbeiten, also erhalten wir neue
+Batches $B^{\prime}$ mit
+\[
+    B^{\prime}:=  \{(t_i,x_{0i},\theta_i) \in [t_0,t_m] \times X_0 \times \Theta\},
+\]
+wobei $t_m<t_f$ und $m$ die Anzahl der bereits trainieren Batches ist. Wir lassen also das neuronale Netz zuerst mit
+einer kleinen Menge an Daten trainieren, um problematische Stellen, die zu einer Verschiebung der Trajektorien sorgen,
+zu vermeiden. Dabei wird ie Menge der Daten in Abhängigkeit der bereits trainierten Batches erhöht. In Kapitel
+\ref{sec:verfahrensvergleich} werden wir
+\[
+    t_m = \frac{t_f}{\ln(11)} \ln(10 \frac{m}{|B|} + 1), \qquad m = 1, \dots, |B|,
+\]
+zur Beschränkung des Zeitintervalls verwenden.
 
 \subsection{Gewichtsinitialisierung}
 \label{subsec:gewichtsinitialisierung}
