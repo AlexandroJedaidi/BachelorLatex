@@ -5,8 +5,9 @@ vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy} 1.21.4, \
 Verfahren und \textit{tensorflow} 2.7.0 für die Architektur der neuronalen Netze verwendet. Das gegebene
 Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahren} beziehungsweise einem BDF-Verfahren
 gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend mit
-verschiedenen Fehlermaßen verglichen. Die Berechnungen wurden mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer
-NVIDIA RTX 3060 Ti GPU durchgeführt.
+verschiedenen Fehlermaßen verglichen. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek $scipy.integrate$,
+genauer die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen wurden
+mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt.
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
@@ -148,12 +149,11 @@ $h<\frac{2}{|\lambda_1}$ und $h<\frac{2}{\lambda_2}$. Da $|\lambda_2| \ll |\lamb
 hat. Wir werden sehen, dass dieses Problem auch für Runge-Kutta-Verfahren auftreten, weshalb wir außerdem ein
 \textit{BDF-Verfahren}, also ein Mehrschrittverfahren, verwenden werden, um die Ergebnisse mit dem Verfahren der
 Lösungspakete vergleich zu können. Für alle Verfahren setzen wir $c_1=3$, $c_2=4$, $\lambda_1 = -100$ und $\lambda_2=-1$.
-Es wird die Bibliothek $scipy.integrate$, genauer die Funktionen $scipy.integrate.RK45$ (Dokumentation siehe
-\cite{ScipyIntegrateRK45}) für ein Runge-Kutta-Verfahren und $scipy.integrate.BDF$ (Dokumentation siehe
-\cite{ScipyIntegrateBDF}) verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$
-und die absolute Toleranz $atol=10^{-7}$ um die Steiffheit des gegebenen Anfangswertproblems \eqref{stiff} beobachten
-zu können. Ähnlich wie in Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten
-zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
+Für die Implementierung des BDF-Verfahrens wird die Funktion $scipy.integrate.BDF$ (Dokumentation siehe
+\cite{ScipyIntegrateBDF}) verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$ und die
+absolute Toleranz $atol=10^{-7}$ um die Steiffheit des gegebenen Anfangswertproblems \eqref{stiff} beobachten zu können.
+Ähnlich wie in Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten zu dem
+verwendeten neuronalen Netz \eqref{stiff} gegeben.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -179,7 +179,8 @@ zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
               Optimierung & \\
               \hline
               Gradientenverfahren & Adam \\
-              Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
+%              Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
+              Gewichtsfunktion & $b(t)=1$ \\
               Batchsize & $|B|=10000$ \\
               Epochen & $1000000$ \\
               Learning rate & $\eta= 0.0001$ \\
@@ -247,10 +248,11 @@ Oszillators ist gegeben mit
 \begin{align}
        \label{harmonic-oscillator}
        &x^{\prime}=v, \qquad v^{\prime}=-\frac{k}{m}x, \\
-       &x(0)=v(0)=0, \nonumber
+       &x(0)=0, \quad v(0)=0, \nonumber
 \end{align}
-wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das numerische Verfahren $k=1$. Tabelle
-\ref{stiff-table-data} enthält alle Daten, welche für alle folgenden neuronale Netze verwendet werden.
+wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das Runge-Kutta-Verfahren $k=1$, für relative Toleranz
+$rtol = 10^{-10}$ und die globale Toleranz $atol = 10^{-14}$. Die Tabelle \ref{stiff-table-data} enthält alle Daten,
+welche für alle folgenden neuronale Netze verwendet werden.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -268,7 +270,8 @@ wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das numerische V
               Gradientenverfahren & Adam \\
               Gewichtsfunktion & $b(t)=1$ \\
               Batchsize & $|B|=10000$ \\
-              Epochen & $1000000$ \\
+              Epochen & $100000$ \\
+              Learning rate & $0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
               \hline
        \end{tabular}
@@ -276,9 +279,10 @@ wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das numerische V
        \eqref{harmonic-oscillator}.}
        \label{stiff-table-data}
 \end{table}
-Wir werden zuerst eine konstante Anzahl Schichten $L=6$ und learning rate $\eta=0.0001$ verwenden und die Anzahl der
-Neuronen pro Schicht variieren. Dazu betrachten wir versteckte Schichten mit den Längen
-$n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enthält die genauen Netzwerkstrukturen.
+Wir werden zuerst eine konstante Anzahl Schichten $L=6$ verwenden und die Anzahl der Neuronen pro Schicht variieren.
+Dazu betrachten wir versteckte Schichten mit den Längen
+$n^{(l)} = 4,$ $8,$ $16,$ $32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enthält die genauen
+Netzwerkstrukturen.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -291,8 +295,8 @@ $n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enth
               versteckte Schichten & $n^{(l)}=4$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingrate & 195 Batches/Sekunde \\
+              Traningszeit & 0,14 Stunden \\
               \hline
               Netzwerk 2 & \\
               \hline
@@ -301,8 +305,8 @@ $n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enth
               versteckte Schichten & $n^{(l)}=8$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Trainingszeit & xx Stunden \\
+              Trainingrate & 195 Batches/Sekunde \\
+              Trainingszeit & 0,14 Stunden \\
               \hline
               Netzwerk 3 & \\
               \hline
@@ -311,8 +315,8 @@ $n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enth
               versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Trainingszeit & xx Stunden \\
+              Trainingrate & 195 Batches/Sekunde \\
+              Trainingszeit & 0,14 Stunden \\
               \hline
               Netzwerk 4 & \\
               \hline
@@ -321,20 +325,42 @@ $n^{(l)} = 4,8,16,32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enth
               versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Trainingszeit & xx Stunden \\
+              Trainingrate & 180 Batches/Sekunde \\
+              Trainingszeit & 0,15 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstrukuren der ersten Variation.}
        \label{stiff-table-first}
 \end{table}
 !TODO:Bilder!
+
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillatorML_error__neurons_var_loss_and_error}
-       \caption{Kostenfunktion und $\left\lVert \cdot \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
-       \label{fig:harmonic-neurons-variable-loss-error}
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_loss}
+       \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
+       \label{fig:harmonic-neurons-variable-loss}
 \end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_error}
+       \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
+       \label{fig:harmonic-neurons-variable-error}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories}
+       \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
+       und der exakten Lösung.}
+       \label{fig:harmonic-neurons-variable-trajectories}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories_in_time_}
+       \caption{$(t,x(t))$ Graph der Lösungen des Runge-Kutta-Verfahrens, der Approximation der
+       Lösungspakete und der exakten Lösung.}
+       \label{fig:harmonic-neurons-variable-trajectories-in-time}
+\end{figure}
+
 Zuletzt werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen
 Schichten$n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu den Netzwerken befinden sich in
 Tabelle
@@ -348,35 +374,63 @@ Tabelle
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingrate & 185 Batches/Sekunde \\
+              Traningszeit & 0,15 Stunden \\
               \hline
               Netzwerk 2 & \\
               \hline
               Anzahl der Schichten & $L=10$ \\
-              Eingabeschicht & $n^{(0)}=8$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingrate & 129 Batches/Sekunde \\
+              Traningszeit & 0,22 Stunden \\
               \hline
               Netzwerk 3 & \\
               \hline
               Anzahl der Schichten & $L=18$ \\
-              Eingabeschicht & $n^{(0)}=16$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               learning rate & $\eta=0.0001$ \\
-              Trainingrate & xx \\
-              Traningszeit & xx Stunden \\
+              Trainingrate & 76 Batches/Sekunde \\
+              Traningszeit & 0,36 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstrukuren der zweiten Variation.}
        \label{stiff-table-second}
 \end{table}
 !TODO: Bilder!
+
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_loss}
+       \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
+       \label{fig:harmonic-layers-variable-loss}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_error}
+       \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
+       \label{fig:harmonic-layers-variable-error}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories}
+       \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
+       und der exakten Lösung.}
+       \label{fig:harmonic-layers-variable-trajectories}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories_in_time_}
+       \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
+       und der exakten Lösung.}
+       \label{fig:harmonic-layers-variable-trajectories-in-time}
+\end{figure}
+
 \newpage

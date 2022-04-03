@@ -184,9 +184,8 @@ Anfangswertproblem auf $D$. Außerdem gilt:
 \end{align*}
 %Für $A$ wird hier jedoch die Operatornorm
 %$\left\lVert A \right\rVert = \sup\limits_{\left\lVert x \right\rVert = 1} \left\lVert Ax \right\rVert$ benutzt.
-Das bedeutet, dass $Ax \in K$ für $x \in K$, bzw. $K \subset AK$.
-\\!!TODO: $AK \subset K $!!\\
-Nun können wir die hergeleitete Äquivalenz umformulieren: Für eine Funktion $\hat{x} \in K$ gilt
+Das bedeutet, dass $Ax \in K$ für $x \in K$, bzw. $AK \subset K$, also bildet $A$ von $K$ nach $K$ ab. Nun können wir die
+hergeleitete Äquivalenz umformulieren: Für eine Funktion $\hat{x} \in K$ gilt
 \[
     \hat{x} \text{ löst auf $D$ das Anfangswertproblem } \eqref{firstorder-ode} \Leftrightarrow \hat{x}
     \text{ ist ein Fixpunkt der Abbildung } A:K \rightarrow K.
@@ -318,14 +317,14 @@ bereits in dem Beweis von Satz \eqref{peano} definiert.
     (j \rightarrow j+1):& \quad \left\lVert (A^{j+1} u)(t)- (A^{j+1} v)(t) \right\rVert_2
     &&\leq \underbrace{\left\lVert x_0 - x_0 \right\rVert_2}_{=0} +
     \left\lVert\int_{t_0}^{t}f(s,(A^ju)(s)) - f(s,(A^ju)(s))ds \right\rVert_2\\
-    & &&\leq L |t - t_0| \left\lVert (A^{j}u) - (A^jv) \right\rVert_{\infty} \\
-    &  &&= L |t-t_0| \max\limits_{ t \in [t_0 - a,t_0 + a] } \left\lVert (A^ju)(t) - (A^jv)(t) \right\rVert_2 \\
-    &  &&\underset{\text{IV}}{\leq} L |t-t_0| \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty} \\
+    & &&\leq \max_{s \in [t_0, t]} \left\lVert f(s,A^ju(s)) - f(s,A^jv(s)) \right\rVert_2 |t-t_0|\\
+    & &&\leq L \max_{s \in [t_0, t]} \left\lVert A^ju(s)) - A^jv(s)) \right\rVert_2 |t-t_0|\\
+    &  &&\underset{\text{IV}}{\leq} L \max_{s \in [t_0, t]} \frac{|s-t_0|^{j}}{j!} |t-t_0| L^j \left\lVert u - v \right\rVert_{\infty}\\
     & &&= \frac{|t-t_0|^{j+1}}{(j+1)!} L^{j+1} \left\lVert u - v \right\rVert_{\infty}
 \end{alignat*}
 Nun folgt direkt
 \[
-    \left\lVert A^j u - A^j v \right\rVert_{\infty} \leq \frac{(aL)^j}{j!} \left\lVert u - v \right\rVert_{\infty}.
+    \left\lVert A^j u - A^j v \right\rVert_{2} \leq \frac{(aL)^j}{j!} \left\lVert u - v \right\rVert_{\infty}.
 \]
 Die Reihe $\sum_{j=1}^{\infty} \frac{(aL)^j}{j!} $ ist nach dem Quotientenkriterium offensichtlich konvergent. Also
 lässt sich der Fixpunktsatz von Weissinger \eqref{Fixpunktsatzvonweissinger} anwenden. Der daraus gewonnene Fixpunkt

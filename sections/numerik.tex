@@ -549,27 +549,28 @@ Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} gilt
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
     \frac{x^{(r+2)}(\xi(s))}{(r+1)!} ds,
 \end{align*}
-wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die letzte Gleichung aus der Fehlerdarstellung der Polynominterpolation
-ergibt. Substituieren wir nur $s = t_i + rh + xh$ folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
+wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die letzte Gleichung ergibt sich aus der Fehlerdarstellung der
+Polynominterpolation. Substituieren wir nur $s = t_i + rh + xh$, so folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
 \begin{align*}
     \prod\limits_{j=0}^{r} (s - (t_i +jh)) &= h^{r+1} \prod\limits_{j=0}^{r} (x-j+r) = h^{r+1}(x+r)(x+r-1) \dots (x+r-r)\\
     &= h^{r+1}(-1)^{r+1}(-x)\dots (-x-r) = h^{r+1}(-1)^{r+1}\frac{(-x)!}{(-x-r-1)!}\\
     &= h^{r+1}(-1)^{r+1}(r+1)! \frac{(-x)!}{(-x-r-1)!(r+1)!}\\
-    &= h^{r+1}(-1)^{r+1}(r+1)! \begin{bmatrix}
-                                   -x \\
-                                   r+1
-    \end{bmatrix}.
+&= h^{r+1}(-1)^{r+1}(r+1)! \begin{pmatrix}  -x \\  r+1  \end{pmatrix},
 \end{align*}
-Einsetzen in den lokalen Diskretisierungsfehler ergibt
+wobei im letzten Schritt die Definition des Binomialkoeffizienten
+\[
+    \begin{pmatrix} n \\ k  \end{pmatrix} := \frac{n!}{(n-k)!k!}
+\]
+mit $n,k \in \mathbb{Z}$, $n\geq k \geq 0$ verwendet wurde. Einsetzen in den lokalen Diskretisierungsfehler ergibt
 \begin{align*}
-    \tau(t_i,h) = (-1)^{r+1} h^{r+1} \int\limits_{-l}^{k-r} \begin{bmatrix} -x \\ r+1 \end{bmatrix}
+    \tau(t_i,h) = (-1)^{r+1} h^{r+1} \int\limits_{-l}^{k-r} \begin{pmatrix} -x \\ r+1 \end{pmatrix}
     x^{(r+2)}(\xi(t_i+rh+xh))dx
 \end{align*}
 und dessen Abschätzung
 \begin{align*}
     \left\lVert \tau(t_i,h) \right\rVert_2 \leq h^{r+1}
     \underbrace{
-        \left\lVert x^{(r+2)}\right\rVert_{\infty}\int\limits_{-l}^{k-r} \begin{bmatrix} -x \\ r+1 \end{bmatrix} dx
+        \left\lVert x^{(r+2)}\right\rVert_{\infty}\int\limits_{-l}^{k-r} \begin{pmatrix} -x \\ r+1 \end{pmatrix} dx
     }_{=:c} = h^{r+1}c,
 \end{align*}
 wobei $c$ eine von $h$ unabhängige Konstante ist. Daraus folgt, dass $\tau(t_i, h)=\mathcal{O}(h^{r+1})$ ist. \qedwhite
