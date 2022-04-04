@@ -184,7 +184,6 @@ Dazu benötigen wir die Simpsonregel
     Q_3(g) = \frac{b-a}{6} (g(a) + 4g(\frac{a+b}{2}) +g(b)).
 \]
 Es gilt also die Approximation
-TODO: Taylor Entwicklung - evtl. weglassen da zu viel Aufwand
 \begin{align*}
     \int_{t_i}^{t_{i+1}} f(s,x(s)) ds &\approx
     \frac{h}{6}(f(t_i,x(t_i)) + 4f((t_i + \frac{h}{2}), x(t_i+\frac{h}{2})) + f(t_i + h,x(t_i + h))) \\
@@ -675,8 +674,14 @@ Mit $\rho(1) = 0$ und $\rho^{\prime}(1)=\sigma(1)$ gilt
 \[
     \sum_{j=0}^{k} \alpha_j = 0 \qquad \text{ und } \qquad \sum_{j=0}^{k} j \alpha_j = \sum_{j=0}^{k} \beta_j
 \]
-Also ist $4)$ für $m=1=p$ erfüllt und daraus folgt mit $1)$ die Konsistenz (von Ordnung $p=1$). \qedwhite
-!!TODO: Komvergenz!!\\
+Also ist $4)$ für $m=1=p$ erfüllt und daraus folgt mit $1)$ die Konsistenz (von Ordnung $p=1$). \qedwhite \\
+Mit folgendem Satz können wir die \textit{Konvergenz} eines Mehrschrittverfahrens erzielen, wobei hierfür der die
+Theorie der \textit{Stabilität} eines Verfahrens benötigt wird, welche in
+\cite[80]{ernsthairergerhardwannerSolvingOrdinaryDifferential} nachgelesen werden kann.
+\begin{satz}
+    Das Mehrschrittverfahren \eqref{k-step-method} ist {\em konvergent}, wenn es {\em stabil} und {\em konsistent} ist.
+\end{satz}
+$Beweis.$ \cite[392-393]{ernsthairergerhardwannerSolvingOrdinaryDifferential}
 %\subsubsection{Stabilität und Stabilitätsgebiete}
 %Trotz höherer Konsistenzordnung bei niedrigeren Rechenaufwand können Mehrschrittverfahren bei einfachen
 %Differentialgleichungen sehr schlechte Ergebnisse liefern. Das liegt daran, dass die Konvergenz der Mehrschrittverfahren

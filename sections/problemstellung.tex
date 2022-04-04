@@ -298,8 +298,7 @@ genauer ausführen.
         a=\min\{\alpha, \frac{\beta}{M}\}, \qquad M= \max_{(t,y)\in {\cal G}}\left\lVert f(t,x)\right\rVert_2 .
     \]\\
 \end{satz}
-TODO: Induktion korrigieren \\
-$Beweis$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
+$Beweis.$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
 aus dem Beweis von Satz \eqref{peano}. Wir zeigen mit Induktion über $j\in \mathbb{N}$, dass
 \[
     \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert_2 \leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty},
@@ -317,10 +316,11 @@ bereits in dem Beweis von Satz \eqref{peano} definiert.
     (j \rightarrow j+1):& \quad \left\lVert (A^{j+1} u)(t)- (A^{j+1} v)(t) \right\rVert_2
     &&\leq \underbrace{\left\lVert x_0 - x_0 \right\rVert_2}_{=0} +
     \left\lVert\int_{t_0}^{t}f(s,(A^ju)(s)) - f(s,(A^ju)(s))ds \right\rVert_2\\
-    & &&\leq \max_{s \in [t_0, t]} \left\lVert f(s,A^ju(s)) - f(s,A^jv(s)) \right\rVert_2 |t-t_0|\\
-    & &&\leq L \max_{s \in [t_0, t]} \left\lVert A^ju(s)) - A^jv(s)) \right\rVert_2 |t-t_0|\\
-    &  &&\underset{\text{IV}}{\leq} L \max_{s \in [t_0, t]} \frac{|s-t_0|^{j}}{j!} |t-t_0| L^j \left\lVert u - v \right\rVert_{\infty}\\
-    & &&= \frac{|t-t_0|^{j+1}}{(j+1)!} L^{j+1} \left\lVert u - v \right\rVert_{\infty}
+    & &&\leq \int_{t_0}^{t}\left\lVert f(s,(A^ju)(s)) - f(s,(A^ju)(s)) \right\rVert_2 ds \\
+    & &&\leq L \int_{t_0}^{t}\left\lVert (A^ju)(s) - (A^ju)(s) \right\rVert_2 ds \\
+    & &&\underset{\text{IV}}{\leq} L \frac{1}{j!} L^j \left\lVert u - v \right\rVert_{\infty}\int_{t_0}^{t} |s - t_0|^{j}ds\\
+    & &&= \frac{1}{j!} L^{j+1} \left\lVert u - v \right\rVert_{\infty} \frac{(s-t_0)^{j+1}}{j+1} \Big|^{t}_{t_0} \\
+    & &&=\frac{|t-t_0|^{j+1}}{(j+1)!} L^{j+1} \left\lVert u - v \right\rVert_{\infty}
 \end{alignat*}
 Nun folgt direkt
 \[

@@ -8,6 +8,7 @@ gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebni
 verschiedenen Fehlermaßen verglichen. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek $scipy.integrate$,
 genauer die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen wurden
 mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt.
+!!TODO: cite code und Fehlermaße mit Trajektorien erklären!!
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
@@ -89,6 +90,33 @@ Verfahren durch den globalen Fehler $\left\lVert u - x \right\rVert_2$ zu vergle
 zugehörigen Verfahrens ist. Außerdem ist ein Vergleich der Trajektorien zu ungenau um qualitative Aussagen über die
 Effizienz liefen zu können. Wir konstruieren nun also ein Fehlermaß, um die Verfahren vergleichen zu können.
 !!TODO: Graphiken und atol,rtol!!
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumML_Loss_}
+       \caption{Kostenfunktion der neuronalen Netzes bei steigender Epochenanzahl.}
+       \label{fig:rebound-loss}
+\end{figure}
+
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_}
+       \caption{Trajektorie der von den resultierenden Lösungen des Rebound Pendels \eqref{rebound-pendulum}.}
+       \label{fig:rebound-trajectories}
+\end{figure}
+
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_in_time_}
+       \caption{$(t, \theta(t))$ Graph der berechneten Lösungen des Rebound Pendels \eqref{rebound-pendulum}.}
+       \label{fig:rebound-trajectories-in-time}
+\end{figure}
+
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumlocal_error_}
+       \caption{Graph des Residuumfehlers beider Verfahren.}
+       \label{fig:rebound-residuum}
+\end{figure}
 
 \subsection{Steife Differentialgleichung}
 \label{sec:steife-differentialgleichung}
@@ -336,26 +364,26 @@ Netzwerkstrukturen.
 
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_loss}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_loss}
        \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-neurons-variable-loss}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_error}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_error}
        \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-neurons-variable-error}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories}
        \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
        und der exakten Lösung.}
        \label{fig:harmonic-neurons-variable-trajectories}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories_in_time_}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories_in_time_}
        \caption{$(t,x(t))$ Graph der Lösungen des Runge-Kutta-Verfahrens, der Approximation der
        Lösungspakete und der exakten Lösung.}
        \label{fig:harmonic-neurons-variable-trajectories-in-time}
@@ -408,26 +436,26 @@ Tabelle
 
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_loss}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_loss}
        \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-layers-variable-loss}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_error}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_error}
        \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-layers-variable-error}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories}
        \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
        und der exakten Lösung.}
        \label{fig:harmonic-layers-variable-trajectories}
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.6]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories_in_time_}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories_in_time_}
        \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
        und der exakten Lösung.}
        \label{fig:harmonic-layers-variable-trajectories-in-time}
