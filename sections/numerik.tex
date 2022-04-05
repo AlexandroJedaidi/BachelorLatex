@@ -506,17 +506,38 @@ Die Startwerte $u_0, \dots, u_{k-1}$ können durch einmalige Verwendung von Eins
         \sum_{j=0}^{k} \alpha_j u_{i+j} = h \sum_{j=0}^{k} \beta_j f(t_{i+j}, u_{i+j}), \quad i = 0, \dots, N-k,
     \end{align}
     gilt. Für $\beta_k = 0$ ist das Verfahren {\em explizit}, sonst {\em implizit}.
-    Setzt man $\alpha_k=1$, $\alpha_{r-l}=-1$ und $\alpha_j=0$ für $j=0,\dots,k-1$, $j \neq r-l$, so erhält man ein
-    \textit{lineares k-Schrittverfahren vom Typ $(r,l)$}
-    \begin{align}
-        \label{k-step-rl}
-        u_{i+k}-u_{i+r-l} = h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}),
-    \end{align}
-    wobei
-    \[
-        \beta_j^{(r,l)} = \int\limits_{-l}^{k-r} \prod\limits_{\overset{q=0}{q \neq j}}^{r} \frac{(r-q+x)}{(j-q)}dx.
-    \]
 \end{definition}
+Zur Herleitung eines linearen Mehrschrittverfahrens integrieren wir die Differentialgleichung \eqref{first-order-num}
+und erhalten
+\[
+    x(t_{i+k} - x(t_{i+r-l})) = \int\limits_{t_{i+r-l}}^{t_{i+k}} f(s,x(s)) ds, \quad 0<r-l<k.
+\]
+Nun ersetzen wir den Integranden $f(s,x(s))$ mit dem Interpolationspolynom $p \in \mathbb{R}_r[s]$, wobei
+$p(t_{i+j})=f(t_{i+j},x(t_{i+j}))$ für $j=0, \dots r$ gilt. Durch die Lagrange-Interpolationsformel, welche bereits aus
+der Theorie der Interpolation bekannt ist, und $t_{i+k}=t_i+kh$ hat $p$ die Form
+\[
+    p(s)=\sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{s-t_{i+q}}{t_{i+j}-t_{i+q}}
+    =\sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{s-(t_i+qh)}{(j+q)h}.
+\]
+Mit dieser Interpolation erhalten wir
+\begin{align*}
+    x(t_{i+k}) - x(t_{i+r-l}) &\approx \int\limits_{t_{i+r-l}}^{t_{i+k}} p(s) ds \\
+    &=\sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \int\limits_{t_{i+r-l}}^{t_{i+k}}
+    \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{s-(t_i+qh)}{(j+q)h} ds \\
+    &= h \sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \int\limits_{-l}^{k-r}
+    \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{r-q+x}{j+q} dx\\
+    &=h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}),
+\end{align*}
+wobei
+\[
+    \beta_j^{(r,l)} = \int\limits_{-l}^{k-r} \prod\limits_{\overset{q=0}{q \neq j}}^{r} \frac{(r-q+x)}{(j-q)}dx.
+\]
+Im vorletzten Schritt wurde die Substitution $s-t_i-rh = xh$ benutzt. Nun verwenden wir die Näherungen $u_{i+j}$ und
+erhalten somit das \textit{lineare $k$-Schrittverfahren vom Typ $(r,l)$}.
+\begin{align}
+    \label{k-step-rl}
+    u_{i+k}-u_{i+r-l} = h \sum_{j=0}^{r} \beta_j^{(r,l)} f(t_{i+j},u_{i+j}),
+\end{align}
 Ähnlich wie bei den Einschrittverfahren definieren wir nun zuerst den {\em lokalen Diskretisierungsfehler} der
 Mehrschrittverfahren.
 \begin{definition}
@@ -536,8 +557,9 @@ Wir können unter bestimmten Bedingungen die Konsistenzordnungen der linearen Me
     Unter den Bedingungen, dass f $(r+1)$-mal stetig differenzierbar auf $D \times K \subseteq \mathbb{R}$ ist, hat
     das lineare Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} die Konsistenzordnung $p=r+1$.
 \end{satz}
-$Beweis.$ Da $f$ $(r+1)$-mal stetig differenzierbar auf $D \times K$ ist, folgt für die Lösung $x$ des Anfangswerproblems
-\eqref{first-order-num} ($r+2$)-mal stetige Differenzierbarkeit. Für den lokalen Diskretisierungsfehler der linearen
+$Beweis.$ Da $f$ $(r+1)$-mal stetig differenzierbar auf $D \times K$ ist, existiert nach Bemerkung \ref{f-lipschitz} und
+Picard-Lindelöff \ref{picard} eine eindeutige Lösung \eqref{first-order-num}, welche ($r+2$)-mal stetig differenzierbar
+ist. Die Existenz und Eindeutigkeit der Lösung folgt hierbei aus der Für den lokalen Diskretisierungsfehler der linearen
 Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} gilt
 \begin{align*}
     \tau(t_i, h) &= \frac{1}{h} (x(t_i + kh) - x(t_i + (r-l)h)) -
@@ -546,10 +568,12 @@ Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} gilt
     \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} p(s) ds \\
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \left( f(s,x(s)) - p(s) \right) ds \\
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
+    \frac{f^{(r+1)}(s,\xi(s))}{(r+1)!} ds,
+    &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
     \frac{x^{(r+2)}(\xi(s))}{(r+1)!} ds,
 \end{align*}
-wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die letzte Gleichung ergibt sich aus der Fehlerdarstellung der
-Polynominterpolation. Substituieren wir nur $s = t_i + rh + xh$, so folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
+wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die letzte Gleichung resultiert aus der Fehlerdarstellung der
+Polynominterpolation. Substituieren wir nun $s = t_i + rh + xh$, so folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
 \begin{align*}
     \prod\limits_{j=0}^{r} (s - (t_i +jh)) &= h^{r+1} \prod\limits_{j=0}^{r} (x-j+r) = h^{r+1}(x+r)(x+r-1) \dots (x+r-r)\\
     &= h^{r+1}(-1)^{r+1}(-x)\dots (-x-r) = h^{r+1}(-1)^{r+1}\frac{(-x)!}{(-x-r-1)!}\\
@@ -573,9 +597,6 @@ und dessen Abschätzung
     }_{=:c} = h^{r+1}c,
 \end{align*}
 wobei $c$ eine von $h$ unabhängige Konstante ist. Daraus folgt, dass $\tau(t_i, h)=\mathcal{O}(h^{r+1})$ ist. \qedwhite
-
-%\cite[93,94]{stykelSkriptZurVorlesung2020}\\
-!!TODO: Beweis genauer gestalten!!\\
 Um die Konsistenz allgemeiner linearer k-Schrittverfahren \eqref{k-step-linear} angeben zu können, benötigen wir noch
 die Definitionen für das ersten und zweiten charakteristische Polynome.
 \begin{definition}

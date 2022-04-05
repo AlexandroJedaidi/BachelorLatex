@@ -5,10 +5,26 @@ vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy} 1.21.4, \
 Verfahren und \textit{tensorflow} 2.7.0 für die Architektur der neuronalen Netze verwendet. Das gegebene
 Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahren} beziehungsweise einem BDF-Verfahren
 gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend mit
-verschiedenen Fehlermaßen verglichen. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek $scipy.integrate$,
-genauer die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen wurden
-mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt.
-!!TODO: cite code und Fehlermaße mit Trajektorien erklären!!
+verschiedenen Maßen verglichen. Dabei sind unter anderem die \textit{Trajektorien} der berechneten Lösungen gemeint.
+Eine Trajektorie ist hierbei das Bild $T(x_0):= \{x(t,x_0): t\in I_{\text{max}}\}$ der Lösung des Anfangswertproblems
+\eqref{first-order-num}, wobei $I_{\text{max}}$ das maximale Existenzintervall ist. Des Weiteren werden wir den globalen
+Fehler des numerischen Verfahrens $\left\lVert x(t_i) - u_i \right\rVert_2$ mit dem globalen Fehler der neuronalen Netze
+$\left\lVert \hat{x}(t) - x(t) \right\rVert_2$ in Abhängigkeit der Zeit $t_i=t_0 + ih$ und $t\in D$ vergleichen. Dabei
+ist zu beachten, dass eine exakte Lösung $x$ vorliegen muss. In dem Abschnitt \ref{subsec:rebound-Pendel} ist das
+analytische Berechnen der Lösung aufwendig, weshalb es nicht möglich ist, die globalen Fehler zu vergleichen. Deshalb
+werden wir die \textit{Residuen} $0 = u_i^{\prime} - f(t_i,u_i)$ und $0 = u_i^{\prime}- f(t,\hat{x})$
+vergleichen, wobei die Ableitung $u_i^{\prime}$ mithilfe der sogenannten \textit{Differenzenquotienten} ermittelt wird.
+Der Vorwärtsdifferenzenquotient ist definiert durch
+\[
+       u_i^{\prime} \approx \frac{u_{i+1}-u_i}{h_i}.
+\]
+Diese Definition findet sich in \cite[177]{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche} wieder.
+Zuletzt geben wir die Kostenfunktion der neuronalen Netze in Abhängigkeit der Epochen und, wenn möglich, den globalen
+Fehler für alle Zeitwerte in Abhängigkeit der Epochen an. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek
+$scipy.integrate$, genauer die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die
+Berechnungen wurden mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der
+Quellcode zur Lösung der folgenden Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen
+Netze befindet sich in dem beigelegtem Datenträger.
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}

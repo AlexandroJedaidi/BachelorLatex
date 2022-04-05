@@ -266,7 +266,9 @@ der Proben in einem Batch mit Hilfe der Backpropagation berechnen und im Anschlu
 verwendet, wobei $|B|$ die Größe der Batches angibt und $X^{(0,i)}$, $1 \leq i \leq |B|$, eine Probe des Batches $B$ ist.
 Dieser Mittelwert wird dann durch das gegebene Gradientenverfahren verwendet, um die Gewichte $\omega_{ij}^{(l)}$ zu
 aktualisieren. Dabei spielt die Größe der Batches $|B|$ eine wichtige Rolle, denn wenn $|B|$ zu klein ist, so werden die
-Abschätzungen des Durchschnitts zu ungenau, was wiederum den Lernprozess verlangsamen würde.
+Abschätzungen des Durchschnitts zu ungenau, was wiederum den Lernprozess verlangsamen würde. Da wir jeden Batch jedoch
+nur einmalig verwenden und anschließend neue zufällige Trainingsdaten erstellen, werden wir die Gesamtanzahl der
+Batches mit Epochen identifizieren. Also ist jeder Batch eine Epoche.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
