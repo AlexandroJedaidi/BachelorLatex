@@ -226,7 +226,7 @@ auf das neue Gewicht haben. Für ein allgemeines Gradientenverfahren gilt dann
 \[
     \omega_{ij}^{(l)[k+1]} = \omega_{ij}^{(l)[k]}\underbrace{-\eta \delta_j^{(l)[k]}x_i^{(l-1)[k]}}_{\approx 0}\approx \omega_{ij}^{(l)[k]}.
 \]
-Um diesem Problem entgegenzuwirken, gibt es mehrere Verbesserungsmöglichkeiten.\newline
+Um diesem Problem entgegenzuwirken, gibt es mehrere Verbesserungsmöglichkeiten.\linebreak
 $\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effektivität des allgemeinen
 Gradientenverfahren sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen
 für einen verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren

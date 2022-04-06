@@ -1,5 +1,5 @@
 \section{Numerischer Lösungsansatz}
-\label{sec:numerict}
+\label{sec:numeric}
 Dieses Kapitel beruht im Wesentlichen auf \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche},
 \cite{ernsthairergerhardwannerSolvingOrdinaryDifferential} und \cite{prof.dr.josefstoerNumerischeMathematik}. Wir
 werden uns im Folgenden hauptsächlich das
@@ -239,7 +239,7 @@ In diesem Fall haben wir die Koeffizienten
 Im Allgemeinen gilt für explizite Runge-Kutta-Verfahren, dass $a_{lj} = 0$ für $l \leq j$.\\
 \begin{bem}
     Die Koeffizienten charakterisieren ein Runge-Kutta-Verfahren, weshalb sie für üblich in sogenannten
-    $Butcher$- $Tabellen$ zusammengefasst werden:
+    \textit{Butcher-Tabellen} zusammengefasst werden:
     \begin{center}
         \begin{tabular}{c | c}
             c & A \\
@@ -332,7 +332,7 @@ und $Df(x(t_i))$ die Jacobi-Matrix von $f$ in $x(t_i)$ ist. Da wir uns nur auf d
     &\vdots\\
     k_{i,m} &= f(x(t_i) + ha_{m1}k_{1,i} + \dots + ha_{m,m-1}k_{m-1,i}).\\
 \end{align*}
-Nun wenden ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erhalten
+Nun wenden wir ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erhalten
 \begin{align*}
     k_{i,1} &= f(x(t_i)), \\
     k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))k_{1,i} + \mathcal{O}(h^2), \\
@@ -357,8 +357,8 @@ Einsetzen in \eqref{eq:kon_auto} ergibt
     &= \left( 1 - \sum_{l=1}^{m} b_l  \right)f(x(t_i))
     + h \left( \frac{1}{2} - \sum_{l=1}^{m} \sum_{j=1}^{l-1} b_l a_lj \right) Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2).
 \end{align*}
-Da $\sum\limits_{l=1}^{m}b_l =1$ gilt, kann schnell abgelesen werden, dass für die gegenüber Autonomisierung invariante
-Runge-Kutta-Verfahren die Konsistenzordnung $p=1$ gilt. Außerdem bilden sich weitere Voraussetungen für höhere
+Da $\sum\limits_{l=1}^{m}b_l =1$ gilt, kann schnell abgelesen werden, dass für gegenüber Autonomisierung invariante
+Runge-Kutta-Verfahren die Konsistenzordnung $p=1$ gilt. Außerdem bilden sich weitere Voraussetzungen für höhere
 Konsistenzordnungen, wie beispielsweise für $p=2$:
 \[
     \sum_{l=1}^{m} \sum_{j=1}^{l-1} b_l a_{lj} = \sum_{l=1}^{m} b_l c_l = \frac{1}{2}.
@@ -393,7 +393,7 @@ Ist der lokale Diskretisierungsfehler aber klein in Relation zur Toleranz, dann 
 vergrößern, um den Rechenaufwand zu minimieren. Dies tritt beispielsweise bei nahezu linearen Lösungsfunktionen auf. \\
 Also müssen wir uns zuerst überlegen, wie wir den lokalen Diskretisierungsfehler sinnvoll mit minimalen Rechenaufwand
 abschätzen, ohne die tatsächliche Lösung der Differentialgleichung zu kennen. Dazu verwenden wir sogenannte
-$eingebettete$ $Runge$-$Kutta$-$Verfahren$, welche aus zwei Einschrittverfahren
+\textit{eingebettete Runge-Kutta-Verfahren}, welche aus zwei Einschrittverfahren
 \[
     u_{i+1}^{(1)} = u_i + h_i \phi_{p}(t_i,u_i,h_i,f)
 \]
@@ -568,7 +568,7 @@ Mehrschrittverfahren vom Typ $(r,l)$ \eqref{k-step-rl} gilt
     \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} p(s) ds \\
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \left( f(s,x(s)) - p(s) \right) ds \\
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
-    \frac{f^{(r+1)}(s,\xi(s))}{(r+1)!} ds,
+    \frac{f^{(r+1)}(s,\xi(s))}{(r+1)!} ds\\
     &= \frac{1}{h} \int\limits_{t_{i+r-l}}^{t_{i+l}} \prod\limits_{j=0}^{r} (s - (t_i + jh))
     \frac{x^{(r+2)}(\xi(s))}{(r+1)!} ds,
 \end{align*}

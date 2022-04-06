@@ -62,68 +62,61 @@ Dämpfungskoeffizient. Wir werden dieses System nun in dem Zeitraum $t \in [0, 1
 Resultate vergleichen. Für beide Verfahren werden zur Vereinfachung $g=1$ und $l=1$ gesetzt. Außerdem gilt für das
 Runge-Kutta-Verfahren $k=3$ und $c=1$.
 \begin{table}
-              \renewcommand{\arraystretch}{1.0}
-              \centering
-              \begin{tabular}{ l | l }
-                     \hline
-                     Netzwerkstruktur & \\
-                     \hline
-                     Anzahl der Schichten & $L=10$ \\
-                     Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
-                     versteckte Schichten & $n^{(l)}=128$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
-                     Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-                     \hline
-                     Hyperparameter und Initialisierungsintervalle & \\
-                     \hline
-                     Anfangswertbereiche & $(\theta_0, \varphi_0) \in [0.0, 1.0] \times [-0.2, 0.2]$ \\
-                     Paramaterbereiche & $(k, c) \in [2.0, 5.0] \times [0.0, 2.0]$ \\
-                     Zeitraum & $t \in [0, 10]$ \\
-                     \hline
-                     Optimierung & \\
-                     \hline
-                     Gradientenverfahren & Adam \\
-                     Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
-                     Batchsize & $|B|=10000$ \\
-                     Epochen & $1000000$ \\
-                     Learning rate & $\eta= 0.0001$ \\
-                     Gewichtsinitialisierung & Xavier-Initialisierung \\
-                     \hline
-                     Statistiken & \\
-                     \hline
-                     Trainingrate & xx \\
-                     Traningszeit & xx Stunden \\
-                     \hline
-              \end{tabular}
-       \caption{Netzwerkstruktur, Hyperparameter, Initialisierungsintervalle, Optimierungsparameter und Statistiken
-       für das Rebound-Pendel-Anfangswerproblem.}
-       \label{rebound-pendulum-table}
-\end{table}
-In Tabelle \ref{rebound-pendulum-table} sind alle relevanten Daten für das Rebound-Pendel-Anfangswerproblem gegeben,
-wobei $\Phi(x)$ die Aktivierungsfunktion für die jeweiligen Schichten ist. Da die rechte Seite $f$ von
-\eqref{rebound-pendulum} nicht differenzierbar ist, lässt sich keine einfache Schlussfolgerung für die Existenz und
-Eindeutigkeit der exakten Lösung formulieren. Da wir keine exakte Lösung $x$haben,ist es nicht möglich, die beiden
-Verfahren durch den globalen Fehler $\left\lVert u - x \right\rVert_2$ zu vergleichen, wobei $u$ das Ergebnis des
-zugehörigen Verfahrens ist. Außerdem ist ein Vergleich der Trajektorien zu ungenau um qualitative Aussagen über die
-Effizienz liefen zu können. Wir konstruieren nun also ein Fehlermaß, um die Verfahren vergleichen zu können.
-!!TODO: Graphiken und atol,rtol!!
-\begin{figure}
+       \renewcommand{\arraystretch}{1.0}
        \centering
-       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumML_Loss_}
-       \caption{Kostenfunktion der neuronalen Netzes bei steigender Epochenanzahl.}
-       \label{fig:rebound-loss}
-\end{figure}
+       \begin{tabular}{ l | l }
+              \hline
+              Netzwerkstruktur & \\
+              \hline
+              Anzahl der Schichten & $L=10$ \\
+              Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
+              versteckte Schichten & $n^{(l)}=128$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
+              \hline
+              Hyperparameter und Initialisierungsintervalle & \\
+              \hline
+              Anfangswertbereiche & $(\theta_0, \varphi_0) \in [0.0, 1.0] \times [-0.2, 0.2]$ \\
+              Paramaterbereiche & $(k, c) \in [2.0, 5.0] \times [0.0, 2.0]$ \\
+              Zeitraum & $t \in [0, 10]$ \\
+              \hline
+              Optimierung & \\
+              \hline
+              Gradientenverfahren & Adam \\
+              Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
+              Batchsize & $|B|=10000$ \\
+              Epochen & $1000000$ \\
+              Lernrate & $\eta= 0.0001$ \\
+              Gewichtsinitialisierung & Xavier-Initialisierung \\
+              \hline
+              Statistiken & \\
+              \hline
+              Trainingrate & xx \\
+              Trainingszeit & xx Stunden \\
+              \hline
+       \end{tabular}
+       \caption{Netzwerkstruktur, Hyperparameter, Initialisierungsintervalle, Optimierungsparameter und Statistiken
+       für das Rebound-Pendel-Anfangswertproblem.}
+\label{rebound-pendulum-table}
+\end{table}
+In Tabelle \ref{rebound-pendulum-table} sind alle relevanten Daten für das Rebound-Pendel-Anfangswertproblem gegeben,
+wobei $\Phi(x)$ die Aktivierungsfunktion für die jeweiligen Schichten ist. Wie bereits erwähnt, haben wir keine exakte
+Lösung vorliegen, weshalb wir zum Vergleich die Trajektorieren der berechneten Lösungen und den Resdiuumsfehler benutzen.
+In Abbildung \ref{fig:rebound-trajectories} sehen wir, dass sich die beiden Trajektorien einen ähnlichen Verlauf haben.
+Jedoch liefert dies keine Aussage über die Güte der Ergebnisse, da wir keine Trajektorie der exakten Lösung verwenden
+können. Ähnliches gilt für die Abbildung \ref{fig:rebound-trajectories-in-time}. Deshalb betrachten wir
+!!TODO: Graphiken und atol,rtol!!
 
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_}
-       \caption{Trajektorie der von den resultierenden Lösungen des Rebound Pendels \eqref{rebound-pendulum}.}
+       \caption{Trajektorie der verschiedenen Lösungen.}
        \label{fig:rebound-trajectories}
 \end{figure}
 
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_in_time_}
-       \caption{$(t, \theta(t))$ Graph der berechneten Lösungen des Rebound Pendels \eqref{rebound-pendulum}.}
+       \caption{$(t, \theta(t))$ Graph der berechneten Lösungen.}
        \label{fig:rebound-trajectories-in-time}
 \end{figure}
 
@@ -132,6 +125,13 @@ Effizienz liefen zu können. Wir konstruieren nun also ein Fehlermaß, um die Ve
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumlocal_error_}
        \caption{Graph des Residuumfehlers beider Verfahren.}
        \label{fig:rebound-residuum}
+\end{figure}
+
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumML_Loss_}
+       \caption{Kostenfunktion des neuronalen Netzes bei steigender Epochenanzahl.}
+       \label{fig:rebound-loss}
 \end{figure}
 
 \subsection{Steife Differentialgleichung}
@@ -227,13 +227,13 @@ verwendeten neuronalen Netz \eqref{stiff} gegeben.
               Gewichtsfunktion & $b(t)=1$ \\
               Batchsize & $|B|=10000$ \\
               Epochen & $1000000$ \\
-              Learning rate & $\eta= 0.0001$ \\
+              Lernrate & $\eta= 0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
               \hline
               Statistiken & \\
               \hline
               Trainingrate & 125 Batches/Sekunde \\
-              Traningszeit & 2,22 Stunden \\
+              Trainingszeit & 2.22 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstruktur, Hyperparameter, Initialisierungsintervalle, Optimierungsparameter und Statistiken
@@ -244,21 +244,20 @@ verwendeten neuronalen Netz \eqref{stiff} gegeben.
 In Abbildung \ref{fig:stiff-trajectories} können wir den Verlauf der Trajektorie mit dem Anfangspunkt
 $x_0=x(0)=(7,-1)^{\intercal}$ für die erwähnten Verfahren betrachten. Wie bereits besprochen beschränkt der betragsmäßig große
 Eigenwert $\lambda_1=-100$ die Schrittweite $h$, was zu einer ungenauen Lösung des Runge-Kutta-Verfahren führt. Die
-Approximation des neuronalen Netzes jedoch lässt sich mit der Perfomance des BDF-Verfahrens vergleichen, da es für ein
-Zeitintervall sogar bessere Ergebnisse liefert als das BDF-Verfahren.
+Approximation des neuronalen Netzes jedoch lässt sich mit der Lösung des BDF-Verfahrens vergleichen, da es für ein
+gewissen Zeitintervall sogar einen niedrigeren globalen Fehler hat als die Lösung des BDF-Verfahrens.
 Dieses Verhalten lässt sich auch in der Abbildung des Fehlers in Abhängigkeit der Zeit \ref{fig:stiff-error-in-time}
 wiederfinden.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Stiff_plots/stifftrajectories_}
-       \caption{Trajektorie des steifen Anfangswertproblems.}
+       \caption{Trajektorien der verschiedenen Lösungen.}
        \label{fig:stiff-trajectories}
 \end{figure}
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Stiff_plots/stiffError_in_time}
-       \caption{Globaler Fehler $\left\lVert x(t_i) - u_{\alpha}(t_i) \right\rVert_2$ der jeweiligen Verfahren
-              mit $\alpha=\text{BDF}, \text{RK}, \text{ML}$ in Abhängigkeit der Zeit.}
+       \caption{Globaler Fehler  der jeweiligen Verfahren in Abhängigkeit der Zeit.}
        \label{fig:stiff-error-in-time}
 \end{figure}
 Der oszillierende Fehler des Runge-Kutta-Verfahrens stimmt mit dem Verhalten der Trajektorie überein. Des Weiteren fällt
@@ -315,7 +314,7 @@ welche für alle folgenden neuronale Netze verwendet werden.
               Gewichtsfunktion & $b(t)=1$ \\
               Batchsize & $|B|=10000$ \\
               Epochen & $100000$ \\
-              Learning rate & $0.0001$ \\
+              Lernrate & $0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
               \hline
        \end{tabular}
@@ -338,9 +337,9 @@ Netzwerkstrukturen.
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=4$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
-              Traningszeit & 0,14 Stunden \\
+              Traningszeit & 0.14 Stunden \\
               \hline
               Netzwerk 2 & \\
               \hline
@@ -348,9 +347,9 @@ Netzwerkstrukturen.
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=8$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
-              Trainingszeit & 0,14 Stunden \\
+              Trainingszeit & 0.14 Stunden \\
               \hline
               Netzwerk 3 & \\
               \hline
@@ -358,9 +357,9 @@ Netzwerkstrukturen.
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
-              Trainingszeit & 0,14 Stunden \\
+              Trainingszeit & 0.14 Stunden \\
               \hline
               Netzwerk 4 & \\
               \hline
@@ -368,16 +367,22 @@ Netzwerkstrukturen.
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 180 Batches/Sekunde \\
-              Trainingszeit & 0,15 Stunden \\
+              Trainingszeit & 0.15 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstrukuren der ersten Variation.}
        \label{stiff-table-first}
 \end{table}
 !TODO:Bilder!
-
+In Abbildung \ref{fig:harmonic-neurons-variable-loss} und Abbildung \ref{fig:harmonic-neurons-variable-error} lässt
+sich leicht erkennen, dass das bei steigender Anzahl der Neuronen sowohl die Kostenfunktion als auch der globale Fehler
+das größte Minimum erreicht. Auch in der Abbildung der Trajektorien \ref{fig:harmonic-neurons-variable-trajectories}
+sehen wir, dass das neuronale Netz mit den meisten Neuronen pro Schicht die beste Lösung liefert. Dei Lösung des
+Runge-Kutta-Verfahrens approximiert die exakte Lösung jedoch viel besser, da die Trajektorie direkt unter der
+Trajektorie der exakten Lösung liegt. Des Weiteren sieht man am globalen Fehler des 4. Netzwerkes
+\ref{fig:harmonic-neurons-variable-error}, dass dieser die maximale Größenordnung $10^0$ besitzt.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_loss}
@@ -387,7 +392,7 @@ Netzwerkstrukturen.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_error}
-       \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
+       \caption{Globaler Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-neurons-variable-error}
 \end{figure}
 \begin{figure}
@@ -406,9 +411,7 @@ Netzwerkstrukturen.
 \end{figure}
 
 Zuletzt werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen
-Schichten$n^{(l)}=16$ und die learning rate $\eta=0.0001$ festgelegt. Genauere Angaben zu den Netzwerken befinden sich in
-Tabelle
-\ref{stiff-table-second}.
+Schichten$n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabelle \ref{stiff-table-second}.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -420,9 +423,9 @@ Tabelle
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 185 Batches/Sekunde \\
-              Traningszeit & 0,15 Stunden \\
+              Traningszeit & 0.15 Stunden \\
               \hline
               Netzwerk 2 & \\
               \hline
@@ -430,9 +433,9 @@ Tabelle
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 129 Batches/Sekunde \\
-              Traningszeit & 0,22 Stunden \\
+              Trainingszeit & 0.22 Stunden \\
               \hline
               Netzwerk 3 & \\
               \hline
@@ -440,16 +443,23 @@ Tabelle
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
               versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
-              learning rate & $\eta=0.0001$ \\
+              Lernrate & $\eta=0.0001$ \\
               Trainingrate & 76 Batches/Sekunde \\
-              Traningszeit & 0,36 Stunden \\
+              Traningszeit & 0.36 Stunden \\
               \hline
        \end{tabular}
        \caption{Netzwerkstrukuren der zweiten Variation.}
        \label{stiff-table-second}
 \end{table}
-!TODO: Bilder!
-
+Hier fällt auf, dass Netzwerk 1 die niedrigste Kostenfunktion erreicht, was in Abbildung
+\ref{fig:harmonic-layers-variable-loss} zu sehen ist. In Abbildung \ref{fig:harmonic-layers-variable-error} lässt sich
+jedoch erkennen, dass Netzwerk 2 den niedrigsten globalen Fehler erzielt. Ähnlich wie bei der ersten Variation der
+Neuronen befindet sich der globale Fehler des besten Netzwerkes in der Größenordnung $10^0$. Die Trajektorien in
+Abbildung \ref{fig:harmonic-layers-variable-trajectories} bestätigen, dass Netzwerk 3 die schlechteste Approximation des
+Anfangswertproblems \eqref{harmonic-oscillator} liefert. Außerdem lässt sich an den Trajektorien und Abbildung
+\ref{fig:harmonic-layers-variable-trajectories-in-time} erkennen, dass Netzwerk 2 die beste Approximation liefert,
+wobei die Trajektorien und auch der $(t_i,u_i)$-Graph der Lösung $u_i$ des Runge-Kutta-Verfahrens wiederum direkt unter
+der exakten Lösung liegen.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_loss}
@@ -459,7 +469,7 @@ Tabelle
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_error}
-       \caption{$\left\lVert x - u \right\rVert_2$-Fehler der verschiedenen neuronalen Netze.}
+       \caption{Globaler Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-layers-variable-error}
 \end{figure}
 \begin{figure}
@@ -472,9 +482,11 @@ Tabelle
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_layers_vartrajectories_in_time_}
-       \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
-       und der exakten Lösung.}
+       \caption{$(t,x(t))$-Graph der von den verschiedenen neuronalen Netzen approximierte Lösung, der
+       Runge-Kutta-Lösung und der exakten Lösung.}
        \label{fig:harmonic-layers-variable-trajectories-in-time}
 \end{figure}
-
+Zusammenfassend können wir sagen, dass eine Erhöhung der Neuronen und Schichten abhängig von der Komplexität des
+Anfangswertproblems ist. Außerdem muss die Trainingszeit erhöht werden, um eine vergleichbar gute Approximation
+gegenüber dem Runge-Kutta-Verfahren zu erhalten.
 \newpage
