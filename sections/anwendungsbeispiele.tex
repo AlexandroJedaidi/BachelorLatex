@@ -12,19 +12,20 @@ Fehler des numerischen Verfahrens $\left\lVert x(t_i) - u_i \right\rVert_2$ mit 
 $\left\lVert \hat{x}(t) - x(t) \right\rVert_2$ in Abhängigkeit der Zeit $t_i=t_0 + ih$ und $t\in D$ vergleichen. Dabei
 ist zu beachten, dass eine exakte Lösung $x$ vorliegen muss. In dem Abschnitt \ref{subsec:rebound-Pendel} ist das
 analytische Berechnen der Lösung aufwendig, weshalb es nicht möglich ist, die globalen Fehler zu vergleichen. Deshalb
-werden wir die \textit{Residuen} $0 = u_i^{\prime} - f(t_i,u_i)$ und $0 = u_i^{\prime}- f(t,\hat{x})$
-vergleichen, wobei die Ableitung $u_i^{\prime}$ mithilfe der sogenannten \textit{Differenzenquotienten} ermittelt wird.
-Der Vorwärtsdifferenzenquotient ist definiert durch
-\[
-       u_i^{\prime} \approx \frac{u_{i+1}-u_i}{h_i}.
-\]
-Diese Definition findet sich in \cite[177]{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche} wieder.
+werden wir ein Runge-Kutta-Verfahren mit sehr kleiner Schrittweite zum Vergleich verwenden, da Einschrittverfahren für
+$h \rightarrow 0$ konvergieren. Hierbei betrachten wir sowohl die Trajektorien, als auch den Graph der ersten Komponente
+der berechneten Lösung in Abhängigkeit der Zeit.
 Zuletzt geben wir die Kostenfunktion der neuronalen Netze in Abhängigkeit der Epochen und, wenn möglich, den globalen
-Fehler für alle Zeitwerte in Abhängigkeit der Epochen an. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek
-$scipy.integrate$, genauer die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die
-Berechnungen wurden mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der
-Quellcode zur Lösung der folgenden Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen
-Netze befindet sich in dem beigelegtem Datenträger.
+Fehler für das gesamte Zeitintervall in Abhängigkeit der Epochen an. Dabei wenden wir den sogenannten
+\textit{gleitenden Mittelwert} an, um die Oszillation der beiden Graphen durch die Varianzen der Batches, zu
+minimieren. Dabei sind sprunghafte Änderungen der Kostenfunktion und des Fehlers gemeint, die entstehen, sobald neue
+Zufallszahlen gewählt werden und das Netzwerk noch nicht angepasst wurde. Hierzu verwenden wir die Funktion
+\textit{pandas.DataFrame.mean} der Bibliothek \textit{pandas}. Die Dokumentation dieser Funktion findet sich in
+\cite{PandasDataFrameMean}. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek $scipy.integrate$, genauer
+die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen wurden mit einem
+AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der Quellcode zur Lösung der folgenden
+Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich in dem
+beigelegtem Datenträger.
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
@@ -84,7 +85,7 @@ Runge-Kutta-Verfahren $k=3$ und $c=1$.
               Gradientenverfahren & Adam \\
               Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
               Batchsize & $|B|=10000$ \\
-              Epochen & $1000000$ \\
+              Epochen & $100000$ \\
               Lernrate & $\eta= 0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
               \hline
@@ -385,7 +386,7 @@ Trajektorie der exakten Lösung liegt. Des Weiteren sieht man am globalen Fehler
 \ref{fig:harmonic-neurons-variable-error}, dass dieser die maximale Größenordnung $10^0$ besitzt.
 \begin{figure}
        \centering
-       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_loss}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_avrloss}
        \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-neurons-variable-loss}
 \end{figure}
@@ -394,6 +395,12 @@ Trajektorie der exakten Lösung liegt. Des Weiteren sieht man am globalen Fehler
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__neurons_var_error}
        \caption{Globaler Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-neurons-variable-error}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorError_in_time_neurons_var}
+       \caption{Globaler Fehler von Netzwerk 4 und dem Runge-Kutta-Verfahren in Abhängigkeit der Zeit.}
+       \label{fig:harmonic-neurons-variable-error-in-time}
 \end{figure}
 \begin{figure}
        \centering
@@ -462,7 +469,7 @@ wobei die Trajektorien und auch der $(t_i,u_i)$-Graph der Lösung $u_i$ des Rung
 der exakten Lösung liegen.
 \begin{figure}
        \centering
-       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_loss}
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_avrloss}
        \caption{Kostenfunktion der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-layers-variable-loss}
 \end{figure}
@@ -471,6 +478,12 @@ der exakten Lösung liegen.
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_error}
        \caption{Globaler Fehler der verschiedenen neuronalen Netze.}
        \label{fig:harmonic-layers-variable-error}
+\end{figure}
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorError_in_time_layers_var}
+       \caption{Globaler Fehler von Netzwerk 2 und dem Runge-Kutta-Verfahren in Abhängigkeit der Zeit.}
+       \label{fig:harmonic-layers-variable-error-in-time}
 \end{figure}
 \begin{figure}
        \centering
