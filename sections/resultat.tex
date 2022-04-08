@@ -1,9 +1,29 @@
 \section{Resultat}
 \label{sec:resultat}
-Wobei das neuronalen Netzes wie in Abschnitt \ref{subsec:rebound-Pendel} einen
-nennenswerten Vorteil hat. Sobald das neuronale Netz trainiert ist, kann dieses zur Approximation anderer
-Anfangswertprobleme, dessen Parameter in den Intervallen der Lösungspaketen liegen, genutzt werden.
-dass unter Berücksichtigung des gegebenen Fehlers in Abbildung \ref{fig:stiff-error-in-time}, eine beliebige
-Zeitauswertung in $[t_0, t_f]$ der approximierten Lösung möglich ist. Erhöht man die Toleranzen des BDF-Verfahrens, so
-führt dies zu erhöhten Laufzeiten, was wiederum für eine Zeitauswertung in Summe längere Rechenzeiten haben könnte als
-das bereits trainierte neuronale Netz.
+Wir haben an verschiedenen Anfangswertproblemen gesehen, wie sich Trajektorien, Graphen in Abhängigkeit der Zeit,
+Kostenfunktionen und weitere Fehler verhalten. Zusammenfassend können wir sagen, dass unter Berücksichtigung der
+Hyperparameter und Trainingszeit der neuronalen Netze die Ergebnisse der numerischen Verfahren, namentlich dem
+Runge-Kutta-Verfahren und dem BDF-Verfahren, den Approximationen der neuronalen Netze weit überlegen sind. Sofern wir
+eine exakte Lösung gegeben haben, können wir die globalen Fehler beider Verfahren vergleichen und sehen, dass der
+numerische Fehler um einige Größenordnungen kleiner ist als der Fehler des neuronalen Netzes.
+Auch ohne exakte Lösung können wir unter anderem die Trajektorien der berechneten Lösungen vergleichen, wobei auch hier
+die Trajektorie des Runge-Kutta-Verfahrens viel näher an dem Vergleichswert liegt, als die des neuronalen Netzes.
+Außerdem sehen wir, dass die Wahl der Schichtanzahl und Größe abhängig von der Komplexität und Form des gegebenen
+Systems ist. Deshalb ist die Wahl der Hyperparameter nicht trivial und wird hauptsächlich durch Ausprobieren ermittelt.\\
+Der Fokus liegt also auf dem Trainingsprozess der neuronalen Netze, denn sofern dieser optimiert wird, gibt einen
+nennenswerten Vorteil für das Approximieren durch neuronale Netze. Dieses kann zur Approximation anderer
+Anfangswertprobleme, dessen Parameter in den Intervallen der Lösungspakete liegen, genutzt werden, da die Gewichte
+durch die zufällige Wahl der Trainingsdaten auf viele Kombinationen von Anfangswertproblemen angepasst wurden. Ein
+numerisches Lösen aller dieser Kombinationen kann je nach vorausgesetzter Genauigkeit zu größerem Rechenaufwand führen,
+als die Auswertung des neuronalen Netzes, das durch eine Verkettung von Matrix-Vektor-Multiplikationen dargestellt ist.
+Des Weiteren ist es möglich, dass unter Berücksichtigung des gegebenen Fehlers eines neuronalen Netzes, eine beliebige
+Zeitauswertung $t_i \in [t_0, t_f]$ der approximierten Lösung möglich ist. Im Gegenzug dazu ist eine Zeitauswertung für
+numerische Verfahren nicht möglich, da für den gesuchten Wert $u_i$ die Werte $ u_0, \dots, u_{i-1}$ zuerst berechnet
+werden. Je nach vorausgesetzter Genauigkeit, Größe des Zeitintervalls und verwendetes numerisches Verfahren kann diese
+Berechnung große Rechenaufwände aufweisen, während das neuronale Netz lediglich Matrix-Vektor-Multiplikationen
+durchführt. Der geringe Rechenaufwand hat den Vorteil, dass zur Berechnung hochkomplexe, aufwendige Anfangswertprobleme
+mit Computern ohne hohe Rechenleistung, also auch kleine Prozessoren die beispielsweise in Drohnen verbaut werden,
+approximiert werden können \cite[9]{flamantSolvingDifferentialEquations2020}.\\
+In Zukunft kann die Methode der Lösungspakete also Anwendungsbereiche finden, da mit steigender Rechenleistung sich auch
+die Ergebnisse der Approximationen verbessern, welche dann wiederum gespeichert, verbreitet und für ähnliche
+Anfangswertprobleme verwendet werden können.
