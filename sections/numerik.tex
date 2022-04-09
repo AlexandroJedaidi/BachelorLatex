@@ -2,20 +2,19 @@
 \label{sec:numeric}
 Dieses Kapitel beruht im Wesentlichen auf \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche},
 \cite{ernsthairergerhardwannerSolvingOrdinaryDifferential} und \cite{prof.dr.josefstoerNumerischeMathematik}. Wir
-werden uns im Folgenden hauptsächlich das
-Anfangswertproblem
+werden uns im Folgenden das Anfangswertproblem
 \begin{align}
     \label{first-order-num}
     x^{\prime} &= f(t,x) \nonumber \\
     x(t_0) &= x_0
 \end{align}
 betrachten, wobei $f$ stetig ist.\\
-Unser Ziel ist es, eine effektive Methode zu verwenden, um eine Lösung eines Anfangswertproblem finden zu können.
+Unser Ziel ist es, eine effektive Methode zur Lösung eines Anfangswertproblem zu verwenden.
 Da es nicht immer möglich ist, eine gewöhnliche Differentialgleichung analytisch zu lösen, gibt es sogenannte Ein- und
-Mehrschrittverfahren, welche  eine Lösung der gewöhnliche Differentialgleichung approximiert.
-Der Grundgedanke dieser Verfahren ist es das Zeitintervall $D=[t_0,t_{0}+a]$ zu diskretisieren
+Mehrschrittverfahren, welche  eine Lösung der gewöhnlichen Differentialgleichung approximiert.
+Der Grundgedanke dieser Verfahren ist es das Zeitintervall \linebreak $D=[t_0,t_{0}+a]$ zu diskretisieren,
 $t_0 < t_1 < \dots < t_N = t_{0}+a$ und beginnend mit dem Anfangswert $t_0$ eine Näherung $u_i \approx x(t_i)$ für
-$i=0, \dots, N$ berechnet. Solche Verfahren werden mit Hilfe von Quadraturformeln der numerischen Integration
+$i=0, \dots, N$ zu berechnen. Solche Verfahren werden mit Hilfe von Quadraturformeln der numerischen Integration
 \cite[Numerische Integration]{walzLexikonMathematik} hergeleitet.\\
 Dies basiert darauf, dass die Differentialgleichung auf einem Teilintervall $[t_i, t_{i+1}] \subset D$
 integriert wird und nach dem Hauptsatz der Differential- und Integralrechung auf folgende Gleichung gebracht werden kann:
@@ -27,8 +26,8 @@ Quadraturformel ein Einschrittverfahren bildet.
 \subsection{Einschrittverfahren}
 In diesem Abschnitt betrachten wir die Einschrittverfahren.
 \begin{definition}
-    Sei $D=[t_0,t_0+\alpha]$ ein Zeitintervall und eine Zerlegung $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ von D mit der
-    Schrittweite $h=\frac{a}{N}$.
+    Sei $D=[t_0,t_0+\alpha]$ ein Zeitintervall und
+    $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Zerlegung von D mit der Schrittweite $h=\frac{a}{N}$.
     Ein {\em explizites Einschrittverfahren} für das Anfangswertproblem \eqref{first-order-num} hat die Form
     \begin{align}
         u_0 &= x_0 \nonumber \\
@@ -36,7 +35,7 @@ In diesem Abschnitt betrachten wir die Einschrittverfahren.
     \end{align}
     Dabei nennt man
     $\phi:D_h \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n) \rightarrow \mathbb{R}^n$ die
-    Inkrementfunktion, wobei $K \subseteq \mathbb{R}^n$.
+    {\em Inkrementfunktion}, wobei $K \subseteq \mathbb{R}^n$.
     {\em Implizite Einschrittverfahren} haben die Form
     \begin{align*}
         u_0 &= x_0\\
@@ -45,11 +44,11 @@ In diesem Abschnitt betrachten wir die Einschrittverfahren.
     mit $\phi:D_h \times \mathbb{R}^n \times \mathbb{R}^n \times \mathbb{R} \times C(D \times K,\mathbb{R}^n)
     \rightarrow \mathbb{R}^n$.
 \end{definition}
-Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Begriffe erläutert.
+Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Fehlermaße eingeführt.
 \begin{definition}[Lokaler Diskretisierungsfehler]
-    Sei das Anfangswertproblem \eqref{first-order-num} mit \\ Lipschitz-stetiger
-    rechten Seite und ein explizites Einschrittverfahren \eqref{eq:6} gegeben. Für $\hat{t}\in [t_0,t_0+a]$ und
-    $0 < h < t_0 + a - \hat{t}$ ist der {\em lokale Diskretisierungsfehler} definiert als
+    Sei das Anfangswertproblem \eqref{first-order-num} mit \\ im zweiten Argument Lipschitz-stetigen
+    rechten Seite $f$ und ein explizites Einschrittverfahren \eqref{eq:6} gegeben.
+    Für $\hat{t}\in [t_0,t_0+a]$ und $0 < h < t_0 + a - \hat{t}$ ist der {\em lokale Diskretisierungsfehler} definiert als
     \[
         \tau(\hat{t}, h) := \frac{x(\hat{t} + h) - u_1(\hat{t})}{h},
     \] wobei $u_1(\hat{t})=x(\hat{t}) + h\phi\left(\hat{t},x(\hat{t}\right),h,f) $ die Approximation der exakten
@@ -65,9 +64,9 @@ Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Begr
     \[
         e(\hat{t}, h) := x(\hat{t}) - u_i,
     \]
-    wobei $u_i$ die vom Einschrittverfahren approximierte Lösung im $i$-ten Schritt ist.\\
-    Falls zusätzlich für alle f mit stetiger und beschränkter Ableitung (bis zur Ordnung p) in der x-Variable gilt, dass
-    für alle $\hat{t} \in (t_0, t_0+a]$
+    wobei $u_i$ die vom Einschrittverfahren im $i$-ten Schritt approximierte Lösung ist.\\
+    Falls zusätzlich für alle $f$ mit stetiger und beschränkter Ableitung (bis zur Ordnung p) in der x-Variable gilt,
+    dass für alle $\hat{t} \in (t_0, t_0+a]$
     \[
         \lim_{h \rightarrow 0 } e(\hat{t}, h)=0 \quad (e(\hat{t},h) = \mathcal{O}(h^p) \text{ für } h \rightarrow 0),
     \] dann nennt man das Einschrittverfahren {\em konvergent} {\em (von der Ordnung p)}.
@@ -75,7 +74,7 @@ Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Begr
 Es ist uns möglich, eine obere Schranke für den globalen Fehler zu finden. Dazu müssen wir zuerst die diskrete Version
 der Gronwallsche Ungleichung \ref{Satz-gronwall} beweisen.
 \begin{satz}[Diskrete Gronwallsche Ungleichung]
-    Gegeben seien die Folgen $(\alpha)_i,(\beta)_i,(\gamma)_i \geq 0$ mit $i = 0,\dots,N$ und es gilt
+    Gegeben seien die Folgen \newline $(\alpha)_i,(\beta)_i,(\gamma)_i \geq 0$ mit $i = 0,\dots,N$ und es gilt
     \[
         \gamma_{i+1} \leq (1 + \alpha_i)\gamma_i + \beta_i, \quad i=0,\dots,N-1.
     \] Dann gilt
@@ -102,7 +101,7 @@ $Beweis.$ Wir beweisen diesen Satz mittels Induktion nach $i$:
 \begin{satz}
     \label{one-step-error-bound}
     Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{first-order-num} gegeben. Ist  die
-    Inkrementfunktion $\phi$ in der $x-Variable$ Lipschitz-stetig, also
+    Inkrementfunktion $\phi$ in der \textit{x-Variable} Lipschitz-stetig, also
     \[
         \left\lVert \phi(t, x_1, h, f) - \phi(t, x_2, h, f) \right\rVert_2 \leq L \left\lVert x_1 - x_2 \right\rVert_2
     \]
@@ -114,11 +113,11 @@ $Beweis.$ Wir beweisen diesen Satz mittels Induktion nach $i$:
     \]
     Dabei ist $e_0 = x(t_0)-u_0$ und $\tau_h= \max\limits_{k=1,\dots,N} \left\lVert \tau(t_k,h) \right\rVert_2 $.
 \end{satz}
-$Beweis.$ Löse zuerst die Gleichung des lokalen Diskretisierungsfehlers auf $x(t_{j+1})$ auf:
+$Beweis.$ Wir lösen zuerst die Gleichung des lokalen Diskretisierungsfehlers nach $x(t_{j+1})$ auf:
 \[
     x(t_{j+1}) = x(t_j) + h \phi(t_j, x(t_j),h,f) + h \tau(t_j, h), \quad j = 0, \dots , i-1.
 \]
-Dann nutzen wir das Ergebnis für den globalen Fehler
+Dann setzen wir das Ergebnis in den globalen Fehler ein
 \[
     e(t_{j+1},h) = x(t_{j+1}) - u_{j+1} = x(t_j) - u_j + h \tau(t_j, h)
     + h \left( \phi(t_j, x(t_j),h,f) - \phi(t_j, u_j, h, f) \right)
@@ -128,7 +127,7 @@ und schätzen ab
     \left\lVert e(t_{j+1},h) \right\rVert_2 \leq \left\lVert e(t_j, h) \right\rVert_2 + h\tau_h
     + hL\left\lVert e(t_j,h) \right\rVert_2 = (1 + hL) \left\lVert e(t_j,h) \right\rVert_2 + h\tau_h.
 \]
-Nun können wir mit $\alpha_j=hL$, $\gamma_j =\left\lVert e(t_j,h) \right\rVert_2$ und $\beta_j = h\tau_h$ die diskrete
+Nun können wir mit $\alpha_j:=hL$, $\gamma_j:=\left\lVert e(t_j,h) \right\rVert_2$ und $\beta_j := h\tau_h$ die diskrete
 Gronwallsche Ungleichung anwenden und erhalten
 \begin{align*}
     \left\lVert e(t_{j+1},h) \right\rVert_2
@@ -142,20 +141,20 @@ für alle $j=0, \dots, i-1$, also insbesondere
     = \left( \left\lVert e_0 \right\rVert_2 + (t_{i} - t_0) \tau_h \right)e^{L(t_{i} - t_0)}
 \]
 für $j=i-1$.\qedwhite\\
-Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Im allgemeinen ist
-ein Verfahren genau dann konvergent, wenn es konsistent und stabil ist, wie wir später beweisen werden.
+Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Allgemein ist dies
+nicht der Fall, wie wir in Abschnitt \ref{subsec:multistep} sehen werden.
 
 \subsection{Runge-Kutta-Verfahren}
-Runge-Kutta-Verfahren sind Einschrittverfahren höherer Ordnung. Um ein Runge-Kutta-Verfahren herleiten zu können, müssen
-wir zuerst definieren, was eine Quadraturformel ist.
+Ein \textit{Runge-Kutta-Verfahren} ist ein Einschrittverfahren höherer Ordnung. Um ein Runge-Kutta-Verfahren herleiten
+zu können, müssen wir zuerst definieren, was eine Quadraturformel ist.
 \begin{definition}
-    Eine Quadratur ist eine Abbildung $Q_n: C([a,b])\rightarrow \mathbb{R}$, für die gilt
+    Eine {\em Quadratur} ist eine Abbildung $Q_m: C([a,b])\rightarrow \mathbb{R}$, für die gilt
     \[
         Q_m(g) = (b-a)\sum_{l=1}^{m}\alpha_l g(s_l) \quad \text{ für alle } g\in C([a,b]),
     \]
-    wobei $\Delta = \{a=s_1, \dots, s_m=b\}$ eine Intervallunterteilung ist. Die Zahlen $s_1, \dots, s_m$ heißen Stützstellen und
-    $\alpha_1, \dots, \alpha_m$ heißen Gewichte der Quadratur.\\
-    Für eine interpolatorische Quadratur gilt zusätzlich
+    wobei $\Delta = \{a=s_1, \dots, s_m=b\}$ eine Intervallunterteilung ist. Die Zahlen $s_1, \dots, s_m$ heißen {\em Stützstellen}
+    und $\alpha_1, \dots, \alpha_m$ heißen {\em Gewichte} der Quadratur.\\
+    Für eine {\em interpolatorische} Quadratur gilt zusätzlich
     \[
         \alpha_l = \int_{0}^{1} \prod_{\underset{j\neq l}{j=1}}^{m} \frac{t-t_j}{t_i-t_j} dt,
         \quad t_j = \frac{s_j-a}{b-a}.
@@ -169,15 +168,15 @@ approximieren:
 Die Stützstellen sind also $s_1=t_i$, $s_l=t_i+c_{l} h$ für $l = 2,\dots, m$. Dazu approximieren wir
 $f(s_l,x(s_l))\approx k_{l,i}$ mit
 \begin{align}
+    \label{eq:rk}
     k_{1,i} &= f(t_i,u_i) \nonumber \\
-    k_{l,i} &= f(t_i+c_lh, u_i + h\sum_{j=1}^{l-1}a_{lj}k_{j,i} ), \quad l=2,\dots,m.   \label{eq:rk}
+    k_{l,i} &= f(t_i+c_lh, u_i + h\sum_{j=1}^{l-1}a_{lj}k_{j,i} ), \quad l=2,\dots,m.
 \end{align}
-
 Dies ergibt das $m$-stufige explizite Runge-Kutta-Verfahren
 \begin{align}
     u_{i+1} = u_i + h \sum_{l=1}^{m} b_l k_{l,i},   \label{exp-rk-def}
 \end{align}
-mit $b_1, \dots, b_m \in \mathbb{R}$
+mit $b_1, \dots, b_m \in \mathbb{R}$.
 Wir werden später ein klassisches $4$-stufiges Runge-Kutta-Verfahren verwenden, welches wir jetzt herleiten.
 Dazu benötigen wir die Simpsonregel
 \[
@@ -213,7 +212,7 @@ mit den Stufen
     k_{3,i} &= f(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{2,i}), \\
     k_{4,i} &= f(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{3,i}). \\
 \end{align*}
-In diesem Fall haben wir die Koeffizienten
+Wir haben also die Koeffizienten
 \[
     b := \left( b_1, \dots , b_m \right)^{\intercal}
     =\left( \begin{matrix}
@@ -255,7 +254,7 @@ Da Runge-Kutta-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-
     k_{m,i} &= f(t_i+c_mh, u_i + h(a_{m1}k_{1,i} + \dots + a_{mm} k_{m,i}))\\
     u_{i+1} &= u_i + h(b_1 k_{1,i} + \dots + b_m k_{m,i})
 \end{align*}
-Hier kann $A$ im Gegensatz zu expliziten Runge-Kutta-Verfahren eine volle Matrix sein.
+Hier kann $A$ im Gegensatz zu expliziten Runge-Kutta-Verfahren eine voll besetzte Matrix sein.
 
 \subsubsection{Konsistenz}
 Es wurde bereits gezeigt, dass die Konvergenz eines Einschrittverfahrens aus der Konsistenz folgt. Deshalb genügt es
@@ -274,7 +273,7 @@ mit der Näherungslösung $v_i := \left[ \begin{matrix}
                                            t_i\\
                                            u_i\\
 \end{matrix} \right]$
-approximiert.
+approximiert wird.
 \begin{satz}
     Gegeben sei ein explizites Runge-Kutta-Verfahren \eqref{exp-rk-def}. Dies ist genau dann invariant gegenüber
     Autonomisierung, wenn für die Koeffizienten gilt:
@@ -289,9 +288,10 @@ $Beweis.$ Für ein autonomes Anfangswertproblem \eqref{autonom-awp} hat das Rung
     f\left( t_i + h \sum\limits_{j=1}^{l-1} a_{lj} \cdot \hat{k}^{z}_{j,i},
     u_i + h \sum\limits_{j=1}^{l-1} a_{lj} \hat{k}^{x}_{j,i} \right)
     \end{bmatrix},  \quad l=1,\dots,m, \\
-    v_{i+1} &= v_i + h \sum\limits_{l=1}^{m} b_l \hat{k}_{l,i} = \begin{bmatrix}
-                                                                     t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1\\
-                                                                     u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i}
+    v_{i+1} &= v_i + h \sum\limits_{l=1}^{m} b_l \hat{k}_{l,i} =
+    \begin{bmatrix}
+         t_i + h \sum\limits_{l=1}^{m} b_l \cdot 1\\
+         u_i + h \sum\limits_{l=1}^{m} b_l \hat{k}^{x}_{l,i}
     \end{bmatrix}
     \overset{!}{=}\begin{bmatrix}t_{i+1}\\u_{i+1}\\\end{bmatrix}.
 \end{alignat*}
@@ -304,11 +304,11 @@ wenn $\hat{k}^{x}_{l,i} = k_{l,i}$, $l = 1, \dots, m$. Äquivalent dazu muss gel
     = f\left( t_i +hc_l, u_i + h \sum_{j=1}^{l-1} a_{lj} k_{j,i} \right), \quad l = 1, \dots, m,
 \]
 was genau dann erfüllt ist, wenn $c_l = \sum\limits_{o=1}^{l-1} a_{lo}, \quad l= 1, \dots, m.$ \qedwhite\\
-Im Folgenden werden wir uns auf autonome Anfangswertprobleme der Form
+Im Folgenden werden wir uns also auf autonome Anfangswertprobleme der Form
 \begin{align}
     x^{\prime} = f(x), \quad x(t_0) = x_0   \label{eq:9}
 \end{align}
-beschränken. Unser Ziel ist es Voraussetzungen an die Koeffizienten des Runge-Kutta-Verfahrens zu setzen, so dass wir eine
+beschränken. Unser Ziel ist es, Voraussetzungen an die Koeffizienten des Runge-Kutta-Verfahrens zu setzen, so dass wir eine
 größtmögliche Konsistenzordnung erhalten. Dazu betrachten wir den lokalen Diskretisierungsfehler
 \begin{align}
     \tau (t_i,h) &= \frac{x(t_i + h) - x(t_i)}{h} - \phi(t_i, x(t_i), h, f) \nonumber \\
@@ -317,12 +317,12 @@ größtmögliche Konsistenzordnung erhalten. Dazu betrachten wir den lokalen Dis
 Wenden wir nun die Taylorentwicklung auf die exakte Lösung $x$ für das Anfangswertproblem \eqref{eq:9} an, erhalten wir
 \begin{align*}
     x(t_{i+1}) &= x(t_i) + hx^{\prime}(t_i) + \frac{1}{2} h^2 x^{\prime \prime}(t_i) + \mathcal{O}(h^3) \\
-    &= x(t_i) + hf(x(t_i)) + \frac{1}{2} h^2 Df(x(t_i)) f(x(t_i)) + \mathcal{O}(h^3),\\
+    &= x(t_i) + hf(x(t_i)) + \frac{1}{2} h^2 Df(x(t_i)) f(x(t_i)) + \mathcal{O}(h^3),
 \end{align*}
 wobei für die Ableitungen der Lösung $x$ die Kettenregel benutzt wird
 \begin{align*}
     x^{\prime}(t_i) &= f(x(t_i)),\\
-    x^{\prime \prime}(t_i) &= Df(x(t_i))x^{\prime}(t_i) = Df(x(t_i))f(x(t_i))\\
+    x^{\prime \prime}(t_i) &= Df(x(t_i))x^{\prime}(t_i) = Df(x(t_i))f(x(t_i))
 \end{align*}
 und $Df(x(t_i))$ die Jacobi-Matrix von $f$ in $x(t_i)$ ist. Da wir uns nur auf das autonome Anfangswertproblem
 \eqref{eq:9} beschränken, hat das explizite Runge-Kutta-Verfahren die Stufen
@@ -330,14 +330,14 @@ und $Df(x(t_i))$ die Jacobi-Matrix von $f$ in $x(t_i)$ ist. Da wir uns nur auf d
     k_{i,1} &= f(x(t_i)), \\
     k_{i,2} &= f(x(t_i) + ha_{21}k_{1,i}), \\
     &\vdots\\
-    k_{i,m} &= f(x(t_i) + ha_{m1}k_{1,i} + \dots + ha_{m,m-1}k_{m-1,i}).\\
+    k_{i,m} &= f(x(t_i) + ha_{m1}k_{1,i} + \dots + ha_{m,m-1}k_{m-1,i}).
 \end{align*}
 Nun wenden wir ähnlich wie oben die Taylorentwicklung im Punkt $x(t_i)$ an und erhalten
 \begin{align*}
     k_{i,1} &= f(x(t_i)), \\
     k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))k_{1,i} + \mathcal{O}(h^2), \\
     &\vdots\\
-    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))k_{1,i} + \dots + ha_{m,m-1}Df(x(t_i))k_{m-1,i} + \mathcal{O}(h^2). \\
+    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))k_{1,i} + \dots + ha_{m,m-1}Df(x(t_i))k_{m-1,i} + \mathcal{O}(h^2).
 \end{align*}
 Im nächsten Schritt setzen wir die Stufen sukzessive ein und verwenden
 \[
@@ -348,7 +348,7 @@ Die resultierenden Stufen haben die Form
     k_{i,1} &= f(x(t_i)), \\
     k_{i,2} &= f(x(t_i)) + ha_{21}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2), \\
     &\vdots\\
-    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))f(x(t_i)) + \dots + ha_{m,m-1}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2). \\
+    k_{i,m} &= f(x(t_i)) + ha_{m1}Df(x(t_i))f(x(t_i)) + \dots + ha_{m,m-1}Df(x(t_i))f(x(t_i)) + \mathcal{O}(h^2).
 \end{align*}
 Einsetzen in \eqref{eq:kon_auto} ergibt
 \begin{align*}
@@ -382,10 +382,9 @@ $h$-Potenzen finden.
 $Beweis.$ ($p\leq m$ Behauptung) \cite[173-174]{ernsthairergerhardwannerSolvingOrdinaryDifferential}
 
 \subsubsection{Schrittweitensteuerung}
-Wir haben im letzten Abschnitt gesehen, unter welchen Bedingungen die Konvergenz der Runge-Kutta-Verfahren die exakte
-Lösung der gegebenen Differentialgleichung gewährleistet ist. Unser Ziel ist es nun die bisher konstante Schritteweite
-$h$ so zu wählen, dass der Rechenaufand zur Approximation der Lösung so gering wie möglich gehalten wird.
-Dazu gibt es im Grunde zwei Fälle:\\
+Wir haben im letzten Abschnitt gesehen, unter welchen Bedingungen die Konvergenz der Runge-Kutta-Verfahren
+gewährleistet ist. Unser Ziel ist es nun, die bisher konstante Schritteweite $h$ so zu wählen, dass der Rechenaufwand
+zur Approximation der Lösung so gering wie möglich gehalten wird. Dazu gibt es im Grunde zwei Fälle.\\
 Ist der lokale Disktretisierungsfehler größer als eine gegebene Toleranz, so sollten wir die Schrittweite verkleinern,
 um den Fehler zu verringern. Ein Beispiel hierfür wäre eine oszillierende Lösung, bei der eine zu große Schrittweite
 zu hohem lokalen Fehler führen würde, da das Einschrittverfahren Wendungspunkte überspringen würde.
@@ -403,7 +402,7 @@ und
 \]
 mit den Konsistenzordnungen $p$ und $p+1$ bestehen. Die Butcherschranken implizieren, dass die Anzahl
 der Stufen schneller steigt, als die Konsistenzordnung, weshalb es nur bis zu einem gewissen Grad sinnvoll ist, ein
-Runge-Kutta-Verfahren höherer Ordnung für $u^{(2)}$ zu verwenden. Deshalb beschränken wir uns auf Verfahren mit
+Runge-Kutta-Verfahren höherer Ordnung für $u_i^{(2)}$ zu verwenden. Deshalb beschränken wir uns auf Verfahren mit
 Konsistenzordnung $p+1$.
 Das Verfahren nennt man $eingebettet$, wenn die für $u_i^{(1)}$ berechneten Stufen bei der Berechnung von $u_i^{(2)}$
 wieder verwendet werden. Dabei werden Funktionsauswertungen gespart, was den Rechenaufwand und die Laufzeit reduziert.
@@ -450,7 +449,7 @@ $\Delta_p = \mathcal{O}(h_i^{p+1}) \approx ch_i^{p+1}$ für jede Schrittweite gi
     \approx \frac{\Delta_{p, \text{alt}}}{h_{\text{alt}}^{p+1}}\\
     \Rightarrow h_{\text{neu}} &\approx h_{\text{alt}} \sqrt[p+1]{\frac{\rho \epsilon}{\Delta_{p, \text{alt}}}}.
 \end{align*}
-Im anderen Fall ist der Fehler zu klein $\Delta_{p, \text{alt}} \approx 0$. Dann können wir die Schrittweite mit Hilfe
+Im anderen Fall ist der Fehler zu klein, also $\Delta_{p, \text{alt}} \approx 0$. Dann können wir die Schrittweite mit Hilfe
 einer Hochschaltungsbeschränkung anpassen. Dabei setzen wir $h_{\text{neu}} = \min(q h_{\text{alt}}, h_{\text{max}})$,
 wobei $h_{\text{max}}$ die maximale Schrittweite und $q>1$ der Hochschaltfaktor ist. Wird der Schritt akzeptiert, so
 setzen wir $u_{i+1} = u_{i+1}^{(2)}$ und führen die Approximation mit der neuen Schrittweite fort.\\
@@ -475,6 +474,7 @@ mit der kombinierten Butcher-Tabelle
 verwenden.
 
 \subsection{Mehrschrittverfahren}
+\label{subsec:multistep}
 Durch die Butcherschranken wissen wir, dass ab einer Konsistenzordnung $p$ eines Runge-Kutta-Verfahrens immer mehr
 Stufen ausgerechnet werden müssen, was wiederum eine erhöhte Anzahl an Funktionsauswertungen bedeutet. Dies wollen wir,
 wenn möglich, verhindern. Deshalb führen wir sogenannte \textit{Mehrschrittverfahren} ein, welche im Gegensatz zu
