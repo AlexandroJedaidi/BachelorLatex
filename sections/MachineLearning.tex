@@ -1,24 +1,24 @@
 \section{Neuronale Netze}
 \label{sec:neuralnet}
-In diesem Kapitel werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu lösen.
-Dabei gehen wir genauer auf neuronale Netze ein. Dieser Abschnitt bezieht sich hauptsächlich auf
+In diesem Kapitel werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu approximieren.
+Dabei gehen wir genauer auf neuronale Netze ein. Dieses Kapitel bezieht sich hauptsächlich auf
 \cite{ovidiucalinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
-Mehrschrittverfahren heutzutage extrem effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, gibt es dennoch
-Vorteile neuronale Netze zu benutzen. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen
+Mehrschrittverfahren heutzutage effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, ist es dennoch interessant,
+neuronale Netze zu betrachten. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen
 Differentialgleichung nur in einem bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von
 der Anfangszeit $t_0$ bis zur gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz
 repräsentiert jedoch die gesuchte Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen,
 was im Gegensatz zu den numerischen Verfahren viel Rechenarbeit spart. Neuronale Netze haben in Bezug auf das
 Approximieren mehrerer Differentialgleichungen noch einen ausschlaggebenden Vorteil für die Recheneffizienz, welchen
-wir in Abschnitt \ref{subsec:lsgpakete}betrachten werden.
+wir in Abschnitt \ref{subsec:lsgpakete} betrachten werden.
 
 \subsection{Struktur neuronaler Netze}
 \label{subsec:struktur-eines-neuronalen-netzes}
 Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei
-versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen wie in Abbildung
+versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen, wie in Abbildung
 \eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder
 \textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=1, \dots, L$,
-Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{l}$ geben an, in welcher Relation
+Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{(l)}$ geben an, in welcher Relation
 die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte
 der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
 \begin{figure}[htp]
@@ -39,7 +39,7 @@ der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten 
         (blau) und 2 Ausgabeneuronen (rot)}
     \label{neuralNetexample}
 \end{figure}
-Die Signale der Neuronen ab der ersten versteckten Schicht bilden sich aus der Summe aller vorherigen
+Die Signale der Neuronen ab der $l$-ten Schicht bilden sich aus der Summe aller vorherigen
 Signale mit entsprechender Gewichtung:
 \begin{align}
     s_j^{(l)} = \sum_{i=1}^{n^{(l)}} \omega_{ij}^{(l)} x_i^{(l-1)} - b_j^{(l)}. \label{eq:signal}
@@ -62,17 +62,18 @@ reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie
 benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
 
 \subsubsection{Forwardpropagation}
-{\em Forward propagation} wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
-Ausgaben der versteckten Schichten zu berechnen. Dabei wird für alle $l = 1, \dots, L$ zuerst \eqref{eq:signal}
-angewendet, um die jeweiligen Signale zu berechnen und im Anschluss nutzen wir \eqref{eq:activ}. Im letzten
-Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $j = 1 ,\dots, n^{(L)}$. Die Forwardpropagation ist
-eine Vorbereitung des zweiten Schrittes des Lernprozesses, der \textit{Backpropagation}.
+{\em Forwardpropagation} wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
+Ausgaben der versteckten Schichten zu berechnen. Dabei wird beginnend mit der ersten versteckten Schicht  $l = 1$
+zuerst \eqref{eq:signal}, um die jeweiligen Signale zu berechnen und im Anschluss \eqref{eq:activ} angewendet.
+Im letzten Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $j = 1 ,\dots, n^{(L)}$.
+Die Forwardpropagation ist eine Vorbereitung auf den zweiten Schritt des Lernprozesses, der \textit{Backpropagation}.
 
 \subsubsection{Backwardpropagation}
-Sei $\mathcal{C}(X)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe
-$\mathcal{C}(X)=Y:=(y_j)_j$, wobei $X$ die Gewichte aller Schichten inklusive Bias sind. Dabei ist $Y$
-offensichtlich abhängig von den Gewichten und den Bias. Der Gradient der Kostenfunktion hat für jede Schicht
-$l = 1, \dots, L$ die Form
+Sei $\mathcal{C}(X)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe \linebreak
+$\mathcal{C}(X)=Y:=(y_j)_j$, wobei $X$ die Gewichte aller Schichten inklusive Bias sind. Dabei ist $Y$ offensichtlich
+abhängig von den Gewichten und den Bias. Unser Ziel ist es $\mathcal{C}(X)$ zu minimieren, weshalb wir an dessen
+Steigung, also dem \textit{Gradienten} der Kostenfunktion, interessiert sind. Der Gradient der Kostenfunktion hat für
+jede Schicht $l = 1, \dots, L$ die Form
 \begin{align*}
     \nabla\mathcal{C}=
         \begin{bmatrix}
@@ -84,8 +85,8 @@ $l = 1, \dots, L$ die Form
         \end{bmatrix}.
 \end{align*}
 Der Gradient der Kostenfunktion $\mathcal{C}$ kann also in $\nabla_{\omega}\mathcal{C}$ und $\nabla_{b}\mathcal{C}$ aufgeteilt werden.
-Dabei ist $\nabla_{b}\mathcal{C}$ die erste Spalte. Das Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons in der
-$(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten Schicht unabhängig von jeglichen anderen Gewichten hinzu
+Dabei ist $\nabla_{b}\mathcal{C}$ die erste Spalte der obigen Matrix. Das Gewicht $\omega_{ij}^{(l)}$ fügt das Signal des Neurons
+in der $(l-1)$-ten Schicht zu dem Signal des Neuron der $l$-ten Schicht unabhängig von jeglichen anderen Gewichten hinzu.
 Also ergibt sich folgendes für den Gradienten der Kostenfunktion.
 \begin{satz}
     \label{machine-cost-grad}
@@ -114,7 +115,7 @@ wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
     = \frac{\partial C(\omega,b)}{\partial s_j^{(l)}}.
 \]
 \qedwhite\\
-Nun definieren wir $\delta_j^{(l)}=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Kostenfunktion im Bezug zum Signal
+Nun definieren wir $\delta_j^{(l)}:=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Kostenfunktion im Bezug zum Signal
 $s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausgerechne und
 somit folgt
 \begin{align*}
@@ -128,8 +129,8 @@ Hiermit kann der Gradient der Kostenfunktion vereinfacht werden zu
 \end{align*}
 Es fällt auf, dass für die Berechnung des Gradienten der Kostenfunktion nur die verschiedenen $\delta_j^{(l)}$ benötigt
 werden, da wir die $x_i^{(l-1)}$ schon in der Forwardpropagation berechnet haben. Diese $\delta_j^{(l)}$ werden mit dem
-sogenannten \textit{Backpropagation}-Algorithmus berechnet. Diesen werden wir im folgenden herleiten. Im Beweis
-von Satz \eqref{machine-cost-grad} haben wir gesehen, dass für $\delta_j^{(L)}$ gilt
+sogenannten \textit{Backpropagation}-Algorithmus berechnet, welchen wir im folgenden herleiten werden. Im Beweis
+von Satz \ref{machine-cost-grad} haben wir gesehen, dass für $\delta_j^{(L)}$ gilt
 \[
     \delta_j^{(L)}= \frac{\partial C}{\partial x_j^{(L)}} \frac{\partial x_j^{(L)}}{\partial s_j^{(L)}}= \frac{\partial C}{\partial x_j^{(L)}} \Psi '(s_j^{(L)})
     =\frac{\partial C}{\partial y_j} \Psi '(s_j^{(L)}).
@@ -189,15 +190,15 @@ Eine genauere Herleitung lässt sich in \cite[103-104]{ovidiucalinDeepLearningAr
 Dabei ist $\eta > 0$ die Lernrate und $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
 Voreinstellung der Parameter wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$)
 müssen jedoch schon Gewichte gegeben sein, um $g^{[k]}$ berechnen zu können. Dazu werden wir uns in
-Abschnitt \eqref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
+Abschnitt \ref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
 
 \subsubsection{Verschwindender und explodierender Gradient}
 Die Berechnung des Gradienten $\nabla C$ ist fehleranfällig, wobei zwei folgende Probleme auftreten können: \\
 $a)$ $\textbf{verschwindender Gradient}:$
 Das Problem des {\em verschwindenden} Gradienten charakterisiert sich durch immer kleiner werdende $\delta_j^{(l)}$, was wiederum
 direkt zu einem verschwindenden Gradienten, also $\nabla C \approx 0$, führt. \\
-Angenommen: Die Aktivierungsfunktion $\Psi$ ist gegeben durch die Sigmoidfunktion, d.h. $\Psi(x) =\frac{1}{1+e^{-x}}$ und
-die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}<1$ gilt.\\
+Angenommen: Die Aktivierungsfunktion $\Psi$ ist gegeben durch die Sigmoidfunktion, d.h. \linebreak
+$\Psi(x) =\frac{1}{1+e^{-x}}$ und die Gewichte sind zufällig initialisiert, wobei für alle $\omega_{ij}^{(l)}<1$ gilt.\\
 \begin{figure}
     \begin{center}
         \begin{tikzpicture}
@@ -231,11 +232,11 @@ $\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effe
 Gradientenverfahren sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen
 für einen verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren
 versteckten Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion $\Psi(x)=\max(0,x)$ mit
-der Ableitung $\Psi'(x)= \begin {cases} 0, &\text{x}\leq 0\\ 1, &\text{x}>0\end{cases}$, sind besser geeignet für tiefe neuronale
-Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
+der Ableitung $\Psi'(x)= \begin {cases} 0, &\text{x}\leq 0\\ 1, &\text{x}>0\end{cases}$ sind besser geeignet für tiefe
+neuronale Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
 verschwindet.\\
 $\textbf{Möglichkeit 2}:$ Eine geschicktere Initialisierung der Gewichte $\omega_{ij}^{(l)}$ wie in Abschnitt
-\ref{subsec:gewichtsinitialisierung}\\
+\ref{subsec:gewichtsinitialisierung}.\\
 $b)$ $\textbf{explodierender Gradient}:$
 Analog zum verschwindenden Gradienten existiert auch das Problem des \textit{explodierenden} Gradienten, in dem
 $\delta_j^{(l)}>1$ ist.\\
@@ -245,12 +246,13 @@ gilt. Bei linearer Regression werden die Signale $s_j^{(l)}$  beispielsweise fü
 \[
     x_j^{(l)}=\Psi(s_j^{(l)})=\Psi\left( \sum\limits_{i=1}^{n^{(l)}} \underbrace{\omega_{ij}^{(l)}x_{i}^{(l-1)}}_{>1} \right)
 \]
-gilt. Solange $\frac{\partial C}{\partial y_i} > 1$ gilt bei einer Aktivierungsfunktion mit $\Psi'(x)>1$ auch $\delta_j^{(L)}>1$,
+gilt. Solange $\frac{\partial C}{\partial y_i} > 1$ ist, gilt bei einer Aktivierungsfunktion mit $\Psi'(x)>1$ auch $\delta_j^{(L)}>1$,
 was zu einem explodierenden Gradienten $\nabla C$ führt. Falls $\Psi'(x)=1$ (wie beispielsweise für die ReLU-Funktion bei
 positiver Eingabe oder linearer Aktivierungsfunktion), so werden die Werte der $\delta_i^{(l)}$ zwar nicht direkt von der Ableitung
 der Aktivierungsfunktion beeinflusst, aber bei einem sehr tiefgehendem Netz ($L>50$) werden die Werte der $\delta_i$ trotzdem
-groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim verschwindenden Gradienten werden wir später eine geschickte
-Initialisierung der Gewichte herleiten, um diesem Problem entgegenzuwirken.
+groß, da $\omega_{ij}^{(l)}>1$ gilt. Ähnlich wie beim verschwindenden Gradienten werden wir in
+\ref{subsec:gewichtsinitialisierung} eine geschickte Initialisierung der Gewichte herleiten, um diesem Problem
+entgegenzuwirken.
 
 \subsubsection{Batch Training}
 Während des Lernprozesses eines neuronalen Netzes wird über die gesamten Eingangsdaten $X^{(0)}$ iteriert. Dabei nennt
@@ -266,9 +268,7 @@ der Proben in einem Batch mit Hilfe der Backpropagation berechnen und im Anschlu
 verwendet, wobei $|B|$ die Größe der Batches angibt und $X^{(0,i)}$, $1 \leq i \leq |B|$, eine Probe des Batches $B$ ist.
 Dieser Mittelwert wird dann durch das gegebene Gradientenverfahren verwendet, um die Gewichte $\omega_{ij}^{(l)}$ zu
 aktualisieren. Dabei spielt die Größe der Batches $|B|$ eine wichtige Rolle, denn wenn $|B|$ zu klein ist, so werden die
-Abschätzungen des Durchschnitts zu ungenau, was wiederum den Lernprozess verlangsamen würde. Da wir jeden Batch jedoch
-nur einmalig verwenden und anschließend neue zufällige Trainingsdaten erstellen, werden wir die Gesamtanzahl der
-Batches mit Epochen identifizieren. Also ist jeder Batch eine Epoche.
+Abschätzungen des Durchschnitts zu ungenau.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
@@ -294,7 +294,7 @@ wobei $p$ die Anzahl der physikalischen Parametern ist. Hierfür werden wir ein 
     \[
         x(t;x_0, \theta)
     \]
-    Lösungspaket der gewöhnlichen Differentialgleichung \eqref{g-func}, wobei $t \in [t_0,t_f]$, $x_0 \in X_0$ und
+    {\em Lösungspaket} der gewöhnlichen Differentialgleichung \eqref{g-func}, wobei $t \in [t_0,t_f]$, $x_0 \in X_0$ und
     $\theta \in \Theta$.
 \end{definition}
 Unser Ziel ist es diese Lösungspakete mit Hilfe neuronaler Netze zu approximieren. Wir definieren die Approximation der
@@ -321,30 +321,31 @@ Die Kostenfunktion ergibt sich dann durch
     \mathcal{C} = \frac{1}{|B|} \sum_{(t_i,x_{0i},\theta_i) \in B} \mu(t_i)
     \left\lVert G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i,\theta_i) \right\rVert_2^2,
 \end{align}
-wobei $\mu:[t_0,t_f] \rightarrow \mathbb{R}$ durch $b(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
+wobei $\mu:[t_0,t_f] \rightarrow \mathbb{R}$ durch $\mu(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
 bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
-$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der Kardinalität $|B|$, welche batch size genannt wird. Mit
+$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der Kardinalität $|B|$, welche \textit{batch size} genannt wird. Mit
 vorgegebenen Gebieten für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen
 Differentialgleichung) können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige
 Wahl aus einer Gleichverteilung der Mengen $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich
 Eingangsdaten zur Verfügung haben, kann der Begriff einer \textit{Epoche} nicht definiert werden. Stattdessen
 repräsentiert jeder Batch eine einzigartige Probe die für den Trainingsablauf genutzt wird, wobei eine steigende
-Anzahl der Proben eine bessere Approximation liefert. Das Problem des \textit{Overfittings} kann hierbei nicht
-auftreten, da es nicht zu viele relevante Variablen bzw. Trainingsdaten gibt. Der Korrekturfaktor $\mu(t_i)$ wird zur
-Beeinflussung des lokalen Fehlers
+Anzahl der Proben eine bessere Approximation liefert. Der Korrekturfaktor $\mu(t_i)$ wird zur Beeinflussung des lokalen
+Fehlers
 \begin{align*}
     \tau(t_i;x_{0i}, \theta_i)
     := G \left( \hat{x}(t_i;x_{0i}, \theta_i), \hat{x}^{\prime}(t_i;x_{0i}, \theta_i),t_i;\theta_i \right)
 \end{align*}
 eingeführt. Ähnlich wie in Satz \ref{one-step-error-bound} für Einschrittverfahren können wir auch hier einen
-Zusammenhang des lokalen und des globalen Fehlers des neuronalen Netzes zeigen. Dabei ist der globale Fehler des
-neuronalen Netzes gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist.
+Zusammenhang des lokalen und des globalen Fehlers des neuronalen Netzes zeigen, wobei hier die rechte Seite $f$ der
+gewöhnlichen Differentialgleichung \eqref{dgl-machinelearnung} Lipschitz-stetig im zweiten Argument ist. Der globale
+Fehler des neuronalen Netzes ist gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $x$ die Lösung von
+\eqref{dgl-machinelearnung} ist.
 \begin{satz}
     \label{ml-error}
-    Für \eqref{dgl-machinelearnung} ist der lokale Fehler $\tau$ gegeben durch
-    $\tau(t) = \hat{x}^{\prime}(t) - f(t,\hat{x})$. Es gilt
+    Für das Anfangswertproblem \eqref{dgl-machinelearnung} mit im zweiten Argument Lipschitz-stetiger rechten Seite $f$
+    ist der lokale Fehler $\tau$ gegeben durch $\tau(t) = \hat{x}^{\prime}(t) - f(t,\hat{x})$. Es gilt
     \[
-        \left\lVert e(t) \right\rVert_2 = \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0) - 1} \right),
+        \left\lVert e(t) \right\rVert_2 = \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
     \]
     wobei $\tau_{t_f} = \max\limits_{t_0 \leq t \leq t_f} \left\lVert \tau(t) \right\rVert_2$ und $L$ die
     Lipschitz-Konstante der rechten Seite $f$.
@@ -361,8 +362,11 @@ Einsetzen in den lokalen Fehler ergibt
 \end{alignat*}
 wobei $x$ die Lösung von \eqref{dgl-machinelearnung} ist , also $x^{\prime}=f(t,x(t))$. Des Weiteren ist $f$
 Lipschitz-stetig im zweiten Argument,
-das heißt es gilt $\left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert_2 \leq L \left\lVert e(t) \right\rVert_2$. Also kann
-man die Norm der rechten Seite obiger Gleichung schreiben als
+das heißt es gilt
+\[
+    \left\lVert f(t,x(t)+e(t)) - f(t,x(t)) \right\rVert_2 \leq L \left\lVert e(t) \right\rVert_2.
+\]
+Also kann man die Norm der rechten Seite obiger Gleichung schreiben als
 \begin{align*}
     \left\lVert \tau(t) + f(t,e(t) + x(t)) - x^{\prime}(t) \right\rVert_2
     &= \left\lVert \tau(t) + f(t,e(t) + x(t)) - f(t,x(t)) \right\rVert_2 \\
@@ -385,9 +389,9 @@ Daraus folgt
 \[
     \left\lVert e(t) \right\rVert_2 \leq \frac{\tau_{t_f}}{L} \left( e^{L(t-t_0)} - 1 \right),
 \]
-was sich mit der Abschätzung in Satz \eqref{one-step-error-bound} vergleichen lässt. \qedwhite\\
+was sich mit der Abschätzung in Satz \ref{one-step-error-bound} vergleichen lässt. \qedwhite\\
 Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
-kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $b$ zu nutzen, um den lokalen Fehler in
+kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $\mu$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
 
 \subsection{Intervall-Lernen}
@@ -396,19 +400,19 @@ Dieser Abschnitt beruht auf \cite{cedricflamantPersonlicheKommunikation2022}.
 Beim Approximieren von gewöhnlichen Differentialgleichungen mithilfe von Lösungspaketen ist es unser Ziel, die
 Kostenfunktion so gut wie möglich zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
 führen, dass das neuronale Netz das gegebene Anfangswertproblem nicht approximiert, wie in Satz \ref{ml-error} zu sehen
-ist. Genauer wird die Trajektorie der approximierten Funktion durch den Fehler in andere Bereiche des Phasenraums
-geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun ein anderes Anfangswertproblem approximiert
-wird. Eine mögliche Behebung dieses Problems ist das Prinzip des sogenannten \textit{Intervall}-\textit{Lernens}
-(eng. curriculum learning). Eine allgemeine Diskussion dieses Prinzips lässt sich in \cite{bengioCurriculumLearning2009}
-nachlesen. Für das Approximieren von gewöhnlichen Differentialgleichungen nutzen wir das Intervall-Lernen so, dass wir
-das Intervall der Zeiten $[t_0, t_f]$ begrenzen. Hierzu werden wir die Batches $B$ bearbeiten, also erhalten wir neue
-Batches $B^{\prime}$ mit
+ist. Genauer wird die Trajektorie (Definition siehe Kapitel \ref{verfahrensvergleich}) der approximierten Funktion durch
+den Fehler in andere Bereiche des Phasenraums geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun
+ein anderes Anfangswertproblem approximiert wird. Eine mögliche Behebung dieses Problems ist das Prinzip des
+sogenannten \textit{Intervall}-\textit{Lernens} (eng. curriculum learning). Eine allgemeine Diskussion dieses Prinzips
+lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Für das Approximieren von gewöhnlichen
+Differentialgleichungen nutzen wir das Intervall-Lernen so, dass wir das Intervall der Zeiten $[t_0, t_f]$ begrenzen.
+Hierzu werden wir die Batches $B$ anpassen, also erhalten wir neue Batches $B^{\prime}$ mit
 \[
     B^{\prime}:=  \{(t_i,x_{0i},\theta_i) \in [t_0,t_m] \times X_0 \times \Theta\},
 \]
 wobei $t_m<t_f$ und $m$ die Anzahl der bereits trainieren Batches ist. Wir lassen also das neuronale Netz zuerst mit
 einer kleinen Menge an Daten trainieren, um problematische Stellen, die zu einer Verschiebung der Trajektorien sorgen,
-zu vermeiden. Dabei wird ie Menge der Daten in Abhängigkeit der bereits trainierten Batches erhöht. In Kapitel
+zu vermeiden. Dabei wird die Menge der Daten in Abhängigkeit der bereits trainierten Batches erhöht. In Kapitel
 \ref{sec:verfahrensvergleich} werden wir
 \[
     t_m = \frac{t_f}{\ln(11)} \ln(10 \frac{m}{|B|} + 1), \qquad m = 1, \dots, |B|,
@@ -439,11 +443,11 @@ der Kostenfunktion ausgehend von der Backpropagation gleichzustellen. Also folgt
 \[
     Var(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}) = Var(\frac{\partial C}{\partial \omega_{ij}^{(l)}})
 \]
-mit Hilfe einiger stochastischer Umformungen und der Annahme, dass $\Psi(x)=x$, die Gleichung
+mit Hilfe einiger stochastischer Umformungen und der Annahme, dass die Aktivierungsfunktion $\Psi(x)=x$ ist, die Gleichung
 \[
     Var(\delta_j^{(l-1)}) = Var(\delta_j^{(l)}),
 \]
-wobei $\delta_j^{(l)}$ eine aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
+wobei $\delta_j^{(l)}$ die aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
 \[
     Var(\omega_{ij}) = \frac{1}{n^{(l)}}.
 \]
