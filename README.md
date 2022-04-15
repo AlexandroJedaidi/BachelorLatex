@@ -1,4 +1,4 @@
-# LatexTemplate
+# BachelorLatex
 
 ## What this is
 
