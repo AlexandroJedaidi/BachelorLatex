@@ -1,8 +1,8 @@
 \section{Numerische Auswertung}
 \label{sec:verfahrensvergleich}
 Wir werden nun die numerischen Verfahren zur Lösung von Anfangswertproblemen mit dem Verfahren der Lösungspakete
-vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy} 1.21.4, \textit{scipy} 1.7.2 für numerische
-Verfahren und \textit{tensorflow} 2.7.0 für die Architektur der neuronalen Netze verwendet. Das gegebene
+miteinander vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy}, \textit{scipy} für numerische
+Verfahren und \textit{tensorflow} für die Architektur der neuronalen Netze verwendet. Das gegebene
 Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahren} beziehungsweise einem BDF-Verfahren
 gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend mit
 verschiedenen Maßen verglichen. Dabei sind unter anderem die \textit{Trajektorien} der berechneten Lösungen gemeint.
@@ -21,15 +21,15 @@ Fehler für das gesamte Zeitintervall in Abhängigkeit der Epochen an. Dabei wen
 minimieren. Dabei sind sprunghafte Änderungen der Kostenfunktion und des Fehlers gemeint, die entstehen, sobald neue
 Zufallszahlen gewählt werden und das Netzwerk noch nicht angepasst wurde. Hierzu verwenden wir die Funktion
 \textit{pandas.DataFrame.mean} der Bibliothek \textit{pandas}. Die Dokumentation dieser Funktion findet sich in
-\cite{PandasDataFrameMean}. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek $scipy.integrate$, genauer
-die Funktion $scipy.integrate.RK45$ (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen wurden mit einem
-AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der Quellcode zur Lösung der folgenden
-Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich in dem
-beigelegtem Datenträger.
+\cite{PandasDataFrameMean}. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek \texttt{scipy.integrate},
+genauer die Funktion \texttt{scipy.integrate.RK45} (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen
+wurden mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der Quellcode zur Lösung
+der folgenden Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich
+auf dem beigelegtem Datenträger.
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
-Ein Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine gedämpfte Feder treffen kann.
+Das Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine gedämpfte Feder treffen kann.
 \begin{figure}
        \centering
        \includegraphics{rebound_pendulum_diagram}
@@ -37,13 +37,14 @@ Ein Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine ged
        \label{fig:rebound_pendulum_diagram}
 \end{figure}
 Ein Beispiel des beschriebenen Systems wird in Abbildung \ref{fig:rebound_pendulum_diagram} gezeigt. Das zugehörige
-Anfangsproblem 2. Ordnung hat die Form
+Anfangsproblem zweiter Ordnung hat die Form
 \begin{align*}
        \theta^{\prime \prime} &= - \frac{g}{l} \sin(\theta) + H(-\theta)
        \text{ReLU}(-\frac{kl}{m}\theta - c \theta^{\prime})\\
-       \theta(0) &= 1, \quad \theta^{\prime}(0)=0.2,
+       \theta(0) &= 1, \quad \theta^{\prime}(0)=0.2
 \end{align*}
-beziehungsweise mit der Einführung einer weiteren Variable $\varphi=\theta^{\prime}$ zu einem System erster Ordnung
+mit dem Auslenkungswinkel $\theta$,
+beziehungsweise mit der Einführung der Winkelgeschwindigkeit $\varphi=\theta^{\prime}$ zu einem System erster Ordnung
 \begin{align}
        \theta^{\prime} &= \varphi \nonumber \\
        \varphi^{\prime} &= - \frac{g}{l} \sin(\theta) + H(-\theta)
@@ -56,15 +57,16 @@ Hierbei ist $\text{ReLU}(x)= \max(x, 0)$,
        \begin{cases}
               0, &x<0 \\
               1, &x \geq 0
-       \end{cases},
+       \end{cases}
 \end{align*}
+die \textit{Heavside}-Funktion,
 $g$ die Erdbeschleunigung, $l$ die Länge des Pendels, $m$ die Masse des Pendels, $k$ die Federkonstante und $c$ der
 Dämpfungskoeffizient. Wir werden dieses System nun in dem Zeitraum $t \in [0, 10]$ lösen bzw. approximieren und die
-Resultate vergleichen. Für beide Verfahren werden zur Vereinfachung $g=1$ und $l=1$ gesetzt. Außerdem gilt für das
-Runge-Kutta-Verfahren $k=3$ und $c=1$. Für die Funktionen zur Berechnung der Lösungen mithilfe der Runge-Kutta-Verfahren
-werden die relative Toleranz $rtol=10^{-5}$ und die globale Toleranz $atol=10^{-7}$ gesetzt. Für den Vergleichswert,
-der durch eine weitere Berechnung der $scipy.integrate.RK45$-Funktion entsteht, setzen wir $rtol=atol=10^{-14}$, um
-kleinere Schrittweiten zuzulassen.
+Resultate vergleichen. Für beide Verfahren werden zur Vereinfachung $g=1$ und $l=1$ gesetzt. Außerdem wird für das
+Runge-Kutta-Verfahren $k=3$ und $c=1$ gewählt. Für die Funktionen zur Berechnung der Lösungen mithilfe der
+Runge-Kutta-Verfahren werden die relative Toleranz $rtol=10^{-5}$ und die globale Toleranz $atol=10^{-7}$ gesetzt. Für
+den Vergleichswert, der durch eine weitere Berechnung der $scipy.integrate.RK45$-Funktion entsteht, setzen wir
+$rtol=atol=10^{-14}$, um kleinere Schrittweiten zuzulassen.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -74,7 +76,7 @@ kleinere Schrittweiten zuzulassen.
               \hline
               Anzahl der Schichten & $L=10$ \\
               Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=128$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=128$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               \hline
               Hyperparameter und Initialisierungsintervalle & \\
@@ -87,7 +89,7 @@ kleinere Schrittweiten zuzulassen.
               \hline
               Gradientenverfahren & Adam \\
               Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
-              Batchsize & $|B|=10000$ \\
+              Batch Size & $|B|=10000$ \\
               Epochen & $100000$ \\
               Lernrate & $\eta= 0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
@@ -103,7 +105,7 @@ kleinere Schrittweiten zuzulassen.
 \label{rebound-pendulum-table}
 \end{table}
 In Tabelle \ref{rebound-pendulum-table} sind alle relevanten Daten für das Rebound-Pendel-Anfangswertproblem gegeben,
-wobei $\Phi(x)$ die Aktivierungsfunktion für die jeweiligen Schichten ist. Wie bereits erwähnt, haben wir keine exakte
+wobei $\Phi$ die Aktivierungsfunktion für die jeweiligen Schichten ist. Wie bereits erwähnt, haben wir keine exakte
 Lösung vorliegen, weshalb wir die berechneten Lösungen mit dem Runge-Kutta-Verfahren mit sehr kleinen Schrittweite
 vergleichen. In Abbildung \ref{fig:rebound-trajectories} sehen wir, dass sich die beiden Trajektorien einen ähnlichen
 Verlauf haben. Jedoch sind die Trajektorien des Runge-Kutta-Verfahrens viel näher an der Vergleichstrajektorie.
@@ -145,7 +147,7 @@ und sobald wir die relative und absolute Toleranz verringern, kann dieses Ergebn
 
 \subsection{Steife Differentialgleichung}
 \label{sec:steife-differentialgleichung}
-Die Anfangswertproblem
+Das Anfangswertproblem
 \begin{align}
        \label{stiff}
        x_{1}^{\prime} &= \frac{1}{2} ((\lambda_1 + \lambda_2)x_1 + (\lambda_1 - \lambda_2)x_2), \nonumber \\
@@ -169,8 +171,8 @@ zu
               c_1 - c_2
        \end{bmatrix}
 \end{align*}
-umformulieren. Dabei gilt $\lambda_1, \lambda_2 < 0$ und $c_1, c_2 \in \mathbb{R}$. A hat die Eigenwerte
-$\lambda_1(A) = \lambda_1$ und $\lambda_2(A) = \lambda_2$ und für $\lambda_1 = -100$ und $\lambda_2 = -1$ ist
+umformulieren. Dabei betrachten wir $\lambda_1, \lambda_2 < 0$ und $c_1, c_2 \in \mathbb{R}$. Die Matrix A hat die
+Eigenwerte $\lambda_1$ und $\lambda_2$ und für $\lambda_1 = -100$ und $\lambda_2 = -1$ ist
 das Anfangswertproblem \eqref{stiff} nach Definition \eqref{steife-dgl} $steif$. Da \eqref{stiff} eine lineare
 Differentialgleichung erster Ordnung ist, können wir die Lösung mithilfe \eqref{linear-ode-solution} angeben:
 \[
@@ -197,7 +199,7 @@ um das Anfangswertproblem zu lösen. Die numerische Lösung ist also gegeben mit
 \end{align*}
 Damit die exakte Lösung und die numerische Lösung das gleiche Grenzverhalten besitzen, muss $|1 + h\lambda_1|<1$ und
 $|1 + h\lambda_2|<1$ gelten. Hieraus resultieren Bedinungen für $h$, also eine Schrittweitenbeschränkung der Form
-$h<\frac{2}{|\lambda_1}$ und $h<\frac{2}{\lambda_2}$. Da $|\lambda_2| \ll |\lambda_1|$, bestimmt der erste Eigenwert
+$h<\frac{2}{|\lambda_1|}$ und $h<\frac{2}{|\lambda_2|}$. Da $|\lambda_2| \ll |\lambda_1|$, bestimmt der erste Eigenwert
 über die Beschränkung der Schrittweite, obwohl dieser in der exakten Lösung für größere Zeiten $t$ fast keinen Einfluss
 hat. Wir werden sehen, dass dieses Problem auch für Runge-Kutta-Verfahren auftreten, weshalb wir außerdem ein
 \textit{BDF-Verfahren}, also ein Mehrschrittverfahren, verwenden werden, um die Ergebnisse mit dem Verfahren der
@@ -216,7 +218,7 @@ zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
               \hline
               Anzahl der Schichten & $L=10$ \\
               Eingabeschicht & $n^{(0)}=5$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               \hline
               Hyperparameter und Initialisierungsintervalle & \\
@@ -234,7 +236,7 @@ zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
               Gradientenverfahren & Adam \\
 %              Gewichtsfunktion & $b(t)=e^{-0.5t}$ \\
               Gewichtsfunktion & $b(t)=1$ \\
-              Batchsize & $|B|=10000$ \\
+              Batch Size & $|B|=10000$ \\
               Epochen & $1000000$ \\
               Lernrate & $\eta= 0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
@@ -320,7 +322,7 @@ welche für alle folgenden neuronale Netze verwendet werden.
               \hline
               Gradientenverfahren & Adam \\
               Gewichtsfunktion & $b(t)=1$ \\
-              Batchsize & $|B|=10000$ \\
+              Batch Size & $|B|=10000$ \\
               Epochen & $100000$ \\
               Lernrate & $0.0001$ \\
               Gewichtsinitialisierung & Xavier-Initialisierung \\
@@ -343,7 +345,7 @@ Netzwerkstrukturen.
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=4$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=4$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
@@ -353,7 +355,7 @@ Netzwerkstrukturen.
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=8$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=8$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
@@ -363,7 +365,7 @@ Netzwerkstrukturen.
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=16$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 195 Batches/Sekunde \\
@@ -373,7 +375,7 @@ Netzwerkstrukturen.
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 180 Batches/Sekunde \\
@@ -383,7 +385,6 @@ Netzwerkstrukturen.
        \caption{Netzwerkstrukuren der ersten Variation.}
        \label{stiff-table-first}
 \end{table}
-!TODO:Bilder!
 In Abbildung \ref{fig:harmonic-neurons-variable-loss} und Abbildung \ref{fig:harmonic-neurons-variable-error} lässt
 sich leicht erkennen, dass das bei steigender Anzahl der Neuronen sowohl die Kostenfunktion als auch der globale Fehler
 das größte Minimum erreicht. Auch in der Abbildung der Trajektorien \ref{fig:harmonic-neurons-variable-trajectories}
@@ -426,9 +427,8 @@ Zeitpunkte für das Runge-Kutta-Verfahren um $4$ Größenordnungen kleiner ist.
        Lösungspakete und der exakten Lösung.}
        \label{fig:harmonic-neurons-variable-trajectories-in-time}
 \end{figure}
-
 Zuletzt werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen
-Schichten$n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabelle \ref{stiff-table-second}.
+Schichten $n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabelle \ref{stiff-table-second}.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -438,7 +438,7 @@ Schichten$n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabel
               \hline
               Anzahl der Schichten & $L=6$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 185 Batches/Sekunde \\
@@ -448,7 +448,7 @@ Schichten$n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabel
               \hline
               Anzahl der Schichten & $L=10$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 129 Batches/Sekunde \\
@@ -458,7 +458,7 @@ Schichten$n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabel
               \hline
               Anzahl der Schichten & $L=18$ \\
               Eingabeschicht & $n^{(0)}=4$ mit $\Phi(x)=\tanh(x)$ \\
-              versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
+              Versteckte Schichten & $n^{(l)}=32$, $l = 1, \dots, L-1$ mit $\Phi(x)=\tanh(x)$ \\
               Ausgabeschicht & $n^{(L)}=2$ mit $\Phi(x)=x$ \\
               Lernrate & $\eta=0.0001$ \\
               Trainingrate & 76 Batches/Sekunde \\

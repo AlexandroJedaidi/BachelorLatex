@@ -2,9 +2,9 @@
 \label{sec:neuralnet}
 In diesem Kapitel werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu approximieren.
 Dabei gehen wir genauer auf neuronale Netze ein. Dieses Kapitel bezieht sich hauptsächlich auf
-\cite{ovidiucalinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
+\cite{calinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
 Mehrschrittverfahren heutzutage effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, ist es dennoch interessant,
-neuronale Netze zu betrachten. Falls Beispielsweise die Interesse besteht, die Lösung einer gewöhnlichen
+neuronale Netze zu betrachten. Falls beispielsweise das Interesse besteht, die Lösung einer gewöhnlichen
 Differentialgleichung nur in einem bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von
 der Anfangszeit $t_0$ bis zur gewünschten Zeit $\hat{t}$ iteriert werden. Ein \textit{trainiertes} neuronales Netz
 repräsentiert jedoch die gesuchte Lösung und ist deshalb in der Lage eine Funktionsauswertung in $\hat{t}$ auszuführen,
@@ -14,11 +14,11 @@ wir in Abschnitt \ref{subsec:lsgpakete} betrachten werden.
 
 \subsection{Struktur neuronaler Netze}
 \label{subsec:struktur-eines-neuronalen-netzes}
-Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit $3$ Neuronen, zwei
-versteckte Schichten mit jeweils 3 Neuronen und eine Ausgangsschicht mit 2 Neuronen, wie in Abbildung
-\eqref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder
-\textit{bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=1, \dots, L$,
-Neuronen pro Schicht, wobei der bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{(l)}$ geben an, in welcher Relation
+Zur Übersicht beschränken wir uns zuerst auf ein neuronales Netz mit einer Eingangsschicht mit drei Neuronen, zwei
+versteckte Schichten mit jeweils drei Neuronen und eine Ausgangsschicht mit zwei Neuronen, wie in Abbildung
+\ref{neuralNetexample} dargestellt. Die gelben Neuronen repräsentieren hier jeweils ein \textit{on-Neuron}, oder
+\textit{Bias}, welches konstant $x_0^{(l)} = -1$ ist. Allgemein haben wir $L$ Schichten und $n^{(l)}$, $l=1, \dots, L$,
+Neuronen pro Schicht, wobei der Bias ausgeschlossen ist. Die Gewichte $\omega_{ij}^{(l)}$ geben an, in welcher Relation
 die Neuronen der vorherigen Schicht $l-1$ zu den Neuronen der nächsten Schicht $l$ stehen. Dabei werden die Gewichte
 der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten unterschieden.
 \begin{figure}[htp]
@@ -35,8 +35,8 @@ der Bias-Neuronen mit $b_j^{(l)}:= \omega_{0j}^{(l)}$ von den anderen Gewichten 
         \linklayers
         \outputlayer[count=2, title=Ausgabe-\\schicht, text=\y] \linklayers
     \end{neuralnetwork}
-    \caption{neuronales Netzwerk mit 3 Eingabeneuronen (grün), bias (gelb), zwei versteckte Schichten
-        (blau) und 2 Ausgabeneuronen (rot)}
+    \caption{Neuronales Netzwerk mit 3 Eingabeneuronen (grün), Bias (gelb), zwei versteckte Schichten
+        (blau) und 2 Ausgabeneuronen (rot).}
     \label{neuralNetexample}
 \end{figure}
 Die Signale der Neuronen ab der $l$-ten Schicht bilden sich aus der Summe aller vorherigen
@@ -69,9 +69,10 @@ Im letzten Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j
 Die Forwardpropagation ist eine Vorbereitung auf den zweiten Schritt des Lernprozesses, der \textit{Backpropagation}.
 
 \subsubsection{Backwardpropagation}
-Sei $\mathcal{C}(X)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe \linebreak
-$\mathcal{C}(X)=Y:=(y_j)_j$, wobei $X$ die Gewichte aller Schichten inklusive Bias sind. Dabei ist $Y$ offensichtlich
-abhängig von den Gewichten und den Bias. Unser Ziel ist es $\mathcal{C}(X)$ zu minimieren, weshalb wir an dessen
+Sei $\mathcal{C}(X)$ die oben genannte Kostenfunktion des neuronalen Netzwerks mit der Ausgabe
+$Y:=(y_j)_j$, wobei $X$ die Gewichte aller Schichten inklusive Bias sind. Dabei ist $Y$ offensichtlich
+abhängig von den Gewichten und den Bias. Die Kostenfunktion $\mathcal{C}$ nutzt die Ausgaben $Y$, weshalb sie deshalb
+auch abhängig von den Gewichten und den Bias ist. Unser Ziel ist es $\mathcal{C}(X)$ zu minimieren, weshalb wir an dessen
 Steigung, also dem \textit{Gradienten} der Kostenfunktion, interessiert sind. Der Gradient der Kostenfunktion hat für
 jede Schicht $l = 1, \dots, L$ die Form
 \begin{align*}
@@ -149,7 +150,7 @@ also folgt aus der oben hergeleiteten Formel
     \delta_i^{(l-1)}= \sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)} \frac{\partial s_j^{(l)}}{\partial s_i^{(l-1)}},
     \qquad i = 1, \dots, n^{(l-1)}. \label{eq:delta-1}
 \end{align}
-Der zweiten Teil der Summe können wir explizit ausrechnen:
+Den rechten Ausdruck in der Summe können wir explizit ausrechnen:
 \begin{align*}
     \frac{\partial s_i^{(l)}}{\partial s_i^{(l-1)}}
     &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{k=0}^{n^{(l-1)}}\omega_{kj}^{(l)}x_{k}^{(l-1)})\\
@@ -170,7 +171,7 @@ Ein allgemeines Gradientenverfahren mit der \textit{Lernrate} $\eta > 0$ hat die
     b_{ij}^{(l)[k+1]} &= b_{ij}^{(l)[k]} + \eta \delta_{j}^{(l)[k]}.
 \end{align*}
 Unser Fokus in Bezug auf Gradientenverfahren wird auf der \textit{ADAM} (engl. adaptive moment estimation) liegen. Sei
-$g^{[k]} := \nabla C(\omega)$ der Gradient der Kostenfunktion nach den Gewichten (inklusive bias) in der $k$-ten
+$g^{[k]} := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive Bias) in der $k$-ten
 Iteration. Dann ist das ADAM-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
 $v^{[0]}=0$
 \begin{align*}
@@ -186,8 +187,8 @@ gegeben durch
 \[
     \omega_{ij}^{[k+1]}= \omega_{ij}^{[k]} - \eta \frac{\hat{m}^{[k]}}{\sqrt{|\hat{v}^{[k]}|} + \epsilon}.
 \]
-Eine genauere Herleitung lässt sich in \cite[103-104]{ovidiucalinDeepLearningArchitectures} nachlesen.
-Dabei ist $\eta > 0$ die Lernrate und $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
+Eine detailierte Herleitung lässt sich in \cite[103-104]{ovidiucalinDeepLearningArchitectures} finden.
+Der Parameter $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
 Voreinstellung der Parameter wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$)
 müssen jedoch schon Gewichte gegeben sein, um $g^{[k]}$ berechnen zu können. Dazu werden wir uns in
 Abschnitt \ref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
@@ -272,7 +273,7 @@ Abschätzungen des Durchschnitts zu ungenau.
 
 \subsection{Prinzip der Lösungspakete}
 \label{subsec:lsgpakete}
-Wir werden uns in diesem Abschnitt an der wissenschaftliche Arbeit \cite{flamantSolvingDifferentialEquations2020}
+Wir werden uns in diesem Abschnitt an der wissenschaftlichen Arbeit \cite{flamantSolvingDifferentialEquations2020}
 orientieren. Unsere Problemstellung liefert im Allgemeinen keine beschriebene Datenmenge (engl. labeled data), mit der
 wir unser neuronales Netz trainieren können. Wir haben lediglich die gewöhnliche Differentialgleichung erster Ordnung
 \begin{align}
@@ -285,8 +286,8 @@ mit den Anfangsbedingungen $x(t_0)=x_0$ gegeben. Dabei definieren wir die Funkti
     &G:\mathbb{R}^n \times \mathbb{R}^n \times [t_0, t_f] \times \mathbb{R}^p \rightarrow \mathbb{R}^n \nonumber\\
     &G \left( x, x^{\prime}, t, \theta \right) = x^{\prime} - f(t, x, \theta),
 \end{align}
-wobei $p$ die Anzahl der physikalischen Parametern ist. Hierfür werden wir ein sogenanntes \textit{Lösungspaket}
-(engl. solution bundle) bilden, welches aus den Lösungen der Gleichung \eqref{g-func} besteht.
+wobei $p \in \mathbb{N}$ die Anzahl der physikalischen Parametern ist. Hierfür werden wir ein sogenanntes
+\textit{Lösungspaket} (engl. solution bundle) bilden, welches aus den Lösungen der Gleichung \eqref{g-func} besteht.
 \begin{definition}
     \label{sol-bundle}
     Seien die Teilmengen $X_0 \subset \mathbb{R}^n$, $\Theta \subset \mathbb{R}^p$ und $[t_0,t_f] \subset \mathbb{R}$
@@ -304,8 +305,8 @@ Lösung über $(X_0,\Theta)$ mit
     \hat{x}(t;x_0, \theta) = x_0 + a(t) N(t; x_0, \theta; \omega),
 \end{align}
 wobei $N:\mathbb{R}^{1+n+p} \rightarrow \mathbb{R}^n$ das neuronale Netz mit den Gewichten $\omega$ repräsentiert und
-$a:[t_0,t_f] \rightarrow \mathbb{R}$ hat die Eigenschaft $a(t_0)=0$. Hierdurch wird das Erfüllen der
-Anfangswertbedingungen in der Approximation \eqref{nn-approx} sichergestellt. Durch Tests in
+$a:[t_0,t_f] \rightarrow \mathbb{R}$ die Eigenschaft, dass $a(t_0)=0$ ist. Hierdurch wird das Erfüllen der
+Anfangswertbedingungen in der Approximation \eqref{nn-approx} sichergestellt. Durch numerische Experimente in
 \cite{flamantSolvingDifferentialEquations2020} wurde herausgefunden, dass $a$ der Form
 \[
     a(t) = 1 - e^{t_0-t}
@@ -321,9 +322,9 @@ Die Kostenfunktion ergibt sich dann durch
     \mathcal{C} = \frac{1}{|B|} \sum_{(t_i,x_{0i},\theta_i) \in B} \mu(t_i)
     \left\lVert G(\hat{x}(t_i;x_{0i},\theta_i), \hat{x}^{\prime}(t_i;x_{0i},\theta_i),t_i,\theta_i) \right\rVert_2^2,
 \end{align}
-wobei $\mu:[t_0,t_f] \rightarrow \mathbb{R}$ durch $\mu(t) = e^{\lambda (t_0 - t)}$ gegeben ist. Die Batches \textit{B}
-bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
-$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der Kardinalität $|B|$, welche \textit{batch size} genannt wird. Mit
+wobei $\mu:[t_0,t_f] \rightarrow \mathbb{R}$ durch $\mu(t) = e^{\lambda (t_0 - t)}$ gegeben ist, wobei $\lambda>0$. Die Batches
+\textit{B} bestehen aus Ansammlungen von 3-Tupel $(t_i,x_{0i},\theta_i)$, also
+$B=\{(t_i,x_{0i},\theta_i) \in [t_0,t_f] \times X_0 \times \Theta\}$ mit der Kardinalität $|B|$, welche \textit{Batch Size} genannt wird. Mit
 vorgegebenen Gebieten für $X_0$ und $\Theta$ durch die Problemstellung (bspw. physikalische Zusammenhänge der gegebenen
 Differentialgleichung) können die Eingabewerte bestimmt werden. Dafür genügt in den meisten Fällen eine zufällige
 Wahl aus einer Gleichverteilung der Mengen $X_0$ und $\Theta$. Da wir in unserer Anwendung theoretisch unendlich
@@ -381,8 +382,8 @@ abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfü
 wobei $0 \leq \left\lVert e(t) \right\rVert_2 \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
 Differentialgleichung erster Ordnung, dessen Lösung sich mit \eqref{linear-ode-solution} berechnen lässt
 \begin{align*}
-    E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f} ds \\
-    &= \tau_{t_f} e^{Lt} \int_{t_0}^{t}e^{-Ls} ds \\
+    E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f}\ ds \\
+    &= \tau_{t_f} e^{Lt} \int_{t_0}^{t}e^{-Ls}\ ds \\
     &= \frac{\tau_{t_f} }{L} \left( e^{L(t-t_0)} - 1 \right).
 \end{align*}
 Daraus folgt
@@ -391,14 +392,14 @@ Daraus folgt
 \]
 was sich mit der Abschätzung in Satz \ref{one-step-error-bound} vergleichen lässt. \qedwhite\\
 Hierdurch erkennt man, dass der globale Fehler durch einen frühen lokalen Fehler exponentiell mit der Zeit wachsen
-kann. Deshalb ist es sinnvoll, die exponentiell fallende Korrekturfunktion $\mu$ zu nutzen, um den lokalen Fehler in
+kann. Deshalb ist es sinnvoll, eine exponentiell fallende Korrekturfunktion $\mu$ zu nutzen, um den lokalen Fehler in
 frühen Zeitpunkten zu skalieren.
 
 \subsection{Intervall-Lernen}
 \label{subsec:curriculum-learning}
 Dieser Abschnitt beruht auf \cite{cedricflamantPersonlicheKommunikation2022}.
 Beim Approximieren von gewöhnlichen Differentialgleichungen mithilfe von Lösungspaketen ist es unser Ziel, die
-Kostenfunktion so gut wie möglich zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
+Kostenfunktion zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
 führen, dass das neuronale Netz das gegebene Anfangswertproblem nicht approximiert, wie in Satz \ref{ml-error} zu sehen
 ist. Genauer wird die Trajektorie (Definition siehe Kapitel \ref{verfahrensvergleich}) der approximierten Funktion durch
 den Fehler in andere Bereiche des Phasenraums geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun
@@ -415,7 +416,11 @@ einer kleinen Menge an Daten trainieren, um problematische Stellen, die zu einer
 zu vermeiden. Dabei wird die Menge der Daten in Abhängigkeit der bereits trainierten Batches erhöht. In Kapitel
 \ref{sec:verfahrensvergleich} werden wir
 \[
-    t_m = \frac{t_f}{\ln(11)} \ln(10 \frac{m}{|B|} + 1), \qquad m = 1, \dots, |B|,
+    t_m = \frac{t_f}{\ln(11)} \ln\left(10 \frac{m}{|B|} + 1 \right), \qquad m = 1, \dots, |B|,
+\]
+und
+\[
+    \lambda = \frac{4}{t_m + 5}
 \]
 zur Beschränkung des Zeitintervalls verwenden.
 
@@ -425,35 +430,36 @@ Die Gewichtsinitialisierung ist ein entscheidender Faktor um Probleme des explod
 entgegenzuwirken. In diesem Abschnitt werden wir ein Intervall bestimmen, welches dann zur Initialisierung der Gewichte
 $\omega_{ij}$ genutzt wird. Dazu werden wir die $(l-1)$-te und $l$-te Schicht eines neuronalen Netzes und die
 zugehörigen Gewichte $\omega_{ij}:=\omega_{ij}^{(l)}$ sowie $x_{i}^{(l-1)}$ als unabhängige, identisch verteilte
-Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die bias $b$
+Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die Bias $b$
 werden mit $0$ initialisiert. Genaueres zur Berechnung folgender Varianzen lässt sich in
 \cite[191-195]{ovidiucalinDeepLearningArchitectures} nachlesen. Für die Varianz der Ausgabe der $l$-ten Schicht
 $x_i^{(l)}$ ergibt sich
 \begin{align*}
-    Var(x_j^{(l)}) = n^{(l-1)} \Psi^{\prime}(0)^2 Var(\omega_{ij}) Var(x_i^{(l-1)}).
+    \mathrm{Var}(x_j^{(l)}) = n^{(l-1)} \Psi^{\prime}(0)^2 \mathrm{Var}(\omega_{ij}) \mathrm{Var}(x_i^{(l-1)}).
 \end{align*}
 Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also \\
-$Var(x_j^{(l)})=Var(x_j^{(l-1)})$, so ergibt sich für die Varianz der Gewichte
+$Var(x_j^{(l)})=\mathrm{Var}(x_j^{(l-1)})$, ergibt sich für die Varianz der Gewichte
 \[
-    Var(\omega_{ij}) = \frac{1}{n^{(l-1)}\Psi^{\prime}(0)^2}.
+        \mathrm{Var}(\omega_{ij}) = \frac{1}{n^{(l-1)}\Psi^{\prime}(0)^2}.
 \]
 Die gegebene Voraussetzung macht Sinn um die oben erwähnten Probleme des explodierenden bzw. verschwindenden Gradienten
 zu vermeiden. Genau wie bei der Varianz der Ausgaben $x_j^{(l-1)}$ und $x_j^{(l)}$ ist es auch vorteilhaft die Varianz
 der Kostenfunktion ausgehend von der Backpropagation gleichzustellen. Also folgt aus
 \[
-    Var(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}) = Var(\frac{\partial C}{\partial \omega_{ij}^{(l)}})
+    \mathrm{Var}\left(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}\right) = \mathrm{Var}\left(\frac{\partial C}{\partial \omega_{ij}^{(l)}}\right)
 \]
-mit Hilfe einiger stochastischer Umformungen und der Annahme, dass die Aktivierungsfunktion $\Psi(x)=x$ ist, die Gleichung
+mit Hilfe einiger Umformungen (vgl. \cite[191-195]{ovidiucalinDeepLearningArchitectures}) und der Annahme, dass die
+Aktivierungsfunktion $\Psi(x)=x$ ist, die Gleichung
 \[
-    Var(\delta_j^{(l-1)}) = Var(\delta_j^{(l)}),
+    \mathrm{Var}(\delta_j^{(l-1)}) = \mathrm{Var}(\delta_j^{(l)}),
 \]
 wobei $\delta_j^{(l)}$ die aus der Backpropagation resultierende Variable ist. Hiermit folgt für Varianz der Gewichte
 \[
-    Var(\omega_{ij}) = \frac{1}{n^{(l)}}.
+    \mathrm{Var}(\omega_{ij}) = \frac{1}{n^{(l)}}.
 \]
 Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{(l-1)} = n^{(l)}$, weshalb man sich für
 \[
-    Var(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
+    \mathrm{Var}(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
 \]
 einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit der
 Varianz der Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
@@ -462,13 +468,13 @@ Varianz der Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, a
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}} \right]
 \]
 für alle $i = 1, \dots, n^{(l-1)}$, $j=1,\dots,n^{(l)}$, $l=1,\dots,L$ Diese Verteilung heißt \textit{Xavier-} oder
-\textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Psi(x)=\tanh(x)$ kann eine Initialisierung mit d
-er Gleichverteilung
+\textit{Glorot-Initialisierung}. In Betracht der Aktivierungsfunktion $\Psi(x)=\tanh(x)$ kann eine Initialisierung mit der
+Gleichverteilung
 \[
     \omega_{ij} \sim
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}} \right]
 \]
-gefunden werden (vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential}).
+gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential}.
 
 %\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
 %\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
