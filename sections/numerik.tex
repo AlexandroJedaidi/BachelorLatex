@@ -24,7 +24,7 @@ integriert wird und nach dem Hauptsatz der Differential- und Integralrechung auf
 Das Integral kann nun mit einer bereits genannten Quadraturformel approximiert werden, welches je nach Wahl der
 Quadraturformel ein Einschrittverfahren bildet.
 \subsection{Einschrittverfahren}
-In diesem Abschnitt betrachten wir die Einschrittverfahren.
+Zuerst definieren wir ein Einschrittverfahren.
 \begin{definition}
     Sei $D=[t_0,t_0+\alpha]$ ein Zeitintervall und
     $D_h=\{t_i=t_0 + ih \text{ für } i=0, \dots,N\}$ eine Zerlegung von D mit der Schrittweite $h=\frac{a}{N}$.
@@ -97,7 +97,7 @@ $Beweis.$ Wir beweisen diesen Satz mittels Induktion nach $i$:
     &  &&\leq e^{\alpha_i} \left( \gamma_0 + \sum_{j=0}^{i-1}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i-1}}
     + \beta_i e^{\alpha_0 + \dots + \alpha_{i}}\\
     &  &&\leq \left( \gamma_0 +  \sum_{j=0}^{i}\beta_j \right) e^{\alpha_0 + \dots + \alpha_{i}}.
-\end{alignat*}\qedwhite\\
+\end{alignat*}\qedwhite
 \begin{satz}
     \label{one-step-error-bound}
     Sei das Einschrittverfahren \eqref{eq:6} und das Anfangswertproblem \eqref{first-order-num} gegeben. Ist  die
@@ -143,7 +143,7 @@ für alle $j=0, \dots, i-1$, also insbesondere
 für $j=i-1$.\qedwhite\\
 Der Satz besagt also, dass die Konsistenz des Einschrittverfahrens bereits die Konvergenz impliziert. Allgemein ist dies
 nicht der Fall, wie wir in Abschnitt \ref{subsec:multistep} sehen werden.
-
+\newpage
 \subsection{Runge-Kutta-Verfahren}
 Ein \textit{Runge-Kutta-Verfahren} ist ein Einschrittverfahren höherer Ordnung. Um ein Runge-Kutta-Verfahren herleiten
 zu können, müssen wir zuerst definieren, was eine Quadraturformel ist. Diese Definition orientiert sich hierbei an
@@ -153,7 +153,7 @@ zu können, müssen wir zuerst definieren, was eine Quadraturformel ist. Diese D
     \[
         \int\limits_a^b g(x)\ dx \approx Q_m(g) = (b-a)\sum_{l=1}^{m}\alpha_l g(s_l) \quad \text{ für alle } g \in C([a,b]),
     \]
-    wobei $\Delta = \{a=s_1, \dots, s_m=b\}$ eine Intervallunterteilung ist. Die Zahlen $s_1, \dots, s_m$ heißen {\em Stützstellen}
+    wobei $\Delta = \{a=s_1 < \dots < s_m=b\}$ eine Intervallunterteilung ist. Die Zahlen $s_1, \dots, s_m$ heißen {\em Stützstellen}
     und $\alpha_1, \dots, \alpha_m$ heißen {\em Gewichte} der Quadratur.\\
     Für eine {\em interpolatorische} Quadratur gilt zusätzlich
     \[
@@ -161,11 +161,12 @@ zu können, müssen wir zuerst definieren, was eine Quadraturformel ist. Diese D
         \quad t_j = \frac{s_j-a}{b-a}.
     \]
 \end{definition}
-In unserem Fall ist $(b-a)=t_{i+1}-t_i=h$, da wir das Integral $\int_{t_i}^{t_{i+1}} f(s,x(s))\ ds$ mit einer Quadratur
+In unserem Fall ist $b=t_{i+1}$ und $a=t_i$, da wir das Integral $\int_{t_i}^{t_{i+1}} f(s,x(s))\ ds$ mit einer Quadratur
 approximieren:
 \[
-    \int_{t_i}^{t_{i+1}} f(s,x(s))\ ds \approx h \sum_{l=1}^{m}\alpha_l f(s_l,x(s_l)).
+    \int_{t_i}^{t_{i+1}} f(s,x(s))\ ds \approx h \sum_{l=1}^{m}\alpha_l f(s_l,x(s_l)),
 \]
+mit $b-a = t_{i+1}-t_i=h$.
 Die Stützstellen sind also $s_1=t_i$, $s_l=t_i+c_{l} h$ für $l = 2,\dots, m$. Dazu approximieren wir
 $f(s_l,x(s_l))\approx k_{l,i}$ mit
 \begin{align}
@@ -238,7 +239,7 @@ Wir haben also die Koeffizienten
 \]
 Im Allgemeinen gilt für explizite Runge-Kutta-Verfahren, dass $a_{lj} = 0$ für $l \leq j$.\\
 \begin{bem}
-    Die Koeffizienten charakterisieren ein Runge-Kutta-Verfahren, weshalb sie für üblich in sogenannten
+    Die Koeffizienten charakterisieren ein Runge-Kutta-Verfahren, weshalb sie im Allgemeinen in sogenannten
     \textit{Butcher-Tabellen} zusammengefasst werden:
     \begin{center}
         \begin{tabular}{c | c}
@@ -248,7 +249,7 @@ Im Allgemeinen gilt für explizite Runge-Kutta-Verfahren, dass $a_{lj} = 0$ für
         \end{tabular}
     \end{center}
 \end{bem}
-Da Runge-Kutta-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Verfahren mit der Form
+Da Runge-Kutta-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-Kutta-Verfahren von der Form
 \begin{align*}
     k_{1,i} &= f(t_i+c_1h, u_i + h(a_{11}k_{1,i} + \dots + a_{1m} k_{m,i})) \\
     &\vdots\\
@@ -263,8 +264,8 @@ sich die Konsistenz(ordnung) der Runge-Kutta-Verfahren zu betrachten. Dabei spie
 große Rolle. Ziel ist es, die Koeffizienten so zu wählen, dass die Konsistenzordnung des Runge-Kutta-Verfahrens
 möglichst hoch ist. Dazu zeigen wir zuerst, dass unter bestimmten Voraussetzungen für die Koeffizienen ein explizites
 Runge-Kutta-Verfahren invariant gegenüber Autonomisierung sind. Das bedeutet, dass ein Runge-Kutta-Verfahren genau dann
-ein Anfangswertproblem \eqref{first-order-num} mit der Näherungslösung $u_i$ approximiert, wenn es das autonomisierte
-Anfangswertproblem
+ein Anfangswertproblem \eqref{first-order-num} mit der Näherungslösung $u_i$ approximiert, wenn es das
+autonomisierte Anfangswertproblem
 \begin{alignat}{3}
     \label{autonom-awp}
     z^{\prime} &= 1, \qquad &z(t_0) &= t_0, \\
@@ -274,7 +275,7 @@ mit der Näherungslösung $v_i := \left[ \begin{matrix}
                                            t_i\\
                                            u_i\\
 \end{matrix} \right]$
-approximiert wird.
+approximiert.
 \begin{satz}
     Gegeben sei ein explizites Runge-Kutta-Verfahren \eqref{exp-rk-def}. Dies ist genau dann invariant gegenüber
     Autonomisierung, wenn für die Koeffizienten gilt:
@@ -367,6 +368,7 @@ Konsistenzordnungen, wie beispielsweise für $p=2$:
 \]
 Allgemein lassen sich für höhere Konsistenzordnungen weitere Voraussetzung durch Taylorentwicklungen mit höheren
 $h$-Potenzen finden.
+\newline
 \begin{satz}[Butcherschranken]
     Für die maximale erreichbare Konsistenzordnung $p$ eines expliziten Runge-Kutta-Verfahrens mit $m$ Stufen gilt
     \[
@@ -408,7 +410,7 @@ der Stufen schneller steigt, als die Konsistenzordnung, weshalb es nur bis zu ei
 Runge-Kutta-Verfahren höherer Ordnung für $u_i^{(2)}$ zu verwenden. Deshalb beschränken wir uns auf Verfahren mit
 Konsistenzordnung $p+1$.
 Das Verfahren nennt man $eingebettet$, wenn die für $u_i^{(1)}$ berechneten Stufen bei der Berechnung von $u_i^{(2)}$
-wieder verwendet werden. Dabei werden Funktionsauswertungen gespart, was den Rechenaufwand und die Laufzeit reduziert.
+wiederverwendet werden. Dabei werden Funktionsauswertungen gespart, was den Rechenaufwand und die Laufzeit reduziert.
 Die dazugehörige Butcher-Tabelle wird dementsprechend zu einer $kombinierten$ Butcher-Tabelle erweitert
 \begin{center}
     \begin{tabular}{c | c}
@@ -456,8 +458,8 @@ Im anderen Fall ist der Fehler zu klein, also $\Delta_{p, \text{alt}} \approx 0$
 einer Hochschaltungsbeschränkung anpassen. Dabei setzen wir $h_{\text{neu}} = \min(q h_{\text{alt}}, h_{\text{max}})$,
 wobei $h_{\text{max}}$ die maximale Schrittweite und $q>1$ der Hochschaltfaktor ist. Wird der Schritt akzeptiert, so
 setzen wir $u_{i+1} = u_{i+1}^{(2)}$ und führen die Approximation mit der neuen Schrittweite fort.\\
-Wir werden in dieser Arbeit hauptsächlich das \textit{4-5-Runge-Kutta-Verfahren} (oder \textit{Dormand-Prince-Verfahren})
-mit der kombinierten Butcher-Tabelle
+Wir werden in dieser Arbeit hauptsächlich das \textit{4-5-Runge-Kutta-Verfahren}
+(auch \textit{Dormand-Prince-Verfahren} genannt) mit der kombinierten Butcher-Tabelle
 \begin{center}
     \begin{tabular}{c | c c c c c c c}
         0 & & & & & & & \\
@@ -857,4 +859,4 @@ mit
     \alpha_j = h \mathcal{L}^{\prime}_{i+j} (t_{i+k}), \quad j=0,\dots,k,
 \]
 welches ein implizites, lineares $k$-Schrittverfahren ist.
-
+\newpage

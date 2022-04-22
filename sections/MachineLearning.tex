@@ -117,7 +117,7 @@ wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
 \]
 \qedwhite\\
 Nun definieren wir $\delta_j^{(l)}:=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Kostenfunktion im Bezug zum Signal
-$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausgerechne und
+$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausgerechnen und
 somit folgt
 \begin{align*}
     \frac{\partial \mathcal{C}}{\partial \omega_{ij}^{(l)}} &= \delta_j^{(l)} x_i^{(l-1)}, \\
@@ -170,7 +170,7 @@ Ein allgemeines Gradientenverfahren mit der \textit{Lernrate} $\eta > 0$ hat die
     \omega_{ij}^{(l)[k+1]} &= \omega_{ij}^{(l)[k]} - \eta \delta_{j}^{(l)[k]} x_i^{(l-1)[k]}\\
     b_{ij}^{(l)[k+1]} &= b_{ij}^{(l)[k]} + \eta \delta_{j}^{(l)[k]}.
 \end{align*}
-Unser Fokus in Bezug auf Gradientenverfahren wird auf der \textit{ADAM} (engl. adaptive moment estimation) liegen. Sei
+Unser Fokus bezüglich der Gradientenverfahren wird auf der \textit{ADAM} (engl. adaptive moment estimation) liegen. Sei
 $g^{[k]} := \nabla C(\omega^{[k]})$ der Gradient der Kostenfunktion nach den Gewichten (inklusive Bias) in der $k$-ten
 Iteration. Dann ist das ADAM-Verfahren mit den Variablen $\beta_1,\beta_2 \in [0,1)$ und den Momenten $m^{[0]}=0$,
 $v^{[0]}=0$
@@ -233,9 +233,12 @@ $\textbf{Möglichkeit 1}:$ Man wählt eine andere Aktivierungsfunktion. Die Effe
 Gradientenverfahren sinkt rapide bei Funktionen mit Plateaus. Da die Sigmoidfunktion bei betragsmäßig großen Signalen
 für einen verschwindenden Gradienten $\nabla C$ sorgt (was zu Plateaus führt), ist sie für neuronale Netze mit mehreren
 versteckten Schichten nicht geeignet. Aktivierungsfunktionen, wie zum Beispiel die ReLU-Funktion $\Psi(x)=\max(0,x)$ mit
-der Ableitung $\Psi'(x)= \begin {cases} 0, &\text{x}\leq 0\\ 1, &\text{x}>0\end{cases}$ sind besser geeignet für tiefe
-neuronale Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben, sodass der Gradient $\nabla C$ nicht
-verschwindet.\\
+der Ableitung
+\[
+    \Psi'(x)= \begin {cases} 0, &\text{x}\leq 0\\ 1, &\text{x}>0\end{cases}
+\]
+sind besser geeignet für tiefe neuronale Netze, da dessen Ableitungen keine verkleinernde Wirkung auf $\delta_i$ haben,
+sodass der Gradient $\nabla C$ nicht verschwindet.\\
 $\textbf{Möglichkeit 2}:$ Eine geschicktere Initialisierung der Gewichte $\omega_{ij}^{(l)}$ wie in Abschnitt
 \ref{subsec:gewichtsinitialisierung}.\\
 $b)$ $\textbf{explodierender Gradient}:$
@@ -380,7 +383,7 @@ abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfü
     E^{\prime}(t) = \tau_{t_f} + L E(t),
 \]
 wobei $0 \leq \left\lVert e(t) \right\rVert_2 \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
-Differentialgleichung erster Ordnung, dessen Lösung sich mit \eqref{linear-ode-solution} berechnen lässt
+Differentialgleichung erster Ordnung vorliegen, deren Lösung sich mit \eqref{linear-ode-solution} berechnen lässt
 \begin{align*}
     E(t) &= e^{L(t-t_0)}E(t_0) + \int_{t_0}^{t}e^{L(t-s)}\tau_{t_f}\ ds \\
     &= \tau_{t_f} e^{Lt} \int_{t_0}^{t}e^{-Ls}\ ds \\
@@ -437,7 +440,7 @@ $x_i^{(l)}$ ergibt sich
 \begin{align*}
     \mathrm{Var}(x_j^{(l)}) = n^{(l-1)} \Psi^{\prime}(0)^2 \mathrm{Var}(\omega_{ij}) \mathrm{Var}(x_i^{(l-1)}).
 \end{align*}
-Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also \\
+Unter der Voraussetzung, dass die Varianz der beiden Schichten gleich bleibt, also \linebreak
 $Var(x_j^{(l)})=\mathrm{Var}(x_j^{(l-1)})$, ergibt sich für die Varianz der Gewichte
 \[
         \mathrm{Var}(\omega_{ij}) = \frac{1}{n^{(l-1)}\Psi^{\prime}(0)^2}.
@@ -457,7 +460,7 @@ wobei $\delta_j^{(l)}$ die aus der Backpropagation resultierende Variable ist. H
 \[
     \mathrm{Var}(\omega_{ij}) = \frac{1}{n^{(l)}}.
 \]
-Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{(l-1)} = n^{(l)}$, weshalb man sich für
+Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{(l-1)} = n^{(l)}$, weshalb man sich auf
 \[
     \mathrm{Var}(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
 \]
@@ -475,7 +478,7 @@ Gleichverteilung
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}} \right]
 \]
 gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential}.
-
+\newpage
 %\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
 %\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
 %Es ist möglich eine Wahrscheinlichkeitsverteilung der Anfangsbedingungen diese mit Hilfe sowohl eines

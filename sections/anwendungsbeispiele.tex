@@ -1,57 +1,56 @@
 \section{Numerische Auswertung}
 \label{sec:verfahrensvergleich}
-Wir werden nun die numerischen Verfahren zur Lösung von Anfangswertproblemen mit dem Verfahren der Lösungspakete
+Wir werden nun die numerischen Verfahren zur Lösung von Anfangswertproblemen mit dem Verfahren des maschinellen Lernens
 miteinander vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy}, \textit{scipy} für numerische
 Verfahren und \textit{tensorflow} für die Architektur der neuronalen Netze verwendet. Das gegebene
-Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahren} beziehungsweise einem BDF-Verfahren
-gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend mit
-verschiedenen Maßen verglichen. Dabei sind unter anderem die \textit{Trajektorien} der berechneten Lösungen gemeint.
+Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahrens} beziehungsweise des BDF-Verfahrens
+gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend anhand
+verschiedenen Maßen verglichen. Dabei werden unter anderem die \textit{Trajektorien} der berechneten Lösungen betrachtet.
 Eine Trajektorie ist hierbei das Bild $T(x_0):= \{x(t,x_0): t\in I_{\text{max}}\}$ der Lösung des Anfangswertproblems
 \eqref{first-order-num}, wobei $I_{\text{max}}$ das maximale Existenzintervall ist. Des Weiteren werden wir den globalen
 Fehler des numerischen Verfahrens $\left\lVert x(t_i) - u_i \right\rVert_2$ mit dem globalen Fehler der neuronalen Netze
-$\left\lVert \hat{x}(t) - x(t) \right\rVert_2$ in Abhängigkeit der Zeit $t_i=t_0 + ih$ und $t\in D$ vergleichen. Dabei
+$\left\lVert x(t_i) - \hat{x}(t_i) \right\rVert_2$ in Abhängigkeit der Zeit $t_i=t_0 + ih$ und vergleichen. Dabei
 ist zu beachten, dass eine exakte Lösung $x$ vorliegen muss. In dem Abschnitt \ref{subsec:rebound-Pendel} ist das
 analytische Berechnen der Lösung aufwendig, weshalb es nicht möglich ist, die globalen Fehler zu vergleichen. Deshalb
-werden wir ein Runge-Kutta-Verfahren mit sehr kleiner Schrittweite zum Vergleich verwenden, da Einschrittverfahren für
-$h \rightarrow 0$ konvergieren. Hierbei betrachten wir sowohl die Trajektorien, als auch den Graph der ersten Komponente
+werden wir ein Runge-Kutta-Verfahren mit sehr kleiner Schrittweite verwenden, um eine Referenzlösung zu berechnen.
+Hierbei betrachten wir sowohl die Trajektorien, als auch den Graph der ersten Komponente
 der berechneten Lösung in Abhängigkeit der Zeit.
 Zuletzt geben wir die Kostenfunktion der neuronalen Netze in Abhängigkeit der Epochen und, wenn möglich, den globalen
 Fehler für das gesamte Zeitintervall in Abhängigkeit der Epochen an. Dabei wenden wir den sogenannten
 \textit{gleitenden Mittelwert} an, um die Oszillation der beiden Graphen durch die Varianzen der Batches, zu
-minimieren. Dabei sind sprunghafte Änderungen der Kostenfunktion und des Fehlers gemeint, die entstehen, sobald neue
+minimieren. Hierbei sind sprunghafte Änderungen der Kostenfunktion und des Fehlers gemeint, die entstehen, sobald neue
 Zufallszahlen gewählt werden und das Netzwerk noch nicht angepasst wurde. Hierzu verwenden wir die Funktion
-\textit{pandas.DataFrame.mean} der Bibliothek \textit{pandas}. Die Dokumentation dieser Funktion findet sich in
-\cite{PandasDataFrameMean}. Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek \texttt{scipy.integrate},
-genauer die Funktion \texttt{scipy.integrate.RK45} (Dokumentation siehe \cite{ScipyIntegrateRK45}). Die Berechnungen
-wurden mit einem AMD Ryzen 7 5800X CPU, 32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der Quellcode zur Lösung
-der folgenden Anfangswertproblemen mit numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich
-auf dem beigelegtem Datenträger.
+\textit{pandas.DataFrame.mean} der Bibliothek \textit{pandas}, für die Dokumentation siehe \cite{PandasDataFrameMean}.
+Für das 4-5-Runge-Kutta-Verfahren verwenden wir die Bibliothek \texttt{scipy.integrate}, genauer die Funktion
+\texttt{scipy.integrate.RK45},  siehe \cite{ScipyIntegrateRK45}. Die Berechnungen wurden mit einem AMD Ryzen 7 5800X CPU,
+32GB RAM und einer NVIDIA RTX 3060 Ti GPU durchgeführt. Der Quellcode zur Lösung der folgenden Anfangswertproblemen mit
+numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich auf dem beigelegtem Datenträger.
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
-Das Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine gedämpfte Feder treffen kann.
+Das Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine gedämpfte Feder treffen kann, siehe
+\ref{fig:rebound_pendulum_diagram}.
 \begin{figure}
        \centering
        \includegraphics{rebound_pendulum_diagram}
        \caption{Diagramm eines Rebound Pendels\cite[6]{flamantSolvingDifferentialEquations2020}}
        \label{fig:rebound_pendulum_diagram}
 \end{figure}
-Ein Beispiel des beschriebenen Systems wird in Abbildung \ref{fig:rebound_pendulum_diagram} gezeigt. Das zugehörige
-Anfangsproblem zweiter Ordnung hat die Form
+Das zugehörige Anfangsproblem zweiter Ordnung hat die Form
 \begin{align*}
        \theta^{\prime \prime} &= - \frac{g}{l} \sin(\theta) + H(-\theta)
        \text{ReLU}(-\frac{kl}{m}\theta - c \theta^{\prime})\\
        \theta(0) &= 1, \quad \theta^{\prime}(0)=0.2
 \end{align*}
-mit dem Auslenkungswinkel $\theta$,
-beziehungsweise mit der Einführung der Winkelgeschwindigkeit $\varphi=\theta^{\prime}$ zu einem System erster Ordnung
+mit dem Auslenkungswinkel $\theta$. Mit der Einführung der Winkelgeschwindigkeit $\varphi=\theta^{\prime}$ kann dieses
+Problem zu einem System erster Ordnung
 \begin{align}
-       \theta^{\prime} &= \varphi \nonumber \\
+       \theta^{\prime} &= \varphi, \nonumber \\
        \varphi^{\prime} &= - \frac{g}{l} \sin(\theta) + H(-\theta)
-       \text{ReLU}(-\frac{kl}{m}\theta - c \varphi) \label{rebound-pendulum}\\
-       \theta(0) &= 1, \quad \varphi(0)=0.2. \nonumber
+       \text{ReLU}(-\frac{kl}{m}\theta - c \varphi), \label{rebound-pendulum}\\
+       \theta(0) &= 1, \quad \varphi(0)=0.2 \nonumber
 \end{align}
-Hierbei ist $\text{ReLU}(x)= \max(x, 0)$,
+umgeschrieben werden. Hierbei ist $\text{ReLU}(x)= \max(x, 0)$,
 \begin{align*}
        H(x) =
        \begin{cases}
@@ -64,9 +63,8 @@ $g$ die Erdbeschleunigung, $l$ die Länge des Pendels, $m$ die Masse des Pendels
 Dämpfungskoeffizient. Wir werden dieses System nun in dem Zeitraum $t \in [0, 10]$ lösen bzw. approximieren und die
 Resultate vergleichen. Für beide Verfahren werden zur Vereinfachung $g=1$ und $l=1$ gesetzt. Außerdem wird für das
 Runge-Kutta-Verfahren $k=3$ und $c=1$ gewählt. Für die Funktionen zur Berechnung der Lösungen mithilfe der
-Runge-Kutta-Verfahren werden die relative Toleranz $rtol=10^{-5}$ und die globale Toleranz $atol=10^{-7}$ gesetzt. Für
-den Vergleichswert, der durch eine weitere Berechnung der $scipy.integrate.RK45$-Funktion entsteht, setzen wir
-$rtol=atol=10^{-14}$, um kleinere Schrittweiten zuzulassen.
+Runge-Kutta-Verfahren werden die relative Toleranz $rtol=10^{-5}$ und die absolute Toleranz $atol=10^{-7}$ gesetzt.
+Die Referenzlösung wird mit Hilfe $scipy.integrate.RK45$-Funktion mit $rtol=atol=10^{-14}$ berechnet.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -105,39 +103,34 @@ $rtol=atol=10^{-14}$, um kleinere Schrittweiten zuzulassen.
 \label{rebound-pendulum-table}
 \end{table}
 In Tabelle \ref{rebound-pendulum-table} sind alle relevanten Daten für das Rebound-Pendel-Anfangswertproblem gegeben,
-wobei $\Phi$ die Aktivierungsfunktion für die jeweiligen Schichten ist. Wie bereits erwähnt, haben wir keine exakte
-Lösung vorliegen, weshalb wir die berechneten Lösungen mit dem Runge-Kutta-Verfahren mit sehr kleinen Schrittweite
-vergleichen. In Abbildung \ref{fig:rebound-trajectories} sehen wir, dass sich die beiden Trajektorien einen ähnlichen
+wobei $\Phi$ die Aktivierungsfunktion für die jeweiligen Schichten des neuronalen Netzes ist. Wie bereits erwähnt, haben
+wir keine exakte Lösung vorliegen, weshalb wir die berechneten Lösungen mit der Referenzlösung vergleichen.
+In Abbildung \ref{fig:rebound-trajectories} sehen wir, dass sich die beiden Trajektorien einen ähnlichen
 Verlauf haben. Jedoch sind die Trajektorien des Runge-Kutta-Verfahrens viel näher an der Vergleichstrajektorie.
-Ähnliches lässt sich in Abbildung \ref{fig:rebound-trajectories-in-time} beobachten, wo beide Verfahren einen ähnlichen
-Verlauf haben, aber das Runge-Kutta-Verfahren näher an dem Vergleichsgraphen als die Approximation des neuronalen Netzes
-ist. In Abbildung \ref{fig:rebound-loss} befindet sich die Entwicklung der Kostenfunktion bei steigenden Epochen. Man
-kann beobachten, dass die Werte der Kostenfunktion bei hohen Epchen wieder steigt. Dies zeigt, dass eine Erhöhung der
-Epochen ohne Anpassung anderer Hyperparameter, wie beispielsweise der Lernrate, nicht zielführend für eine Verbesserung
-der Approximation sein kann. Zusammenfassend erkennen wir, dass das Runge-Kutta-Verfahren ein besseres Ergebnis liefert
-und sobald wir die relative und absolute Toleranz verringern, kann dieses Ergebnis noch verbessert werden.
-
+Ähnliches lässt sich in Abbildung \ref{fig:rebound-trajectories-in-time} beobachten, dass sowohl die Trajektorie des
+des maschinellen Lernens als auch die Trajektorie des Runge-Kutta-Verfahrens einen ähnlichen Verlauf wie die
+Referenzlösung haben. Es fällt aber auf, dass das Runge-Kutta-Verfahren näher an der Trajektorie der Referenzlösung ist,
+als die Approximation des neuronalen Netzes. In Abbildung \ref{fig:rebound-loss} befindet sich die Entwicklung der
+Kostenfunktion bei steigenden Epochen. Man kann beobachten, dass die Werte der Kostenfunktion bei hohen Epochen wieder
+steigt. Dies zeigt, dass eine Erhöhung der Epochen ohne Anpassung anderer Hyperparameter, wie beispielsweise der
+Lernrate, nicht zielführend für eine Verbesserung der Approximation sein kann. Zuletzt zeigt die Rechenzeit des
+Runge-Kutta-Verfahrens von $0.22$ Sekunden, sowie die Rechenzeit der Referenzlösung von $0.18$ Sekunden, dass im
+Vergleich zu der Trainingszeit des neuronalen Netzes von $3.1$ Stunden um ein Vielfaches kleiner ist. Zusammenfassend
+erkennen wir, dass das Runge-Kutta-Verfahren im Vergleich zu dem neuronalen Netz ein besseres Ergebnis mit viel
+kleineren Rechenzeiten liefert und sobald wir die relative und absolute Toleranz verringern, kann dieses Ergebnis noch
+optimiert werden.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_}
        \caption{Trajektorie der verschiedenen Lösungen.}
        \label{fig:rebound-trajectories}
 \end{figure}
-
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumtrajectories_in_time_}
        \caption{$(t, \theta(t))$ Graph der berechneten Lösungen.}
        \label{fig:rebound-trajectories-in-time}
 \end{figure}
-
-%\begin{figure}
-%       \centering
-%       \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumlocal_error_}
-%       \caption{Graph des Residuumfehlers beider Verfahren.}
-%       \label{fig:rebound-residuum}
-%\end{figure}
-
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Rebound_plots/reboundpendulumavr_loss}
@@ -173,7 +166,7 @@ zu
 \end{align*}
 umformulieren. Dabei betrachten wir $\lambda_1, \lambda_2 < 0$ und $c_1, c_2 \in \mathbb{R}$. Die Matrix A hat die
 Eigenwerte $\lambda_1$ und $\lambda_2$ und für $\lambda_1 = -100$ und $\lambda_2 = -1$ ist
-das Anfangswertproblem \eqref{stiff} nach Definition \eqref{steife-dgl} $steif$. Da \eqref{stiff} eine lineare
+das Anfangswertproblem \ref{stiff} nach Definition \eqref{steife-dgl} $steif$. Da \eqref{stiff} eine lineare
 Differentialgleichung erster Ordnung ist, können wir die Lösung mithilfe \eqref{linear-ode-solution} angeben:
 \[
        x(t) =
@@ -183,13 +176,12 @@ Differentialgleichung erster Ordnung ist, können wir die Lösung mithilfe \eqre
        \end{bmatrix}.
 \]
 Der erste Eigenwert $\lambda_1$ lässt den ersten Summand der Lösung viel schneller gegen $0$ konvergieren für
-$t \rightarrow \infty$, als der zweite Eigenwert $\lambda_2$. Verwenden wir nun das explizite Euler-Verfahren mit der
-Form
+$t \rightarrow \infty$, als der zweite Eigenwert $\lambda_2$. Wir verwenden nun das explizite Euler-Verfahren der Form
 \begin{align*}
        u_0 &= x_0 \\
        u_i &= u_{i-1} + hAu_{i-1}= \dots = (I + hA)^{i}u_0, \qquad i=1,\dots,N
 \end{align*}
-um das Anfangswertproblem zu lösen. Die numerische Lösung ist also gegeben mit
+um das Anfangswertproblem zu lösen. Die numerische Lösung ist also gegeben durch
 \begin{align*}
        u_{i}=
        \begin{bmatrix}
@@ -201,14 +193,14 @@ Damit die exakte Lösung und die numerische Lösung das gleiche Grenzverhalten b
 $|1 + h\lambda_2|<1$ gelten. Hieraus resultieren Bedinungen für $h$, also eine Schrittweitenbeschränkung der Form
 $h<\frac{2}{|\lambda_1|}$ und $h<\frac{2}{|\lambda_2|}$. Da $|\lambda_2| \ll |\lambda_1|$, bestimmt der erste Eigenwert
 über die Beschränkung der Schrittweite, obwohl dieser in der exakten Lösung für größere Zeiten $t$ fast keinen Einfluss
-hat. Wir werden sehen, dass dieses Problem auch für Runge-Kutta-Verfahren auftreten, weshalb wir außerdem ein
+hat. Wir werden sehen, dass dieses Problem auch im Runge-Kutta-Verfahren auftreten wird, weshalb wir außerdem ein
 \textit{BDF-Verfahren}, also ein Mehrschrittverfahren, verwenden werden, um die Ergebnisse mit dem Verfahren der
 Lösungspakete vergleich zu können. Für alle Verfahren setzen wir $c_1=3$, $c_2=4$, $\lambda_1 = -100$ und $\lambda_2=-1$.
-Für die Implementierung des BDF-Verfahrens wird die Funktion $scipy.integrate.BDF$ (Dokumentation siehe
-\cite{ScipyIntegrateBDF}) verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$ und die
-absolute Toleranz $atol=10^{-7}$ um die steiffe Eigenschaft des gegebenen Anfangswertproblems \eqref{stiff} beobachten
+Für die Implementierung des BDF-Verfahrens wird die Funktion \texttt{scipy.integrate.BDF}, siehe
+\cite{ScipyIntegrateBDF}, verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$ und die
+absolute Toleranz $atol=10^{-7}$, um die steiffe Eigenschaft des gegebenen Anfangswertproblems \eqref{stiff} beobachten
 zu können. Ähnlich wie in Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten
-zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
+zu dem verwendeten neuronalen Netz für \eqref{stiff} gegeben.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -252,12 +244,23 @@ zu dem verwendeten neuronalen Netz \eqref{stiff} gegeben.
        \label{stiff-table}
 \end{table}
 In Abbildung \ref{fig:stiff-trajectories} können wir den Verlauf der Trajektorie mit dem Anfangspunkt
-$x_0=x(0)=(7,-1)^{\intercal}$ für die erwähnten Verfahren betrachten. Wie bereits besprochen beschränkt der betragsmäßig große
+$x(0)=(7,-1)^{\intercal}$ für die erwähnten Verfahren betrachten. Wie bereits besprochen beschränkt der betragsmäßig große
 Eigenwert $\lambda_1=-100$ die Schrittweite $h$, was zu einer ungenauen Lösung des Runge-Kutta-Verfahren führt. Die
 Approximation des neuronalen Netzes jedoch lässt sich mit der Lösung des BDF-Verfahrens vergleichen, da es für ein
-gewissen Zeitintervall sogar einen niedrigeren globalen Fehler hat als die Lösung des BDF-Verfahrens.
-Dieses Verhalten lässt sich auch in der Abbildung des Fehlers in Abhängigkeit der Zeit \ref{fig:stiff-error-in-time}
-wiederfinden.
+gewissen Zeitintervall sogar einen niedrigeren globalen Fehler hat als die Lösung des BDF-Verfahrens, siehe
+\ref{fig:stiff-error-in-time}. Es fällt auf, dass während in Abbildung \ref{fig:stiff-trajectories} der Fehler für das
+Runge-Kutta-Verfahren viel größer als der Fehler des BDF-Verfahrens scheint, so ist der Fehler der beiden Verfahren in
+Abbildung \ref{fig:stiff-error-in-time} vergleichbar. Das liegt daran, dass die Abbildung der Trajektorien fehlleitend
+ist, da wir nicht erkennen können, zu welchem Zeitpunkt die Koordinaten der Trajektorien gehören. Mit der exakten Lösung
+\[
+       x(t) = \begin{bmatrix*} 3 e^{-100 t} + 4 e^{- t} \\
+              3 e^{-100 t} - 4 e^{-t} \end{bmatrix*}
+\]
+können wir sehen, dass die Trajektorien beispielsweise bei einem Zeitpunkt $t=5 \in [0, 10]$ die Koordinaten
+$(0.027, -0.027)$ hat. Also befinden wir nach dem halben Zeitintervall in der Nähe vom Ursprung $(0,0)$. Deshalb müssen
+wir in Abbildung \ref{fig:stiff-error-in-time} den Fehler in Abhängigkeit der Zeit für $t<5$ betrachten, um die
+Verhalten der Trajektorien in Abbildung \ref{fig:stiff-trajectories} wiederzufinden. Dabei sehen wir in beiden
+Abbildungen, dass das neuronale Netz das beste ergebnis liefert.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Stiff_plots/stifftrajectories_}
@@ -272,8 +275,8 @@ wiederfinden.
 \end{figure}
 Der oszillierende Fehler des Runge-Kutta-Verfahrens stimmt mit dem Verhalten der Trajektorie überein. Des Weiteren fällt
 auf, dass der Fehler des neuronalen Netzes über die Zeit nahezu konstant bleibt, während der Fehler der anderen
-Verfahren im Laufe der Zeit sinkt. Zudem sehen wir in \ref{fig:stiff-error} und \ref{fig:stiff-loss} den Verlauf des
-globalen Fehlers und der Kostenfunktion für steigende Epochen.
+Verfahren im Laufe der Zeit sinkt. Zudem sehen wir in Abbildungen \ref{fig:stiff-error} und \ref{fig:stiff-loss} den
+Verlauf des globalen Fehlers und der Kostenfunktion für steigende Epochen.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{Stiff_plots/stiffML_error_}
@@ -286,26 +289,26 @@ globalen Fehlers und der Kostenfunktion für steigende Epochen.
        \caption{Kostenfunktion für steigende Epochen.}
        \label{fig:stiff-loss}
 \end{figure}
-Sowohl der globale Fehler als auch die Kostenfunktion sinken wie erwartet bei steigender Epchenzahl, jedoch wird die
+Sowohl der globale Fehler als auch die Kostenfunktion sinken wie erwartet bei steigender Epochenzahl, jedoch wird die
 Steigung beider Graphen betragsmäßig kleiner. Um eine genauere Approximation zu erhalten, müssten wir die Anzahl der
-Epochen erhöhen, wobei dies zu einer Laufzeit von über $\approx 2.2$ Stunden führen würde. Das BDF-Verfahren hat
-trotz einer Beschränkung der globalen und relativen Toleranz das Anfangswertproblem in $0.039$ Sekunden mit akzeptablen
-Fehler gelöst. Deshalb können wir zusammenfassend sagen, dass das BDF-Verfahren allgemein qualifizierter ist zur Lösung
-von steifen Anfangswertproblemen.
+Epochen erhöhen, wobei dies zu einer Laufzeit von $2.2$ Stunden übersteigt. Das BDF-Verfahren hat trotz einer
+Beschränkung der absoluten und relativen Toleranz das Anfangswertproblem in $0.039$ Sekunden mit akzeptablen
+Fehler gelöst. Deshalb können wir zusammenfassend sagen, dass das BDF-Verfahren allgemein besser zur Lösung
+von steifen Anfangswertproblemen geeignet ist.
 
 \subsection{Harmonischer Oszillator}
 \label{sec:harmonischer-oszillator}
 Zuletzt werden wir die Lösung für den harmonischen Oszillator mit verschiedenen Netzwerkstrukturen approximieren und
 die Ergebnisse untereinander und mit dem 4-5-Runge-Kutta-Verfahren vergleichen. Die Bewegung eines harmonischen
-Oszillators ist gegeben mit
+Oszillators ist gegeben durch
 \begin{align}
        \label{harmonic-oscillator}
        &x^{\prime}=v, \qquad v^{\prime}=-\frac{k}{m}x, \\
        &x(0)=0, \quad v(0)=0, \nonumber
 \end{align}
 wobei zur Vereinfachung $m=1$ gesetzt wird. Außerdem gilt für das Runge-Kutta-Verfahren $k=1$, für relative Toleranz
-$rtol = 10^{-10}$ und die globale Toleranz $atol = 10^{-14}$. Die Tabelle \ref{stiff-table-data} enthält alle Daten,
-welche für alle folgenden neuronale Netze verwendet werden.
+$rtol = 10^{-10}$ und die absolute Toleranz $atol = 10^{-14}$. Die Tabelle \ref{stiff-table-data} enthält alle Daten
+für die folgenden neuronale Netze verwendet werden.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
        \centering
@@ -332,9 +335,9 @@ welche für alle folgenden neuronale Netze verwendet werden.
        \eqref{harmonic-oscillator}.}
        \label{stiff-table-data}
 \end{table}
-Wir werden zuerst eine konstante Anzahl Schichten $L=6$ verwenden und die Anzahl der Neuronen pro Schicht variieren.
+Wir werden zuerst eine konstante Anzahl der Schichten $L=6$ verwenden und die Anzahl der Neuronen pro Schicht variieren.
 Dazu betrachten wir versteckte Schichten mit den Längen
-$n^{(l)} = 4,$ $8,$ $16,$ $32$, $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enthält die genauen
+$n^{(l)} = 4,$ $8,$ $16,$ $32$, für $l = 1, \dots, L-1$. Tabelle \ref{stiff-table-first} enthält die genauen
 Netzwerkstrukturen.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
@@ -387,13 +390,13 @@ Netzwerkstrukturen.
 \end{table}
 In Abbildung \ref{fig:harmonic-neurons-variable-loss} und Abbildung \ref{fig:harmonic-neurons-variable-error} lässt
 sich leicht erkennen, dass das bei steigender Anzahl der Neuronen sowohl die Kostenfunktion als auch der globale Fehler
-das größte Minimum erreicht. Auch in der Abbildung der Trajektorien \ref{fig:harmonic-neurons-variable-trajectories}
-und dem $x(t)$-Graphen in Abbildung \ref{fig:harmonic-neurons-variable-trajectories-in-time}
+das größte Minimum erreicht. Auch in Abbildung \ref{fig:harmonic-neurons-variable-trajectories} mit den Trajektorien
+und in Abbildung \ref{fig:harmonic-neurons-variable-trajectories-in-time} mit den $x(t)$-Graphen
 sehen wir, dass das neuronale Netz mit den meisten Neuronen pro Schicht die beste Lösung liefert. Die Lösung des
 Runge-Kutta-Verfahrens approximiert die exakte Lösung jedoch viel besser, da die Trajektorie direkt unter der
-Trajektorie der exakten Lösung liegt. Dies sieht man auch am globalen Fehler des 4. Netzwerkes
-\ref{fig:harmonic-neurons-variable-error}, denn dieser besitzt die maximale Größenordnung $10^0$ und in
-Abbildung \ref{fig:harmonic-neurons-variable-error-in-time} ist zu erkennen, dass der globale Fehler für die einzelnen
+Trajektorie der exakten Lösung liegt. Dies sieht man auch in Abbildung \ref{fig:harmonic-neurons-variable-error} mit den
+globalen Fehler der Netzwerke, denn diese erreichen die minimale Größenordnung $10^0$. In Abbildung
+\ref{fig:harmonic-neurons-variable-error-in-time} ist zu erkennen, dass der globale Fehler für die einzelnen
 Zeitpunkte für das Runge-Kutta-Verfahren um $4$ Größenordnungen kleiner ist.
 \begin{figure}
        \centering
@@ -409,12 +412,6 @@ Zeitpunkte für das Runge-Kutta-Verfahren um $4$ Größenordnungen kleiner ist.
 \end{figure}
 \begin{figure}
        \centering
-       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorError_in_time_neurons_var}
-       \caption{Globaler Fehler von Netzwerk 4 und dem Runge-Kutta-Verfahren in Abhängigkeit der Zeit.}
-       \label{fig:harmonic-neurons-variable-error-in-time}
-\end{figure}
-\begin{figure}
-       \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillator_neurons_vartrajectories}
        \caption{Trajektorien der von den verschiedenen neuronalen Netzen approximierte Lösung, der Runge-Kutta-Lösung
        und der exakten Lösung.}
@@ -427,7 +424,13 @@ Zeitpunkte für das Runge-Kutta-Verfahren um $4$ Größenordnungen kleiner ist.
        Lösungspakete und der exakten Lösung.}
        \label{fig:harmonic-neurons-variable-trajectories-in-time}
 \end{figure}
-Zuletzt werden wir Netzwerke mit 4, 8 und 16 versteckte Schichten vergleichen. Dazu wird die Länge der jeweiligen
+\begin{figure}
+       \centering
+       \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorError_in_time_neurons_var}
+       \caption{Globaler Fehler von Netzwerk 4 und dem Runge-Kutta-Verfahren in Abhängigkeit der Zeit.}
+       \label{fig:harmonic-neurons-variable-error-in-time}
+\end{figure}
+Zuletzt werden wir die Netzwerke mit 4, 8 und 16 versteckten Schichten vergleichen. Dazu wird die Länge der jeweiligen
 Schichten $n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabelle \ref{stiff-table-second}.
 \begin{table}
        \renewcommand{\arraystretch}{1.0}
@@ -468,16 +471,20 @@ Schichten $n^{(l)}=32$. Genauere Angaben zu den Netzwerken befinden sich in Tabe
        \caption{Netzwerkstrukuren der zweiten Variation.}
        \label{stiff-table-second}
 \end{table}
-Hier fällt auf, dass Netzwerk 1 die niedrigste Kostenfunktion erreicht, was in Abbildung
-\ref{fig:harmonic-layers-variable-loss} zu sehen ist. In Abbildung \ref{fig:harmonic-layers-variable-error} lässt sich
-jedoch erkennen, dass Netzwerk 2 den niedrigsten globalen Fehler erzielt. Ähnlich wie bei der ersten Variation der
+Hier fällt auf, dass die Kostenfunktion von Netzwerk 1 die niedrigsten Werte für erhöhte Anzahl von Epochen erreicht,
+was in Abbildung \ref{fig:harmonic-layers-variable-loss} zu sehen ist. In Abbildung
+\ref{fig:harmonic-layers-variable-error} lässt sich jedoch erkennen, dass Netzwerk 2 den niedrigsten globalen Fehler
+erzielt. Ähnlich wie bei der ersten Variation der
 Neuronen befindet sich der globale Fehler des besten Netzwerkes in der Größenordnung $10^0$. Die Trajektorien in
 Abbildung \ref{fig:harmonic-layers-variable-trajectories} bestätigen, dass Netzwerk 3 die schlechteste Approximation des
-Anfangswertproblems \eqref{harmonic-oscillator} liefert. Außerdem lässt sich an den Trajektorien und Abbildung
+Anfangswertproblems \eqref{harmonic-oscillator} liefert. Außerdem lässt sich an den Trajektorien in Abbildung
 \ref{fig:harmonic-layers-variable-trajectories-in-time} erkennen, dass Netzwerk 2 die beste Approximation liefert,
-wobei die Trajektorien und auch der $(t_i,u_i)$-Graph der Lösung $u_i$ des Runge-Kutta-Verfahrens wiederum direkt unter
-der exakten Lösung liegen. Abbildung \ref{fig:harmonic-layers-variable-error-in-time} bestätigt diese Aussage, da der
-globale Fehler des Runge-Kutta-Verfahrens um 2 Größenordnungen kleiner ist.
+wobei die Trajektorien und auch der $(t_i,u_i)$-Graph der Näherungslösung $u_i$ des Runge-Kutta-Verfahrens wiederum
+direkt unter der exakten Lösung liegen. Abbildung \ref{fig:harmonic-layers-variable-error-in-time} bestätigt diese
+Aussage, da der globale Fehler des Runge-Kutta-Verfahrens um 2 Größenordnungen kleiner ist. Das Runge-Kutta-verfahren
+beträgt für das Anfangswertproblem \eqref{harmonic-oscillator} eine Rechenzeit von $0.0019$ Sekunden, was im Vergleich
+zu den Rechenzeiten der neuronalen Netzen von $0.15$ Stunden im ersten Fall und $0.22$ Stunden im zweiten Fall um einige
+Größenordnungen kleiner ist.
 \begin{figure}
        \centering
        \includegraphics[scale=0.9]{harmonicoscillator_plots/harmonicoscillatorML_error__layers_var_avrloss}
@@ -510,7 +517,7 @@ globale Fehler des Runge-Kutta-Verfahrens um 2 Größenordnungen kleiner ist.
        Runge-Kutta-Lösung und der exakten Lösung.}
        \label{fig:harmonic-layers-variable-trajectories-in-time}
 \end{figure}
-Zusammenfassend können wir sagen, dass eine Erhöhung der Neuronen und Schichten abhängig von der Komplexität des
+Zusammenfassend können wir also sagen, dass eine Erhöhung der Neuronen und Schichten abhängig von der Komplexität des
 Anfangswertproblems ist. Außerdem muss die Trainingszeit erhöht werden, um eine vergleichbar gute Approximation
 gegenüber dem Runge-Kutta-Verfahren zu erhalten.
 \newpage

@@ -91,11 +91,11 @@ wir eine neue Variable $z$ ein, für die gilt
 \]
 Dann ist das Anfangswertproblem \eqref{eq:2} äquivalent zu dem autonomen Anfangswertproblem zweiter Ordnung
 \begin{alignat}{3}
-    \label{autonom-ode-tranform}
+    \label{autonom-ode-transform}
     z^{\prime} &= 1, \qquad &z(t_0) &= t_0 \nonumber\\
-    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0. \\
+    x^{\prime} &= f(z,x),\qquad  &x(t_0) &= x_0.
 \end{alignat}
-Die Lösung von dem Anfangswertproblem \eqref{autonom-ode-tranform} hat also die Form
+Die Lösung von dem Anfangswertproblem \eqref{autonom-ode-transform} hat also die Form
 $\left[ \begin{matrix} t\\ x(t)\\ \end{matrix} \right].$ Weiterhin definieren wir in diesem Abschnitt noch eine
 Sonderform einer gewöhnlichen Differentialgleichung.
 \begin{definition}
@@ -142,7 +142,7 @@ Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysi
 $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}\\
 In dieser Arbeit wird mit $\left\lVert \cdot \right\rVert_2$ die euklidische Norm
 $\left\lVert x \right\rVert_2 = \left( \sum_{i=1}^{n} (x_i)^2  \right)^{\frac{1}{2}}$ für $x \in \mathbb{R}^n$
-beschrieben. Der Beweis des folgenden Satzes beruht auf das Buch \cite{harroheuserGewohnlicheDifferentialgleichungen}.
+beschrieben. Der Beweis des folgenden Satzes beruht auf dam Buch \cite{harroheuserGewohnlicheDifferentialgleichungen}.
 \begin{satz}[Existenzsatz von Peano]
 \label{peano}
     Seien $t_0 \in \mathbb{R}$, $x_0 \in \mathbb{R}^n$,
@@ -163,8 +163,8 @@ Da die rechte Seite $f$ auf ${\cal G}$ stetig ist, gilt nach dem Hauptsatz der D
     \label{peano-proof}
 \end{align}
 Außerdem gilt für jede auf $J$ stetige Funktion $\hat{x}(t)$, die obige Gleichung erfüllt, dass sie auf $J$
-differenzierbar ist. Dies bedeutet, dass eine auf $J$ stetige Funktion $\hat{x}(t)$ löst genau dann das
-Anfangswertproblem \eqref{firstorder-ode}, wenn es die obige Integralgleichung erfüllt. Für eine auf $J$ stetige
+differenzierbar ist. Dies bedeutet, dass eine auf $J$ stetige Funktion $\hat{x}(t)$ genau dann das
+Anfangswertproblem \eqref{firstorder-ode} löst, wenn es die obige Integralgleichung erfüllt. Für eine auf $J$ stetige
 Funktion $\hat{x}(t)$ gilt also:
 \[
     \hat{x}(t) \text{ löst das AWP \eqref{firstorder-ode}}, \text{ g.d.w. } \hat{x}(t)
@@ -307,10 +307,10 @@ genauer ausführen.
 \end{satz}
 $Beweis.$ Nun ist $f$ Lipschitz-stetig, also setzen wir $B=C(D)$ mit der Maximumsnorm, $U=K$ und $A:K \rightarrow K$
 aus dem Beweis von Satz \ref{peano}. Wir zeigen mit Induktion über $j\in \mathbb{N}$, dass
-\[
+\begin{align*}
     \left\lVert (A^j u)(t) - (A^j v)(t) \right\rVert_2 \leq \frac{|t-t_0|^j}{j!} L^j\left\lVert u - v \right\rVert_{\infty},
     \quad u,v \in K
-\]
+\end{align*}
 für alle $j \in \mathbb{N}$ und $t \in D$ gilt. Die Maximumsnorm $\left\lVert \cdot \right\rVert_{\infty}$ wurde
 bereits in dem Beweis von Satz \ref{peano} definiert.
 \begin{alignat*}{2}
@@ -357,8 +357,6 @@ Einfaches Ableiten und Einsetzen von $t_0$ zeigt, dass diese Funktion die Differ
     $f:X \rightarrow \mathbb{R}^n$, die stetig und stetig differenzierbar im zweiten Argument ist, $f$
     Lipschitz-stetig ist.
 \end{bem}
-\newpage
-
 \subsection{Abhängigkeit der Lösungen von den Daten}
 In Kapitel \ref{sec:verfahrensvergleich} werden wir gewöhnliche Differentialgleichungen betrachten, die zur
 Simulation bzw. Vorhersage abgeschlossener Systeme genutzt werden. Darin ist es üblich, dass Anfangsdaten durch
@@ -505,7 +503,7 @@ gilt. Die Lösung $\hat{x}$ verlässt die kompakte Menge
 \]
 nicht. Also können wir mit einem Satz über das Verhalten der maximalen Lösung aus
 \cite[Satz 3.21]{beckGewohnlicheDifferentialgleichungen2018} zeigen, dass $D \subset \hat{D}_{\text{max}}$ gilt.
-Also haben wir die Fehlerabschätzung $\left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon$
+Demnach haben wir die Fehlerabschätzung $\left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon$
 für $t \in D$ und die Existenz der Lösung $\hat{x}$ des gestörten Anfangswertproblems auf $D$ gezeigt. \qedwhite
 %Um die Abhängigkeit der Anfangsdaten $(t_0,x_0)$ formulieren zu können, wird im Folgenden eine Notation eingeführt.
 %\begin{definition}
