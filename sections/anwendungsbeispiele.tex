@@ -1,8 +1,9 @@
 \section{Numerische Auswertung}
 \label{sec:verfahrensvergleich}
 Wir werden nun die numerischen Verfahren zur Lösung von Anfangswertproblemen mit dem Verfahren des maschinellen Lernens
-miteinander vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy}, \textit{scipy} für numerische
-Verfahren und \textit{tensorflow} für die Architektur der neuronalen Netze verwendet. Das gegebene
+miteinander vergleichen. Es werden hierfür die Python Bibliotheken \textit{numpy}\footnote{URL: \url{https://numpy.org/}},
+\textit{scipy} \footnote{URL: \url{https://scipy.org/}} für numerische Verfahren und \textit{tensorflow}
+\footnote{URL: \url{https://www.tensorflow.org/}} für die Architektur der neuronalen Netze verwendet. Das gegebene
 Anfangswertproblem wird zuerst mithilfe des \textit{4-5-Runge-Kutta-Verfahrens} beziehungsweise des BDF-Verfahrens
 gelöst und danach mit einem neuronalen Netz approximiert. Die folgenden Ergebnisse werden darauffolgend anhand
 verschiedenen Maßen verglichen. Dabei werden unter anderem die \textit{Trajektorien} der berechneten Lösungen betrachtet.
@@ -190,15 +191,15 @@ um das Anfangswertproblem zu lösen. Die numerische Lösung ist also gegeben dur
        \end{bmatrix}.
 \end{align*}
 Damit die exakte Lösung und die numerische Lösung das gleiche Grenzverhalten besitzen, muss $|1 + h\lambda_1|<1$ und
-$|1 + h\lambda_2|<1$ gelten. Hieraus resultieren Bedinungen für $h$, also eine Schrittweitenbeschränkung der Form
+$|1 + h\lambda_2|<1$ gelten. Hieraus resultieren Bedingungen für $h$, also eine Schrittweitenbeschränkung der Form
 $h<\frac{2}{|\lambda_1|}$ und $h<\frac{2}{|\lambda_2|}$. Da $|\lambda_2| \ll |\lambda_1|$, bestimmt der erste Eigenwert
 über die Beschränkung der Schrittweite, obwohl dieser in der exakten Lösung für größere Zeiten $t$ fast keinen Einfluss
 hat. Wir werden sehen, dass dieses Problem auch im Runge-Kutta-Verfahren auftreten wird, weshalb wir außerdem ein
 \textit{BDF-Verfahren}, also ein Mehrschrittverfahren, verwenden werden, um die Ergebnisse mit dem Verfahren der
-Lösungspakete vergleich zu können. Für alle Verfahren setzen wir $c_1=3$, $c_2=4$, $\lambda_1 = -100$ und $\lambda_2=-1$.
+Lösungspakete vergleichen zu können. Für alle Verfahren setzen wir $c_1=3$, $c_2=4$, $\lambda_1 = -100$ und $\lambda_2=-1$.
 Für die Implementierung des BDF-Verfahrens wird die Funktion \texttt{scipy.integrate.BDF}, siehe
 \cite{ScipyIntegrateBDF}, verwendet. Für beide Verfahren setzen wir dazu die relative Toleranz $rtol=10^{-2}$ und die
-absolute Toleranz $atol=10^{-7}$, um die steiffe Eigenschaft des gegebenen Anfangswertproblems \eqref{stiff} beobachten
+absolute Toleranz $atol=10^{-7}$, um die steife Eigenschaft des gegebenen Anfangswertproblems \eqref{stiff} beobachten
 zu können. Ähnlich wie in Abschnitt \ref{subsec:rebound-Pendel} sind in Tabelle \ref{stiff-table} alle relevanten Daten
 zu dem verwendeten neuronalen Netz für \eqref{stiff} gegeben.
 \begin{table}

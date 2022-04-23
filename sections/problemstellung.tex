@@ -1,9 +1,9 @@
 \section{Theorie gewöhnlicher Differentialgleichungen}
 \label{sec:theorie}
 In diesem Abschnitt wird die Theorie zu gewöhnlichen Differentialgleichungen erläutert. Diese orientiert sich
-hauptsächlich an den Arbeiten \cite{peterdeuflhardfolkmarbornemannNumerischeMathematikGewohnliche,
-ernsthairergerhardwannerSolvingOrdinaryDifferential,berndaulbachGewohnlicheDifferentialgleichungen2004}.
-Dieses Kapitel ist Grundlage für das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
+hauptsächlich an den Arbeiten \cite{deuflhardNumerischeMathematikGewohnliche2013,
+hairerSolvingOrdinaryDifferential,aulbachGewohnlicheDifferentialgleichungen2004}.
+Dieses Kapitel ist die Grundlage für das Verständnis der Schlussfolgerungen und Ergebnisse dieser Arbeit.
 
 \subsection{Gewöhnliche Differentialgleichungen und Anfangswertprobleme}
 Wir beginnen mit der allgemeinen Definition einer gewöhnlichen Differentialgleichung erster Ordnung.
@@ -17,7 +17,7 @@ Wir beginnen mit der allgemeinen Definition einer gewöhnlichen Differentialglei
     f : D \times \mathbb{R}^{n} \rightarrow \mathbb{R}^{n},
     $
     wobei $D \subseteq \mathbb{R}$ ein Zeitintervall ist. Eine dazugehörige {\em Lösung} (falls existent)
-    $\hat{x} : D \rightarrow \mathbb{R}^n$ ist eine stetig, differenzierbare Funktion welche die Bedingung
+    $\hat{x} : D \rightarrow \mathbb{R}^n$ ist eine stetig differenzierbare Funktion, welche die Bedingung
     \[
         \hat{x}^{\prime} = f(t, \hat{x}).
     \]
@@ -108,7 +108,7 @@ Sonderform einer gewöhnlichen Differentialgleichung.
         {\em lineares System gewöhnlicher Differentialgleichungen}. Falls $g \equiv 0$, so nennt man
     \eqref{linear-first-order-ode} homogen, sonst inhomogen.
 \end{definition}
-Wir definieren nun steife lineare Differentialgleichungen unter der Bedingung, dass die Koeffizientenmatrix $A$ konstant,
+Wir definieren nun steife, lineare Differentialgleichungen unter der Bedingung, dass die Koeffizientenmatrix $A$ konstant,
 also unabhängig von $t$ ist.
 \begin{definition}
     \label{steife-dgl}
@@ -129,7 +129,7 @@ In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung
     x(t_{0})&=x_{0} \label{firstorder-ode}
 \end{align}
 und zeigen, unter welchen Bedingungen der rechten Seite $f(t,x(t))$ eine Lösung existiert und gegebenenfalls eindeutig
-ist, welcher aus der Literatur \cite[13, 14]{sundermeierFixpunktsatzSchauder} stammt.
+ist, was aus der Literatur \cite[13, 14]{sundermeierFixpunktsatzSchauder} stammt.
 
 \subsubsection{Existenz von Lösungen}
 Zuerst werden wir einen Satz beweisen, welcher zeigt, dass die Stetigkeit der rechten Seite $f$ für die Existenz einer
@@ -142,7 +142,7 @@ Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysi
 $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}\\
 In dieser Arbeit wird mit $\left\lVert \cdot \right\rVert_2$ die euklidische Norm
 $\left\lVert x \right\rVert_2 = \left( \sum_{i=1}^{n} (x_i)^2  \right)^{\frac{1}{2}}$ für $x \in \mathbb{R}^n$
-beschrieben. Der Beweis des folgenden Satzes beruht auf dam Buch \cite{harroheuserGewohnlicheDifferentialgleichungen}.
+beschrieben. Der Beweis des folgenden Satzes beruht auf dem Buch \cite{heuserGewohnlicheDifferentialgleichungen2009}.
 \begin{satz}[Existenzsatz von Peano]
 \label{peano}
     Seien $t_0 \in \mathbb{R}$, $x_0 \in \mathbb{R}^n$,
@@ -236,7 +236,7 @@ Bildmenge $AK$ relativ kompakt ist. Sei hierfür $x \in K$ beliebig, dann ist
     \left\lVert (Ax)(t_1) - (Ax)(t_2) \right\rVert_2 \leq |t_1 - t_2| M \quad \text{ für alle } \quad t_1,t_2 \in D.
 \]
 Somit ist $A(K)$ punktweise beschränkt und gleichgradig stetig auf dem kompakten Intervall $D$. Nach dem Satz von
-Arzela-Ascoli \cite[49]{beckGewohnlicheDifferentialgleichungen2018} hat also jede Folge $(Ax)_n\subset AK$ eine
+Arzela-Ascoli \cite[49]{beckGewohnlicheDifferentialgleichungen2016} hat also jede Folge $(Ax)_n\subset AK$ eine
 gleichmäßig konvergente Teilfolge. Dies gilt offensichtlich auch für die Maximimsnorm, weshalb $AK$ relativ kompakt
 ist. \qedwhite\\
 
@@ -253,9 +253,9 @@ definieren wir zuerst den Begriff der Lipschitz-Stetigkeit einer Funktion.
     \]
     für alle $(t,x), (t,y) \in \mathcal{M}$.
 \end{definition}
-Eine ähnliche Definition findet sich in \cite[36-37]{ernsthairergerhardwannerSolvingOrdinaryDifferential}. Außerdem
+Eine ähnliche Definition findet sich in \cite[36-37]{hairerSolvingOrdinaryDifferential}. Außerdem
 benötigen wir für den Beweis noch den Fixpunktsatz von Weissinger aus
-\cite{harroheuserGewohnlicheDifferentialgleichungen}.
+\cite{heuserGewohnlicheDifferentialgleichungen2009}.
 \begin{satz}[Fixpunktsatz von Weissinger]
     \label{Fixpunktsatzvonweissinger}
     Sei $\left( B, \left\lVert . \right\rVert \right) $ ein Banachraum und $U \subset B$ abgeschlossen und nichtleer.
@@ -275,7 +275,7 @@ benötigen wir für den Beweis noch den Fixpunktsatz von Weissinger aus
         \left\lVert u - u_n \right\rVert \leq \sum_{j=n}^{\infty} \alpha_j \left\lVert u_1 - u_0 \right\rVert.
     \]
 \end{satz}
-$Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
+$Beweis.$ \cite[139]{heuserGewohnlicheDifferentialgleichungen2009}\\
 %Es gilt
 %\[
 %    \left\lVert u_{j+1}-u_j \right\rVert_2 = \left\lVert A^j u_1 - A^j u_0 \right\rVert_2 \leq
@@ -289,7 +289,7 @@ $Beweis.$ \cite[139]{harroheuserGewohnlicheDifferentialgleichungen}\\
 %\]
 Nun können wir einen grundlegenden Satz in der Theorie gewöhnlicher Differentialgleichungen beweisen, welcher sich
 ähnlich wie der Beweis des Satzes von Peano an auf Überlegungen von H. Heuser in
-\cite{harroheuserGewohnlicheDifferentialgleichungen} beruht. Wir werden in dieser Arbeit die gegebene Beweisidee etwas
+\cite{heuserGewohnlicheDifferentialgleichungen2009} beruht. Wir werden in dieser Arbeit die gegebene Beweisidee etwas
 genauer ausführen.
 \begin{satz}[Existenz- und Eindeutigkeitssatz von Picard-Lindelöf]
 \label{picard}
@@ -365,7 +365,7 @@ Auswirkungen kleine Störungen der Anfangsdaten auf die Lösung der Differential
 die rechte Seite $f$ stetig und Lipschitz-stetig im zweiten Argument, sodass die Eindeutigkeit der Lösung durch den Satz
 von Picard-Lindelöf \ref{picard} garantiert ist. Um eine Aussage über die stetige Abhängigkeit von den Daten treffen zu
 können, beweisen wir zuerst einen wichtigen Hilfssatz. Die Überlegungen und Ergebnisse in diesem Abschnitt stammen aus
-\cite{beckGewohnlicheDifferentialgleichungen2018}.
+\cite{beckGewohnlicheDifferentialgleichungen2016}.
 \begin{theorem}[Gronwallsche Ungleichung]
     \label{Satz-gronwall}
     Seien $D=[t_{0}, t_{f}]$ ein Intervall und die stetige, nichtnegative Funktion $u : D \rightarrow \mathbb{R}$
@@ -502,7 +502,7 @@ gilt. Die Lösung $\hat{x}$ verlässt die kompakte Menge
     \text{ für ein } t \in D \} \subset \mathcal{M}
 \]
 nicht. Also können wir mit einem Satz über das Verhalten der maximalen Lösung aus
-\cite[Satz 3.21]{beckGewohnlicheDifferentialgleichungen2018} zeigen, dass $D \subset \hat{D}_{\text{max}}$ gilt.
+\cite[Satz 3.21]{beckGewohnlicheDifferentialgleichungen2016} zeigen, dass $D \subset \hat{D}_{\text{max}}$ gilt.
 Demnach haben wir die Fehlerabschätzung $\left\lVert x(t) - \hat{x}(t) \right\rVert_2 \leq \epsilon$
 für $t \in D$ und die Existenz der Lösung $\hat{x}$ des gestörten Anfangswertproblems auf $D$ gezeigt. \qedwhite
 %Um die Abhängigkeit der Anfangsdaten $(t_0,x_0)$ formulieren zu können, wird im Folgenden eine Notation eingeführt.
@@ -533,7 +533,7 @@ für $t \in D$ und die Existenz der Lösung $\hat{x}$ des gestörten Anfangswert
 %    stetig differenzierbar ist. Dann ist die charaktistische Funktion $x(t; t_0, x_0)$ stetig differenzierbar in
 %    $(t_0, x_0) \in T$ und $t \in I_{max}(t_0, x_0)$.
 %\end{satz}
-%$Beweis.$ \cite[69,70]{beckGewohnlicheDifferentialgleichungen2018}
+%$Beweis.$ \cite[69,70]{beckGewohnlicheDifferentialgleichungen2016}
 %\begin{bem}
 %    Man kann zeigen, dass für $T \subset \mathbb{R}^{1+n}$ und eine stetige Funktion $f:T \rightarrow \mathbb{R}^{n}$,
 %    die stetig differenzierbar in der x-Variable ist, gilt: $f$ ist lokal Lipschitz-stetig in der x-Variable.

@@ -1,8 +1,8 @@
 \section{Neuronale Netze}
 \label{sec:neuralnet}
-In diesem Kapitel werden wir eine weitere Möglichkeit betrachen, ein Anfangswertproblem zu approximieren.
+In diesem Kapitel werden wir eine weitere Möglichkeit betrachten, ein Anfangswertproblem zu approximieren.
 Dabei gehen wir genauer auf neuronale Netze ein. Dieses Kapitel bezieht sich hauptsächlich auf
-\cite{calinDeepLearningArchitectures}. Obwohl die bisher besprochenen numerischen Verfahen wie Runge-Kutta- und
+\cite{calinDeepLearningArchitectures2020}. Obwohl die bisher besprochenen numerischen Verfahren wie Runge-Kutta- und
 Mehrschrittverfahren heutzutage effizient in Bezug auf Fehlertoleranz und Rechenaufwand sind, ist es dennoch interessant,
 neuronale Netze zu betrachten. Falls beispielsweise das Interesse besteht, die Lösung einer gewöhnlichen
 Differentialgleichung nur in einem bestimmten Zeitpunkt $\hat{t}$ auszuwerten, so müssen in numerischen Verfahren von
@@ -62,7 +62,7 @@ reduzieren. Dazu werden die Konzepte der Forward- und Backwardpropagation, sowie
 benötigt, was wir in den folgenden Teilabschnitten besprechen werden.
 
 \subsubsection{Forwardpropagation}
-{\em Forwardpropagation} wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht um die
+{\em Forwardpropagation} wird der Vorgang genannt, in dem man das neuronale Netz Schritt für Schritt durchgeht, um die
 Ausgaben der versteckten Schichten zu berechnen. Dabei wird beginnend mit der ersten versteckten Schicht  $l = 1$
 zuerst \eqref{eq:signal}, um die jeweiligen Signale zu berechnen und im Anschluss \eqref{eq:activ} angewendet.
 Im letzten Schritt der Forwardpropagation erhalten wir die Ausgangsschicht $y_{j}$, $j = 1 ,\dots, n^{(L)}$.
@@ -116,8 +116,8 @@ wobei in der letzten Gleichheit die Kettenregel benutzt wurde:
     = \frac{\partial C(\omega,b)}{\partial s_j^{(l)}}.
 \]
 \qedwhite\\
-Nun definieren wir $\delta_j^{(l)}:=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung des Kostenfunktion im Bezug zum Signal
-$s_j^{(l)}$ angibt. Der zweite Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausgerechnen und
+Nun definieren wir $\delta_j^{(l)}:=\frac{\partial C}{\partial s_{j}^{(l)}}$, welches die Änderung der Kostenfunktion bezüglich des Signals
+$s_j^{(l)}$ angibt. Den zweiten Faktor des Gradienten können wir mit Hilfe von \eqref{eq:signal} explizit ausrechnen und
 somit folgt
 \begin{align*}
     \frac{\partial \mathcal{C}}{\partial \omega_{ij}^{(l)}} &= \delta_j^{(l)} x_i^{(l-1)}, \\
@@ -157,7 +157,7 @@ Den rechten Ausdruck in der Summe können wir explizit ausrechnen:
     &= \frac{\partial}{\partial s_i^{(l-1)}} (\sum\limits_{k=1}^{n^{(l-1)}}\omega_{kj}^{(l)}\Psi(s_{k}^{(l-1)}) - b_j^{(l)}) \\
     &= \omega_{ij}^{(l)}\Psi'(s_i^{(l-1)}).
 \end{align*}
-Setzen wir jetzt das Ergebnis in \eqref{eq:delta-1}, so erhält man die zentrale Formel des
+Setzen wir jetzt das Ergebnis in \eqref{eq:delta-1} ein, so erhält man die zentrale Formel des
 \textit{Backpropagation}-Algorithmus:
 \begin{align}
     \delta_i^{(l-1)} = \Psi'(s_i^{(l-1)})\sum\limits_{j=1}^{n^{(l)}} \delta_j^{(l)}\omega_{ij}^{(l)},
@@ -187,7 +187,7 @@ gegeben durch
 \[
     \omega_{ij}^{[k+1]}= \omega_{ij}^{[k]} - \eta \frac{\hat{m}^{[k]}}{\sqrt{|\hat{v}^{[k]}|} + \epsilon}.
 \]
-Eine detailierte Herleitung lässt sich in \cite[103-104]{ovidiucalinDeepLearningArchitectures} finden.
+Eine detaillierte Herleitung lässt sich in \cite[103-104]{calinDeepLearningArchitectures2020} finden.
 Der Parameter $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
 Voreinstellung der Parameter wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$)
 müssen jedoch schon Gewichte gegeben sein, um $g^{[k]}$ berechnen zu können. Dazu werden wir uns in
@@ -354,7 +354,7 @@ Fehler des neuronalen Netzes ist gegeben mit $e(t) = \hat{x}(t) - x(t)$, wobei $
     wobei $\tau_{t_f} = \max\limits_{t_0 \leq t \leq t_f} \left\lVert \tau(t) \right\rVert_2$ und $L$ die
     Lipschitz-Konstante der rechten Seite $f$.
 \end{satz}
-$Beweis.$ Der lokale Fehler ergibt sich durch einfaches Konstuierens von $G$.\\
+$Beweis.$ Der lokale Fehler ergibt sich durch einfaches Konstruierens von $G$.\\
 Für den globalen Fehler $e(t) = \hat{x}(t) - x(t)$ gilt
 \begin{align*}
     \hat{x}(t) = e(t) + x(t).
@@ -380,7 +380,7 @@ Also kann man die Norm der rechten Seite obiger Gleichung schreiben als
 Dabei wurde die Dreiecksungleichung benutzt und der lokale Fehler wurde durch das Maximum aller lokalen Fehler
 abgeschätzt. Jetzt suchen wir eine Funktion $E(t)$ die folgende Gleichung erfüllt
 \[
-    E^{\prime}(t) = \tau_{t_f} + L E(t),
+    E^{\prime}(t) = \tau_{t_f} + L \cdot E(t),
 \]
 wobei $0 \leq \left\lVert e(t) \right\rVert_2 \leq E(t)$ und $E(t_0) = 0$ gilt. Also haben wir eine lineare gewöhnliche
 Differentialgleichung erster Ordnung vorliegen, deren Lösung sich mit \eqref{linear-ode-solution} berechnen lässt
@@ -400,14 +400,14 @@ frühen Zeitpunkten zu skalieren.
 
 \subsection{Intervall-Lernen}
 \label{subsec:curriculum-learning}
-Dieser Abschnitt beruht auf \cite{cedricflamantPersonlicheKommunikation2022}.
+Dieser Abschnitt beruht auf \cite{flamantPersonlicheKommunikation2022}.
 Beim Approximieren von gewöhnlichen Differentialgleichungen mithilfe von Lösungspaketen ist es unser Ziel, die
 Kostenfunktion zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
 führen, dass das neuronale Netz das gegebene Anfangswertproblem nicht approximiert, wie in Satz \ref{ml-error} zu sehen
 ist. Genauer wird die Trajektorie (Definition siehe Kapitel \ref{verfahrensvergleich}) der approximierten Funktion durch
 den Fehler in andere Bereiche des Phasenraums geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun
 ein anderes Anfangswertproblem approximiert wird. Eine mögliche Behebung dieses Problems ist das Prinzip des
-sogenannten \textit{Intervall}-\textit{Lernens} (eng. curriculum learning). Eine allgemeine Diskussion dieses Prinzips
+sogenannten \textit{Intervall}-\textit{Lernens} (engl. curriculum learning). Eine allgemeine Diskussion dieses Prinzips
 lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Für das Approximieren von gewöhnlichen
 Differentialgleichungen nutzen wir das Intervall-Lernen so, dass wir das Intervall der Zeiten $[t_0, t_f]$ begrenzen.
 Hierzu werden wir die Batches $B$ anpassen, also erhalten wir neue Batches $B^{\prime}$ mit
@@ -435,7 +435,7 @@ $\omega_{ij}$ genutzt wird. Dazu werden wir die $(l-1)$-te und $l$-te Schicht ei
 zugehörigen Gewichte $\omega_{ij}:=\omega_{ij}^{(l)}$ sowie $x_{i}^{(l-1)}$ als unabhängige, identisch verteilte
 Zufallszahlen betrachten. Außerdem gilt für den Erwartungswert der Gewichte $\mathbb{E}(\omega_{ij})=0$ und die Bias $b$
 werden mit $0$ initialisiert. Genaueres zur Berechnung folgender Varianzen lässt sich in
-\cite[191-195]{ovidiucalinDeepLearningArchitectures} nachlesen. Für die Varianz der Ausgabe der $l$-ten Schicht
+\cite[191-195]{calinDeepLearningArchitectures2020} nachlesen. Für die Varianz der Ausgabe der $l$-ten Schicht
 $x_i^{(l)}$ ergibt sich
 \begin{align*}
     \mathrm{Var}(x_j^{(l)}) = n^{(l-1)} \Psi^{\prime}(0)^2 \mathrm{Var}(\omega_{ij}) \mathrm{Var}(x_i^{(l-1)}).
@@ -451,7 +451,7 @@ der Kostenfunktion ausgehend von der Backpropagation gleichzustellen. Also folgt
 \[
     \mathrm{Var}\left(\frac{\partial C}{\partial \omega_{ij}^{(l-1)}}\right) = \mathrm{Var}\left(\frac{\partial C}{\partial \omega_{ij}^{(l)}}\right)
 \]
-mit Hilfe einiger Umformungen (vgl. \cite[191-195]{ovidiucalinDeepLearningArchitectures}) und der Annahme, dass die
+mit Hilfe einiger Umformungen (vgl. \cite[191-195]{calinDeepLearningArchitectures2020}) und der Annahme, dass die
 Aktivierungsfunktion $\Psi(x)=x$ ist, die Gleichung
 \[
     \mathrm{Var}(\delta_j^{(l-1)}) = \mathrm{Var}(\delta_j^{(l)}),
@@ -464,7 +464,7 @@ Das Erfüllen beider Voraussetzungen führt zu einer restriktiven Bedingung $n^{
 \[
     \mathrm{Var}(\omega_{ij})= \frac{2}{n^{(l-1)} + n^{(l)}}
 \]
-einigt. Werden die Gewichte nun gleichverteilt auf $[-a,a]$, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit der
+einigt. Werden die Gewichte nun auf $[-a,a]$ gleichverteilt, dessen Varianz $\frac{a^2}{3}$ gleichgestellt mit der
 Varianz der Gewichte $a=\frac{\sqrt {6}}{\sqrt {n^{(l-1)} + n^{(l)}}}$ ergibt, also
 \[
     \omega_{ij} \sim
@@ -477,7 +477,7 @@ Gleichverteilung
     \omega_{ij} \sim
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}} \right]
 \]
-gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential}.
+gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential2019}.
 \newpage
 %\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
 %\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}

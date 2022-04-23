@@ -1,7 +1,7 @@
 \section{Numerischer Lösungsansatz}
 \label{sec:numeric}
-Dieses Kapitel beruht im Wesentlichen auf \cite{p.deuflhardf.bornemannNumerischeMathematikGewohnliche,
-ernsthairergerhardwannerSolvingOrdinaryDifferential, prof.dr.josefstoerNumerischeMathematik}. Wir werden uns im
+Dieses Kapitel beruht im Wesentlichen auf \cite{deuflhardNumerischeMathematikGewohnliche2013,
+hairerSolvingOrdinaryDifferential, stoerNumerischeMathematik2005}. Wir werden uns im
 Folgenden das Anfangswertproblem
 \begin{align}
     \label{first-order-num}
@@ -9,15 +9,15 @@ Folgenden das Anfangswertproblem
     x(t_0) &= x_0
 \end{align}
 betrachten, wobei $f$ stetig ist.\\
-Unser Ziel ist es, eine effektive Methode zur Lösung eines Anfangswertproblem zu verwenden.
+Unser Ziel ist es, eine effektive Methode zur Lösung eines Anfangswertproblems zu verwenden.
 Da es nicht immer möglich ist, eine gewöhnliche Differentialgleichung analytisch zu lösen, gibt es sogenannte Ein- und
-Mehrschrittverfahren, welche  eine Lösung der gewöhnlichen Differentialgleichung approximiert.
+Mehrschrittverfahren, welche eine Lösung der gewöhnlichen Differentialgleichung approximieren.
 Der Grundgedanke dieser Verfahren ist es das Zeitintervall \linebreak $D=[t_0,t_{0}+a]$ zu diskretisieren,
 $t_0 < t_1 < \dots < t_N = t_{0}+a$ und beginnend mit dem Anfangswert $t_0$ eine Näherung $u_i \approx x(t_i)$ für
 $i=0, \dots, N$ zu berechnen. Solche Verfahren werden mit Hilfe von Quadraturformeln der numerischen Integration
-\cite[Numerische Integration]{walzLexikonMathematik} hergeleitet.\\
+\cite[Numerische Integration]{walzLexikonMathematik2017} hergeleitet.\\
 Dies basiert darauf, dass die Differentialgleichung auf einem Teilintervall $[t_i, t_{i+1}] \subset D$
-integriert wird und nach dem Hauptsatz der Differential- und Integralrechung auf folgende Gleichung gebracht werden kann:
+integriert wird und nach dem Hauptsatz der Differential- und Integralrechnung auf folgende Gleichung gebracht werden kann:
 \[
     x(t_{i+1}) - x(t_i) = \int_{t_i}^{t_{i+1}} x^{\prime}(t)\ dt = \int_{t_i}^{t_{i+1}}f(t, x(t))\ dt.
 \]
@@ -47,7 +47,7 @@ Zuerst definieren wir ein Einschrittverfahren.
 Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Fehlermaße eingeführt.
 \begin{definition}[Lokaler Diskretisierungsfehler]
     Sei das Anfangswertproblem \eqref{first-order-num} mit \\ im zweiten Argument Lipschitz-stetiger
-    rechten Seite $f$ und ein explizites Einschrittverfahren \eqref{eq:6} gegeben.
+    rechter Seite $f$ und ein explizites Einschrittverfahren \eqref{eq:6} gegeben.
     Für $\hat{t}\in [t_0,t_0+a]$ und $0 < h < t_0 + a - \hat{t}$ ist der {\em lokale Diskretisierungsfehler} definiert als
     \[
         \tau(\hat{t}, h) := \frac{x(\hat{t} + h) - u_1(\hat{t})}{h},
@@ -72,7 +72,7 @@ Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Fehl
     \] dann nennt man das Einschrittverfahren {\em konvergent} {\em (von der Ordnung p)}.
 \end{definition}
 Es ist uns möglich, eine obere Schranke für den globalen Fehler zu finden. Dazu müssen wir zuerst die diskrete Version
-der Gronwallsche Ungleichung in Satz \ref{Satz-gronwall} beweisen.
+der Gronwallschen Ungleichung in Satz \ref{Satz-gronwall} beweisen.
 \begin{satz}[Diskrete Gronwallsche Ungleichung]
     Gegeben seien die Folgen \newline $(\alpha)_i,(\beta)_i,(\gamma)_i \geq 0$ mit $i = 0,\dots,N$ und es gilt
     \[
@@ -147,7 +147,7 @@ nicht der Fall, wie wir in Abschnitt \ref{subsec:multistep} sehen werden.
 \subsection{Runge-Kutta-Verfahren}
 Ein \textit{Runge-Kutta-Verfahren} ist ein Einschrittverfahren höherer Ordnung. Um ein Runge-Kutta-Verfahren herleiten
 zu können, müssen wir zuerst definieren, was eine Quadraturformel ist. Diese Definition orientiert sich hierbei an
-\cite[Kapitel 9]{p.deuflharda.hohmannNumerischeMathematik2018}.
+\cite[Kapitel 9]{deuflhardNumerischeMathematik2018}.
 \begin{definition}
     Eine {\em Quadratur} ist eine Abbildung $Q_m: C([a,b])\rightarrow \mathbb{R}$, für die gilt
     \[
@@ -375,7 +375,7 @@ $h$-Potenzen finden.
         p \leq m.
     \]
 \end{satz}
-$Beweis.$ \cite[173-174]{ernsthairergerhardwannerSolvingOrdinaryDifferential} \\
+$Beweis.$ \cite[173-174]{hairerSolvingOrdinaryDifferential} \\
 Außerdem kann man in \cite{stykelSkriptZurVorlesung2020} folgende Zusammenhänge zwischen der Stufe $m$ des
 Runge-Kutta-Verfahrens \eqref{exp-rk-def} und dessen Konsistenzordnung finden:\\
 \begin{center}
@@ -520,7 +520,7 @@ und erhalten
 \]
 Nun approximieren wir den Integranden $f(s,x(s))$ mit dem Interpolationspolynom $p \in \mathbb{R}_r[s]$, wobei
 $p(t_{i+j})=f(t_{i+j},x(t_{i+j}))$ für $j=0, \dots r$ gilt. Durch die Lagrange-Interpolationsformel
-\cite[Kapitel 7]{p.deuflharda.hohmannNumerischeMathematik2018} und $t_{i+k}=t_i+kh$ hat $p$ die Form
+\cite[Kapitel 7]{deuflhardNumerischeMathematik2018} und $t_{i+k}=t_i+kh$ hat $p$ die Form
 \[
     p(s)=\sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{s-t_{i+q}}{t_{i+j}-t_{i+q}}
     =\sum_{j=0}^{r}f(t_{i+j},x(t_{i+j})) \prod\limits_{\underset{q \neq j}{q=0}}^{r} \frac{s-(t_i+qh)}{(j+q)h}.
@@ -578,7 +578,7 @@ ist. Für den lokalen Diskretisierungsfehler der linearen Mehrschrittverfahren v
     \frac{x^{(r+2)}(\xi(s))}{(r+1)!}\ ds,
 \end{align*}
 wobei $\xi(s) \in [t_{i+r-l}, t_{i+k}]$ und die vorletzte Gleichung resultiert aus der Fehlerdarstellung der
-Polynominterpolation, vgl \cite[213]{p.deuflharda.hohmannNumerischeMathematik2018}. Substituieren wir nun
+Polynominterpolation, vgl \cite[213]{deuflhardNumerischeMathematik2018}. Substituieren wir nun
 $s = t_i + rh + xh$, so folgt daraus $s- (t_i +jh) = xh - (j-r)h$ und
 \begin{align*}
     \prod\limits_{j=0}^{r} (s - (t_i +jh)) &= h^{r+1} \prod\limits_{j=0}^{r} (x-j+r) = h^{r+1}(x+r)(x+r-1) \dots (x+r-r)\\
@@ -704,7 +704,7 @@ Mit $\rho(1) = 0$ und $\rho^{\prime}(1)=\sigma(1)$ gilt
 Also ist $4.$ für $m=1=p$ erfüllt und daraus folgt mit $1.$ die Konsistenz (von Ordnung $p=1$). \qedwhite \\
 Mit folgendem Satz können wir die \textit{Konvergenz} eines Mehrschrittverfahrens erzielen, wobei hierfür der die
 Theorie der \textit{Stabilität} eines Verfahrens benötigt wird, welche in
-\cite[80]{ernsthairergerhardwannerSolvingOrdinaryDifferential} nachgelesen werden kann.
+\cite[80]{hairerSolvingOrdinaryDifferential} nachgelesen werden kann.
 \begin{satz}
     Das Mehrschrittverfahren \eqref{k-step-method} ist {\em konvergent (von der Ordnung p)}, also
     \[
@@ -712,7 +712,7 @@ Theorie der \textit{Stabilität} eines Verfahrens benötigt wird, welche in
     \]
     wenn es {\em stabil} und {\em konsistent} ist.
 \end{satz}
-$Beweis.$ \cite[392-393]{ernsthairergerhardwannerSolvingOrdinaryDifferential}
+$Beweis.$ \cite[392-393]{hairerSolvingOrdinaryDifferential}
 %\subsubsection{Stabilität und Stabilitätsgebiete}
 %Trotz höherer Konsistenzordnung bei niedrigeren Rechenaufwand können Mehrschrittverfahren bei einfachen
 %Differentialgleichungen sehr schlechte Ergebnisse liefern. Das liegt daran, dass die Konvergenz der Mehrschrittverfahren
