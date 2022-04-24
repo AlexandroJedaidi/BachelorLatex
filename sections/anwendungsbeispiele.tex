@@ -30,8 +30,8 @@ numerischen Verfahren und die Implementierung der neuronalen Netze befindet sich
 
 \subsection{Rebound-Pendel}
 \label{subsec:rebound-Pendel}
-Das Rebound-Pendel ist ein System, in dem ein Pendel an einer Seite auf eine gedämpfte Feder treffen kann, siehe
-\ref{fig:rebound_pendulum_diagram}.
+Das Rebound-Pendel \cite[6-7]{flamantSolvingDifferentialEquations2020} ist ein System, in dem ein Pendel an einer
+Seite auf eine gedämpfte Feder treffen kann, siehe \ref{fig:rebound_pendulum_diagram}.
 \begin{figure}
        \centering
        \includegraphics{rebound_pendulum_diagram}
@@ -143,7 +143,7 @@ optimiert werden.
 
 \subsection{Steife Differentialgleichung}
 \label{sec:steife-differentialgleichung}
-Das Anfangswertproblem
+Das Anfangswertproblem (siehe \cite[173]{stoerNumerischeMathematik2005})
 \begin{align}
        \label{stiff}
        x_{1}^{\prime} &= \frac{1}{2} ((\lambda_1 + \lambda_2)x_1 + (\lambda_1 - \lambda_2)x_2), \nonumber \\
@@ -306,9 +306,9 @@ von steifen Anfangswertproblemen geeignet ist.
 
 \subsection{Harmonischer Oszillator}
 \label{sec:harmonischer-oszillator}
-Zuletzt werden wir die Lösung für den harmonischen Oszillator mit verschiedenen Netzwerkstrukturen approximieren und
-die Ergebnisse untereinander und mit dem 4-5-Runge-Kutta-Verfahren vergleichen. Die Bewegung eines harmonischen
-Oszillators ist gegeben durch
+Zuletzt werden wir die Lösung für den harmonischen Oszillator \cite[8]{flamantSolvingDifferentialEquations2020} mit
+verschiedenen Netzwerkstrukturen approximieren und die Ergebnisse untereinander und mit dem 4-5-Runge-Kutta-Verfahren
+vergleichen. Die Bewegung eines harmonischen Oszillators ist gegeben durch
 \begin{align}
        \label{harmonic-oscillator}
        &x^{\prime}=v, \qquad v^{\prime}=-\frac{k}{m}x, \\
