@@ -101,7 +101,7 @@ Also ergibt sich folgendes für den Gradienten der Kostenfunktion.
     \]
     mit $i = 0, \dots, n^{(l-1)}, j= 1, \dots,  n^{(l)}, l=1, \dots, L$.
 \end{satz}
-$Beweis$ Es ist $x_j^{(l)}=\psi(s_j^{(l)})$ wie in \eqref{eq:activ}. Wir zeigen die Gleichung für
+$Beweis.$ Es ist $x_j^{(l)}=\psi(s_j^{(l)})$ wie in \eqref{eq:activ}. Wir zeigen die Gleichung für
 $\nabla_{\omega}C(w,b)$, der Beweis für  $\nabla_{b}C(w,b)$ funktioniert analog mit $i=0$:
 \begin{align*}
     \frac{\partial \mathcal{C}(\omega,b)}{\partial \omega_{ij}^{(l)}} &= \frac{\partial \mathcal{C}(\omega,b)}{\partial x_j^{(l)}} \frac{\partial x_j^{(l)}}{\partial \omega_{ij}^{(l)}}
@@ -165,6 +165,7 @@ Setzen wir jetzt das Ergebnis in \eqref{eq:delta-1} ein, so erhält man die zent
 \end{align}
 
 \subsubsection{Gradientenverfahren}
+\label{subsubsec:gradient}
 Ein allgemeines Gradientenverfahren mit der \textit{Lernrate} $\eta > 0$ hat die Form
 \begin{align*}
     \omega_{ij}^{(l)[k+1]} &= \omega_{ij}^{(l)[k]} - \eta \delta_{j}^{(l)[k]} x_i^{(l-1)[k]}\\
@@ -191,7 +192,7 @@ Eine detaillierte Herleitung lässt sich in \cite[103-104]{calinDeepLearningArch
 Der Parameter $\epsilon > 0$ verhindert eine Division durch $0$, falls $\hat{v}^{[k]} = 0$. Eine
 Voreinstellung der Parameter wäre beispielsweise $\beta_1=0.9$, $\beta_2=0.99$, $\epsilon=10^{-8}$ und $\eta = 0.001$. Zu Beginn ($k=0$)
 müssen jedoch schon Gewichte gegeben sein, um $g^{[k]}$ berechnen zu können. Dazu werden wir uns in
-Abschnitt \ref{subsec:gewichtsinitialisierung} genauere Gedanken machen.\\
+Abschnitt \ref{subsec:gewichtsinitialisierung} genauere Gedanken machen.
 
 \subsubsection{Verschwindender und explodierender Gradient}
 Die Berechnung des Gradienten $\nabla C$ ist fehleranfällig, wobei zwei folgende Probleme auftreten können: \\
@@ -404,9 +405,9 @@ Dieser Abschnitt beruht auf \cite{flamantPersonlicheKommunikation2022}.
 Beim Approximieren von gewöhnlichen Differentialgleichungen mithilfe von Lösungspaketen ist es unser Ziel, die
 Kostenfunktion zu minimieren. Dabei kann ein Fehler am Anfang des Trainingsprozesses schon dazu
 führen, dass das neuronale Netz das gegebene Anfangswertproblem nicht approximiert, wie in Satz \ref{ml-error} zu sehen
-ist. Genauer wird die Trajektorie (Definition siehe Kapitel \ref{verfahrensvergleich}) der approximierten Funktion durch
-den Fehler in andere Bereiche des Phasenraums geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da nun
-ein anderes Anfangswertproblem approximiert wird. Eine mögliche Behebung dieses Problems ist das Prinzip des
+ist. Genauer wird die Trajektorie (Definition siehe Kapitel \ref{sec:verfahrensvergleich}) der approximierten Funktion
+durch den Fehler in andere Bereiche des Phasenraums geleitet. Dies wiederum sorgt für einen größeren globalen Fehler, da
+nun ein anderes Anfangswertproblem approximiert wird. Eine mögliche Behebung dieses Problems ist das Prinzip des
 sogenannten \textit{Intervall}-\textit{Lernens} (engl. curriculum learning). Eine allgemeine Diskussion dieses Prinzips
 lässt sich in \cite{bengioCurriculumLearning2009} nachlesen. Für das Approximieren von gewöhnlichen
 Differentialgleichungen nutzen wir das Intervall-Lernen so, dass wir das Intervall der Zeiten $[t_0, t_f]$ begrenzen.
@@ -478,7 +479,22 @@ Gleichverteilung
     \left[ -\frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}}, \frac{\sqrt {6}}{\sqrt {n^{(l-1)} \tanh(2)}} \right]
 \]
 gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferential2019}.
-\newpage
+
+\subsection{Implementierung des neuronalen Netzes}
+Dieser Abschnitt fasst die wesentlichen Implementierungbsschritte für das neuronale Netz, welches für Abschnitt
+\ref{sec:verfahrensvergleich} benutzt wird, zusammen. Zuerst wird nach Abschnitt \ref{subsec:lsgpakete} ein Batch
+$B_1=\{(t_i,x_{0i},\theta_i)\}$ mit Zufallszahlen aus $[t_0,t_f]$, $X_0$ und $\Theta_0$ generiert, wobei die Anzahl der
+Tripel durch die Batch Size $|B|$ festgelegt wurde. Im Anschluss wird ein neuronales Netz mit den gegebenen Schichten
+$L$ und den zugehörigen Neuronen per Schicht $n^{(l)}$ erstellt. Die Aktivierungsfunktion für die versteckten Schichten
+wird auf $\Psi(x)=tanh(x)$ gesetzt und die Gewichte werden gemäß der Xavierinitialisierung aus Abschnitt
+\ref{subsec:gewichtsinitialisierung} initialisiert. Darauffolgend wird unter Verwendung der Forward- und
+Backwardpropagation sowie dem ADAM Gradientenverfahren aus Abschnitt \ref{subsubsec:gradient} für jedes Tripel
+$(t_i,x_{0i},\theta_i)$ die Kostenfunktion $\mathcal{C}$ \eqref{cost-func} minimiert. Die daraus resultierenden Gewichte
+$\hat{\omega}^{(l)}_{ij}$ werden nach jedem Tripel weiterverwendet. Nach einmaligen Trainierens des Batches $B_1$ wird
+ein neuer Batch $B_2$ initialisiert und das Training wird fortgesetzt, wobei die Gewichte weiterhin wiederverwendet
+werden. Nachdme alle Epochen iteriert wurden, kann das Ergebnis des neuronalen Netzes in \eqref{nn-approx} eingesetzt
+werden, um eine Approximation des gegebenen Anfangswertproblems (siehe dazu Abschnitt \ref{sec:verfahrensvergleich}) zu
+erhalten.
 %\subsection{Fortsetzen einer Wahrscheinlichkeitverteilung}
 %\label{subsec:fortsetzeneinerwahrscheinlichkeitsverteilung}
 %Es ist möglich eine Wahrscheinlichkeitsverteilung der Anfangsbedingungen diese mit Hilfe sowohl eines
@@ -507,3 +523,4 @@ gefunden werden, vgl. hierbei \cite[27]{remcovandermeerSolvingPartialDifferentia
 %\textit{Markow-Ketten-Monte-Carlo-Verfahren} (kurz MCMC-Verfahren). Diese wählen die gesuchten Daten mit Hilfe einer
 %Markow-Kette und sind Dimensionsunabhängig: Genaueres zu MCMC-Verfahren kann in \cite{SamplingMethods} nachgelesen
 %werden.
+\newpage

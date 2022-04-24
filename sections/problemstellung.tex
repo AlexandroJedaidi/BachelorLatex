@@ -129,11 +129,12 @@ In diesem Abschnitt betrachten wir ein Anfangswertproblem $erster$ Ordnung
     x(t_{0})&=x_{0} \label{firstorder-ode}
 \end{align}
 und zeigen, unter welchen Bedingungen der rechten Seite $f(t,x(t))$ eine Lösung existiert und gegebenenfalls eindeutig
-ist, was aus der Literatur \cite[13, 14]{sundermeierFixpunktsatzSchauder} stammt.
+ist.
 
 \subsubsection{Existenz von Lösungen}
 Zuerst werden wir einen Satz beweisen, welcher zeigt, dass die Stetigkeit der rechten Seite $f$ für die Existenz einer
-Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysis.
+Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysis, welcher,  aus der Literatur
+\cite[13, 14]{sundermeierFixpunktsatzSchauder} stammt.
 \begin{satz}[Fixpunktsatz von Schauder, 2. Version]
     \label{fixpunktsatzvonschauder}
     Sei M eine nichtleere, abgeschlossene und konvexe Teilmenge eines Banachraums $X$ und $A:M \rightarrow M$ stetig.
@@ -142,7 +143,8 @@ Lösung ausreicht. Dazu benötigen wir noch einen Satz aus der Funktionalanalysi
 $Beweis.$ \cite[13,14]{sundermeierFixpunktsatzSchauder}\\
 In dieser Arbeit wird mit $\left\lVert \cdot \right\rVert_2$ die euklidische Norm
 $\left\lVert x \right\rVert_2 = \left( \sum_{i=1}^{n} (x_i)^2  \right)^{\frac{1}{2}}$ für $x \in \mathbb{R}^n$
-beschrieben. Der Beweis des folgenden Satzes beruht auf dem Buch \cite{heuserGewohnlicheDifferentialgleichungen2009}.
+beschrieben. Der Beweis des folgenden Satzes beruht auf dem Buch \cite{heuserGewohnlicheDifferentialgleichungen2009} und
+wird hier etwas genauer ausgeführt.
 \begin{satz}[Existenzsatz von Peano]
 \label{peano}
     Seien $t_0 \in \mathbb{R}$, $x_0 \in \mathbb{R}^n$,
@@ -189,7 +191,7 @@ Anfangswertproblem auf $D$. Außerdem gilt:
 %Für $A$ wird hier jedoch die Operatornorm
 %$\left\lVert A \right\rVert = \sup\limits_{\left\lVert x \right\rVert = 1} \left\lVert Ax \right\rVert$ benutzt.
 Das bedeutet, dass $Ax \in K$ für $x \in K$, bzw. $AK \subset K$, also bildet $A$ von $K$ nach $K$ ab. Nun können wir die
-hergeleitete Äquivalenz umformulieren: Für eine Funktion $\hat{x} \in K$ gilt:
+hergeleitete Äquivalenz umformulieren. Für eine Funktion $\hat{x} \in K$ gilt:
 \begin{align}
     \label{peano-äquivalenz-proof}
     \hat{x} \text{ löst auf $D$ das Anfangswertproblem } \eqref{firstorder-ode} \Leftrightarrow \hat{x}
@@ -238,7 +240,7 @@ Bildmenge $AK$ relativ kompakt ist. Sei hierfür $x \in K$ beliebig, dann ist
 Somit ist $A(K)$ punktweise beschränkt und gleichgradig stetig auf dem kompakten Intervall $D$. Nach dem Satz von
 Arzela-Ascoli \cite[49]{beckGewohnlicheDifferentialgleichungen2016} hat also jede Folge $(Ax)_n\subset AK$ eine
 gleichmäßig konvergente Teilfolge. Dies gilt offensichtlich auch für die Maximimsnorm, weshalb $AK$ relativ kompakt
-ist. \qedwhite\\
+ist. \qedwhite
 
 \subsubsection{Eindeutigkeit von Lösungen}
 Ähnlich wie im vorherigen Abschnitt existiert ein Satz, welcher zeigt, dass eine im zweiten Argument $Lipschitz$-stetige

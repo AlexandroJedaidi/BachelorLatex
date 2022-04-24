@@ -45,6 +45,7 @@ Zuerst definieren wir ein Einschrittverfahren.
     \rightarrow \mathbb{R}^n$.
 \end{definition}
 Zur Analyse der Approximationsqualität der Einschrittverfahren werden neue Fehlermaße eingeführt.
+\newpage
 \begin{definition}[Lokaler Diskretisierungsfehler]
     Sei das Anfangswertproblem \eqref{first-order-num} mit \\ im zweiten Argument Lipschitz-stetiger
     rechter Seite $f$ und ein explizites Einschrittverfahren \eqref{eq:6} gegeben.
@@ -212,7 +213,7 @@ mit den Stufen
     k_{1,i} &= f(t_i,u_i), \\
     k_{2,i} &= f\left(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{1,i}\right), \\
     k_{3,i} &= f\left(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{2,i}\right), \\
-    k_{4,i} &= f\left(t_i + \frac{h}{2}, u_i + \frac{h}{2}k_{3,i}\right). \\
+    k_{4,i} &= f\left(t_i + h, u_i + h k_{3,i}\right). \\
 \end{align*}
 Wir haben also die Koeffizienten
 \[
@@ -257,7 +258,7 @@ Da Runge-Kutta-Verfahren Einschrittverfahren sind, gibt es auch implizite Runge-
     u_{i+1} &= u_i + h(b_1 k_{1,i} + \dots + b_m k_{m,i})
 \end{align*}
 Hier kann $A$ im Gegensatz zu expliziten Runge-Kutta-Verfahren eine voll besetzte Matrix sein.
-
+\newpage
 \subsubsection{Konsistenz}
 Es wurde bereits gezeigt, dass die Konvergenz eines Einschrittverfahrens aus der Konsistenz folgt. Deshalb genügt es
 sich die Konsistenz(ordnung) der Runge-Kutta-Verfahren zu betrachten. Dabei spielt die Wahl der Koeffizienten eine
@@ -546,6 +547,7 @@ erhalten somit das \textit{lineare $k$-Schrittverfahren vom Typ $(r,l)$}.
 \end{align}
 Ähnlich wie für die Einschrittverfahren definieren wir nun zuerst den {\em lokalen Diskretisierungsfehler} der
 Mehrschrittverfahren.
+\newpage
 \begin{definition}
     Sei ein Mehrschrittverfahren \eqref{k-step-method} und das dazugehörige Anfangswertproblem \eqref{first-order-num}
     gegeben. Dann ist der {\em lokale Diskretisierungsfehler} gegeben durch
